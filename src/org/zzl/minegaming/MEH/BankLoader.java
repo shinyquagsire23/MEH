@@ -13,7 +13,7 @@ import javax.swing.tree.TreePath;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
-public class BankLoader implements Runnable
+public class BankLoader extends Thread implements Runnable
 {
 	GBARom rom;
 	int tblOffs;

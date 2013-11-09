@@ -152,7 +152,7 @@ public class MainGUI extends JFrame
 				}
 				lblInfo.setText("Loading...");
 				
-				new BankLoader(0x3526A8,ROMManager.getActiveROM(),lblInfo,mapBanks).run();
+				new BankLoader(0x3526A8,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
 			}
 		});
 		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, -1, -2));
@@ -381,6 +381,7 @@ public class MainGUI extends JFrame
 						loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
 						reloadMimeLabels();
 						mapEditorPanel.setGlobalTileset(new Tileset(ROMManager.getActiveROM(), loadedMap.getMapData().globalTileSetPtr));
+						mapEditorPanel.setLocalTileset(new Tileset(ROMManager.getActiveROM(), loadedMap.getMapData().localTileSetPtr));
 						mapEditorPanel.repaint();
 						lblInfo.setText("Done!");
 					}
