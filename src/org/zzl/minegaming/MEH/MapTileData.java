@@ -30,9 +30,6 @@ public class MapTileData
 	
 	public MapTile getTile(int x, int y)
 	{
-		
 			return mapTiles[x][y];
-	    
-		
 	}
 }

@@ -2,13 +2,9 @@ package org.zzl.minegaming.MEH;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class MapEditorPanel extends JPanel
@@ -24,7 +20,7 @@ public class MapEditorPanel extends JPanel
 	private static final long serialVersionUID = -877213633894324075L;
 	private Tileset globalTiles;
 	private Tileset localTiles;
-	private BlockRenderer blockRenderer = new BlockRenderer();
+	public static BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
    
 	public MapEditorPanel() 
@@ -42,7 +38,7 @@ public class MapEditorPanel extends JPanel
               
                 int x=(e.getX()/16);
                 int y=(e.getY()/16);
-                int tile=TileEditorPanel.getInstance().baseSelectedTile;
+                int tile=TileEditorPanel.baseSelectedTile;
               
         		map.getMapTileData().getTile(x, y).SetID(tile);
                 
@@ -112,7 +108,8 @@ public class MapEditorPanel extends JPanel
 			{
 				for(int x = 0; x < map.getMapData().mapWidth; x++)
 				{
-					g.drawImage(blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), x*16, y*16, null); 
+					if((x - 1)*16 < this.getVisibleRect().x + this.getVisibleRect().width && (x + 1)*16 > this.getVisibleRect().x && (y - 1)*16 < this.getVisibleRect().y + this.getVisibleRect().height && (y + 1)*16 > this.getVisibleRect().y)
+						g.drawImage((Image)blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), x*16, y*16, null); 
 				}
 			}
 			MainGUI.lblInfo.setText("Done!");

@@ -1,5 +1,6 @@
 package org.zzl.minegaming.MEH;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,6 +8,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
@@ -15,126 +17,127 @@ import java.awt.event.MouseMotionListener;
 
 public class TileEditorPanel extends JPanel
 {
-
-	private static TileEditorPanel instance = null;
-	  
-	  public static TileEditorPanel getInstance(){
-	    if(instance==null){
-	       instance = new TileEditorPanel();
-	      }
-	      return instance;
-	  }
-	
 	private static final long serialVersionUID = -877213633894324075L;
-	public int baseSelectedTile;//Called it base in case of multiple tile selection in the future.
+	public static int baseSelectedTile;	// Called it base in case of multiple tile
+										// selection in the future.
+	public static int editorWidth = 8; //Editor width in 16x16 tiles
 	private Tileset globalTiles;
 	private Tileset localTiles;
-	private BlockRenderer blockRenderer = new BlockRenderer();
-	
-    public TileEditorPanel() 
-    {
-    	
-    	this.addMouseMotionListener(new MouseMotionListener(){
+	private boolean isMouseDown = true;
+	private BlockRenderer blockRenderer = MapEditorPanel.blockRenderer;
 
-			@Override
-			public void mouseDragged(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+	public TileEditorPanel()
+	{
 
-			@Override
-			public void mouseMoved(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-    		
-    		
-    		
-    	});
-    	
-    	this.addMouseListener(new MouseListener()
-        {
-           
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                int x=0;
-                int y=0;
-                
-                x=(e.getX()/16);
-        		y=(e.getY()/16);
-        		baseSelectedTile=x+( y*16);
-        		String k="Current Tile: ";
-				k+=String.format("0x%8s", Integer.toHexString(baseSelectedTile)).replace(' ', '0');
-				
-        	
-            }
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-                
-            
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                
-            }
-            
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                
-               
-            }
-            
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-                
-               
-            }
-            
-        });
-        
-    }
-    
-    public void setGlobalTileset(Tileset global)
-    {
-    	globalTiles = global;
-    	blockRenderer.setGlobalTileset(global);
-    }
-    
-    public void setLocalTileset(Tileset local)
-    {
-    	localTiles = local;
-    	blockRenderer.setLocalTileset(local);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) 
-    {
-        super.paintComponent(g);
-        if(globalTiles != null)
-        {
-        	int i=0;
-        	for(i=0;i<globalTiles.numBlocks;i++){
-        		
-	        	g.drawImage(blockRenderer.renderBlock(i),      (i % 16)*16,(i/16)*16, null); 
-	    
-	        	
-        	}
-        	MainGUI.lblInfo.setText("Done!");
-        }
-        try
+		this.addMouseMotionListener(new MouseMotionListener()
 		{
-			g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")), 100, 240, null);
+
+			@Override
+			public void mouseDragged(MouseEvent arg0)
+			{
+				
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e)
+			{
+				
+				
+			}
+
+		});
+
+		this.addMouseListener(new MouseListener()
+		{
+
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				int x = 0;
+				int y = 0;
+
+				x = (e.getX() / 16);
+				y = (e.getY() / 16);
+				baseSelectedTile = x + (y * editorWidth);
+				String k = "Current Tile: ";
+				k += String.format("0x%8s",
+						Integer.toHexString(baseSelectedTile))
+						.replace(' ', '0');
+				repaint();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e)
+			{
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e)
+			{
+				isMouseDown = true;
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e)
+			{
+				isMouseDown = false;
+			}
+
+		});
+
+	}
+
+	public void setGlobalTileset(Tileset global)
+	{
+		globalTiles = global;
+		blockRenderer.setGlobalTileset(global);
+	}
+
+	public void setLocalTileset(Tileset local)
+	{
+		localTiles = local;
+		blockRenderer.setLocalTileset(local);
+	}
+
+	@Override
+	protected void paintComponent(Graphics g)
+	{
+		System.out.println(this.getVisibleRect());
+		super.paintComponent(g);
+		if (globalTiles != null)
+		{
+			for(int i = 0; i < globalTiles.numBlocks+localTiles.numBlocks; i++)
+			{
+				int x = (i % editorWidth) * 16;
+				int y = (i / editorWidth) * 16;
+				if((y + 1)*16 > this.getVisibleRect().y)
+					g.drawImage(blockRenderer.renderBlock(i), x, y, null);
+				if(baseSelectedTile == i)
+				{
+					g.setColor(Color.red);
+					g.drawRect(x, y, 15, 15);
+				}
+
+			}
+			//this.setSize(editorWidth*16, ((globalTiles.numBlocks/editorWidth)*16)+((localTiles.numBlocks/editorWidth)*16));
+			MainGUI.lblInfo.setText("Done!");
 		}
-		catch (IOException e)
+		try
+		{
+			//I'll always remember you Smeargle <3
+			//g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")), 100, 240,null);
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-    }
+	}
 
 }
