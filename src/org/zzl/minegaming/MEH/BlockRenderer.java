@@ -59,7 +59,7 @@ public class BlockRenderer extends Component
 			if(tileNum < global.numBlocks)
 				g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
 			else
-				g.drawImage(global.getTile(tileNum - global.numBlocks, palette, xFlip, yFlip),x*8,y*8,null);
+				g.drawImage(local.getTile(tileNum - global.numBlocks, palette, xFlip, yFlip),x*8,y*8,null);
 			x++;
 			if(x > 1)
 			{

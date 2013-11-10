@@ -25,6 +25,7 @@ public class Tileset
 	private GBAImage image;
 	private BufferedImage[] bi;
 	private Palette[] palettes; //Main gets 7, local gets 5
+	private boolean isPrimary = true;
 
 	private int blockPtr, animPtr;
 	public final int numBlocks;
@@ -39,7 +40,7 @@ public class Tileset
 		blockPtr = rom.getPointerAsInt(offset+0xC);
 		animPtr = rom.getPointerAsInt(offset+0x10);
 
-		boolean isPrimary = (rom.readByte(offset+1) == 0);
+		isPrimary = (rom.readByte(offset+1) == 0);
 		int[] uncompressedData = null;
 		byte b = rom.readByte(offset);
 
@@ -49,27 +50,27 @@ public class Tileset
 			uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (isPrimary ? 128*320 : 128*192) / 2)); //TODO: Hardcoded to FR tileset sizes
 
 		numBlocks = (isPrimary ? (128 / 8)*(320 / 8) : (128/8)*(192/8));
-		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? 7 : 5];
-		for(int i = 0; i < (isPrimary ? 7 : 5); i++)
+		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? 7 : 13];
+		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
 
-		palettes = new Palette[isPrimary ? 7 : 5];
-		bi = new BufferedImage[isPrimary ? 7 : 5];
+		palettes = new Palette[isPrimary ? 7 : 13];
+		bi = new BufferedImage[isPrimary ? 7 : 13];
 		
 		
-		for(int i = 0; i < (isPrimary ? 7 : 5); i++)
+		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 		{
 			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
 		}
 		
 		image = new GBAImage(uncompressedData,palettes[0],new Point(128,320));
 		
-		for(int i = 0; i < (isPrimary ? 7 : 5); i++)
+		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
 		}
 		
-		for(int i = 0; i < (isPrimary ? 7 : 5); i++)
+		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 			new TileLoader(renderedTiles,i).start();
 	}
 
@@ -129,7 +130,7 @@ public class Tileset
 
 	public BufferedImage getTileSet(int palette)
 	{
-		return image.getBufferedImageFromPal(palettes[palette]);
+		return bi[palette];
 	}
 
 	public int getBlockPointer()

@@ -15,46 +15,53 @@ public class MapEditorPanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private BlockRenderer blockRenderer = new BlockRenderer();
+	private Map map;
 
-    public MapEditorPanel() 
-    {
-    	
-    }
-    
-    public void setGlobalTileset(Tileset global)
-    {
-    	globalTiles = global;
-    	blockRenderer.setGlobalTileset(global);
-    }
-    
-    public void setLocalTileset(Tileset local)
-    {
-    	localTiles = local;
-    	blockRenderer.setLocalTileset(local);
-    }
+	public MapEditorPanel() 
+	{
 
-    @Override
-    protected void paintComponent(Graphics g) 
-    {
-        super.paintComponent(g);
-        if(globalTiles != null)
-        {
-        	g.drawImage(blockRenderer.renderBlock(0xE), 0, 0, null); 
-        	g.drawImage(blockRenderer.renderBlock(0xF), 16, 0, null); 
-        	g.drawImage(blockRenderer.renderBlock(0x1E), 0, 16, null); 
-        	g.drawImage(blockRenderer.renderBlock(0x1F), 16, 16, null); 
-        	g.drawImage(blockRenderer.renderBlock(0x26), 0, 32, null); 
-        	g.drawImage(blockRenderer.renderBlock(0x27), 16, 32, null);
-        	MainGUI.lblInfo.setText("Done!");
-        }
-        try
+	}
+
+	public void setGlobalTileset(Tileset global)
+	{
+		globalTiles = global;
+		blockRenderer.setGlobalTileset(global);
+	}
+
+	public void setLocalTileset(Tileset local)
+	{
+		localTiles = local;
+		blockRenderer.setLocalTileset(local);
+	}
+
+	public void setMap(Map m)
+	{
+		map = m;
+	}
+
+	@Override
+	protected void paintComponent(Graphics g) 
+	{
+		super.paintComponent(g);
+		if(globalTiles != null)
 		{
-			g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")), 100, 240, null);
+			for(int y = 0; y < map.getMapData().mapHeight; y++)
+			{
+				for(int x = 0; x < map.getMapData().mapWidth; x++)
+				{
+					g.drawImage(blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), x*16, y*16, null); 
+				}
+			}
+			MainGUI.lblInfo.setText("Done!");
 		}
-		catch (IOException e)
+		try
+		{
+			//g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")), 100, 240, null);
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-    }
+	}
 
 }
