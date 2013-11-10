@@ -292,7 +292,7 @@ public class MainGUI extends JFrame
 		
 		borderTileEditor = new BorderEditorPanel();
 		borderTileEditor.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Border Tiles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		borderTileEditor.setBounds(12, 12, 195, 75);
+		borderTileEditor.setBounds(12, 12, 114, 75);
 		panelBorderTilesToAbsolute.add(borderTileEditor);
 		
 		
