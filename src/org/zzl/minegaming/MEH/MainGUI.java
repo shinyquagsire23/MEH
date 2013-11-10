@@ -71,7 +71,7 @@ public class MainGUI extends JFrame
 	public int paneSize = 0;
 	public int initEditorPanePos = -1;
 	
-	public JLabel lblInfo;
+	public static JLabel lblInfo;
 	public JTree mapBanks;
 	public Map loadedMap;
 	private int selectedBank = 0;
@@ -380,10 +380,9 @@ public class MainGUI extends JFrame
 						lblInfo.setText("Loading map...");
 						loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
 						reloadMimeLabels();
-						mapEditorPanel.setGlobalTileset(new Tileset(ROMManager.getActiveROM(), loadedMap.getMapData().globalTileSetPtr));
-						mapEditorPanel.setLocalTileset(new Tileset(ROMManager.getActiveROM(), loadedMap.getMapData().localTileSetPtr));
+						mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+						mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 						mapEditorPanel.repaint();
-						lblInfo.setText("Done!");
 					}
 				}
 			}

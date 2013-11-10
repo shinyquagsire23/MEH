@@ -2,6 +2,7 @@ package org.zzl.minegaming.MEH;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -44,6 +45,7 @@ public class MapEditorPanel extends JPanel
         	g.drawImage(blockRenderer.renderBlock(0x1F), 16, 16, null); 
         	g.drawImage(blockRenderer.renderBlock(0x26), 0, 32, null); 
         	g.drawImage(blockRenderer.renderBlock(0x27), 16, 32, null);
+        	MainGUI.lblInfo.setText("Done!");
         }
         try
 		{

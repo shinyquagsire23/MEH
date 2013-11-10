@@ -18,7 +18,7 @@ import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.Palette;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
-public class Tileset extends Component
+public class Tileset
 {
 	private GBARom rom;
 	private int dataPtr;
@@ -94,6 +94,7 @@ public class Tileset extends Component
 		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
 		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
 		BufferedImage toSend =  bi[palette].getSubimage(x, y, 8, 8);
+		renderedTiles[palette].put(tileNum, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
@@ -164,11 +165,11 @@ public class Tileset extends Component
 			{
 					try
 					{
-						buffer[pal].put(i, getTile(i,pal,false,false));System.out.println("An error occured while writing tile " + i + " with palette " + pal);
+						buffer[pal].put(i, getTile(i,pal,false,false));
 					}
 					catch(Exception e)
 					{
-						
+						System.out.println("An error occured while writing tile " + i + " with palette " + pal);
 					}
 			}
 		}

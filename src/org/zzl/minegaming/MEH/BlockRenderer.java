@@ -2,7 +2,9 @@ package org.zzl.minegaming.MEH;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -42,7 +44,9 @@ public class BlockRenderer extends Component
 		
 		int blockPointer = (isSecondaryBlock ? local.getBlockPointer() : global.getBlockPointer()) + (blockNum * 16);
 		BufferedImage block = new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB);
-		Graphics g = block.getGraphics();
+		Graphics2D g = (Graphics2D)block.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 		int x = 0;
 		int y = 0;
 		for(int i = 0; i < 16; i++)
