@@ -1,5 +1,6 @@
 package org.zzl.minegaming.MEH;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,6 +38,10 @@ public class MapEditorPanel extends JPanel
 	public void setMap(Map m)
 	{
 		map = m;
+		Dimension size = new Dimension();
+		size.setSize((int)(m.getMapData().mapWidth + 1) * 16, (int)(m.getMapData().mapHeight + 1) * 16);
+		setPreferredSize(size);
+		this.setSize(size);
 	}
 
 	@Override

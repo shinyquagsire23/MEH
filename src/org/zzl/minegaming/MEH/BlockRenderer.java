@@ -57,9 +57,16 @@ public class BlockRenderer extends Component
 			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
 			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
 			if(tileNum < global.numBlocks)
-				g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
+			{
+				if(palette < 7)
+					g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
+				else
+					g.drawImage(global.getTileWithCustomPal(tileNum, local.getPalette()[palette],xFlip,yFlip),x*8,y*8,null);
+			}
 			else
+			{
 				g.drawImage(local.getTile(tileNum - global.numBlocks, palette, xFlip, yFlip),x*8,y*8,null);
+			}
 			x++;
 			if(x > 1)
 			{

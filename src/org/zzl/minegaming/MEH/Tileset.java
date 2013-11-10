@@ -54,8 +54,8 @@ public class Tileset
 		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
 
-		palettes = new Palette[isPrimary ? 7 : 13];
-		bi = new BufferedImage[isPrimary ? 7 : 13];
+		palettes = new Palette[13];
+		bi = new BufferedImage[13];
 		
 		
 		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
@@ -72,6 +72,22 @@ public class Tileset
 		
 		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 			new TileLoader(renderedTiles,i).start();
+	}
+	
+	public BufferedImage getTileWithCustomPal(int tileNum, Palette palette, boolean xFlip, boolean yFlip)
+	{
+		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
+		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
+		BufferedImage toSend =  image.getBufferedImageFromPal(palette).getSubimage(x, y, 8, 8);
+
+		if(!xFlip && !yFlip)
+			return toSend;
+		if(xFlip)
+			toSend = horizontalFlip(toSend);
+		if(yFlip)
+			toSend = verticalFlip(toSend);
+		
+		return toSend;
 	}
 
 	public BufferedImage getTile(int tileNum, int palette, boolean xFlip, boolean yFlip)
@@ -105,6 +121,11 @@ public class Tileset
 			toSend = verticalFlip(toSend);
 		
 		return toSend;
+	}
+	
+	public Palette[] getPalette()
+	{
+		return palettes;
 	}
 	
     private BufferedImage horizontalFlip(BufferedImage img) {

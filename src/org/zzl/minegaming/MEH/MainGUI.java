@@ -275,9 +275,13 @@ public class MainGUI extends JFrame
 		panelMapTilesContainer.add(panelMapTiles, BorderLayout.CENTER);
 		
 		mapEditorPanel = new MapEditorPanel();
-		editorPanel.add(mapEditorPanel, BorderLayout.CENTER);
 		mapEditorPanel.setLayout(null);
 		mapEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
+		
+		JScrollPane mapScrollPane = new JScrollPane(mapEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+			      JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		editorPanel.add(mapScrollPane, BorderLayout.CENTER);
+
 		
 		JToolBar toolBar = new JToolBar();
 		editorPanel.add(toolBar, BorderLayout.NORTH);
