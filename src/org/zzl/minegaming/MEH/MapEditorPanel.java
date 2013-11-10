@@ -2,6 +2,7 @@ package org.zzl.minegaming.MEH;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,7 @@ public class MapEditorPanel extends JPanel
 	@Override
 	protected void paintComponent(Graphics g) 
 	{
+		System.out.println(this.getVisibleRect());
 		super.paintComponent(g);
 		if(globalTiles != null)
 		{
@@ -54,7 +56,8 @@ public class MapEditorPanel extends JPanel
 			{
 				for(int x = 0; x < map.getMapData().mapWidth; x++)
 				{
-					g.drawImage(blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), x*16, y*16, null); 
+					if((x - 1)*16 < this.getVisibleRect().x + this.getVisibleRect().width && (x + 1)*16 > this.getVisibleRect().x && (y - 1)*16 < this.getVisibleRect().y + this.getVisibleRect().height && (y + 1)*16 > this.getVisibleRect().y)
+						g.drawImage((Image)blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), x*16, y*16, null); 
 				}
 			}
 			MainGUI.lblInfo.setText("Done!");

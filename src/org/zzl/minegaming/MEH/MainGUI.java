@@ -6,6 +6,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar.Separator;
+import javax.swing.JViewport;
 
 import java.awt.BorderLayout;
 
@@ -294,6 +295,7 @@ public class MainGUI extends JFrame
 		JScrollPane mapScrollPane = new JScrollPane(mapEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 			      JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		editorPanel.add(mapScrollPane, BorderLayout.CENTER);
+		mapScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 
 		
 		JToolBar toolBar = new JToolBar();
@@ -419,6 +421,7 @@ public class MainGUI extends JFrame
 		
 		JScrollPane mapPane = new JScrollPane(mapBanks,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 			      JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		mapPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		panel_3.add(mapPane);
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
