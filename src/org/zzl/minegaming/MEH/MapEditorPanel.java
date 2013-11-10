@@ -2,6 +2,8 @@ package org.zzl.minegaming.MEH;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -11,16 +13,72 @@ import javax.swing.JPanel;
 
 public class MapEditorPanel extends JPanel
 {
-
+	private static MapEditorPanel instance = null;
+	  
+	  public static MapEditorPanel getInstance(){
+	    if(instance==null){
+	       instance = new MapEditorPanel();
+	      }
+	      return instance;
+	  }
 	private static final long serialVersionUID = -877213633894324075L;
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
-
+   
 	public MapEditorPanel() 
 	{
-
+		this.addMouseListener(new MouseListener()
+        {
+           
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+              
+                //X+(Y*mapSize);
+                
+                
+              
+                int x=(e.getX()/16);
+                int y=(e.getY()/16);
+                int tile=TileEditorPanel.getInstance().baseSelectedTile;
+              
+        		map.getMapTileData().getTile(x, y).SetID(tile);
+                
+              
+        		//myParent.mapEditorPanel.setMap(myParent.loadedMap);
+        		repaint();
+        	
+            }
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                
+            
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                
+            }
+            
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                
+               
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                
+               
+            }
+            
+        });
 	}
 
 	public void setGlobalTileset(Tileset global)

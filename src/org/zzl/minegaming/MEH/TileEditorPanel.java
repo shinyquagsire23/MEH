@@ -16,6 +16,15 @@ import java.awt.event.MouseMotionListener;
 public class TileEditorPanel extends JPanel
 {
 
+	private static TileEditorPanel instance = null;
+	  
+	  public static TileEditorPanel getInstance(){
+	    if(instance==null){
+	       instance = new TileEditorPanel();
+	      }
+	      return instance;
+	  }
+	
 	private static final long serialVersionUID = -877213633894324075L;
 	public int baseSelectedTile;//Called it base in case of multiple tile selection in the future.
 	private Tileset globalTiles;
@@ -24,18 +33,40 @@ public class TileEditorPanel extends JPanel
 	
     public TileEditorPanel() 
     {
+    	
+    	this.addMouseMotionListener(new MouseMotionListener(){
+
+			@Override
+			public void mouseDragged(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+    		
+    		
+    		
+    	});
+    	
     	this.addMouseListener(new MouseListener()
         {
-            
+           
             @Override
             public void mouseClicked(MouseEvent e)
             {
                 int x=0;
                 int y=0;
                 
-                		x=(e.getX()/8);
-        		y=(e.getY()/8);
-        		baseSelectedTile=x+( y*32);
+                x=(e.getX()/16);
+        		y=(e.getY()/16);
+        		baseSelectedTile=x+( y*16);
+        		String k="Current Tile: ";
+				k+=String.format("0x%8s", Integer.toHexString(baseSelectedTile)).replace(' ', '0');
+				
         	
             }
             @Override
