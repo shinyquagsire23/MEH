@@ -38,7 +38,7 @@ public class MapEditorPanel extends JPanel
               
                 int x=(e.getX()/16);
                 int y=(e.getY()/16);
-                int tile=TileEditorPanel.getInstance().baseSelectedTile;
+                int tile=TileEditorPanel.baseSelectedTile;
               
         		map.getMapTileData().getTile(x, y).SetID(tile);
                 

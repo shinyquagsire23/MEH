@@ -287,11 +287,6 @@ public class MainGUI extends JFrame
 		panelBorderTilesContainer.add(panelBorderTilesSplitter, BorderLayout.SOUTH);
 		//Set up tileset
 		
-		TileEditorPanel.getInstance().setPreferredSize(new Dimension(512, 512));
-		panelMapTilesContainer.add(TileEditorPanel.getInstance(), BorderLayout.WEST);
-		TileEditorPanel.getInstance().setLayout(null);
-		TileEditorPanel.getInstance().setBorder(UIManager.getBorder("SplitPane.border"));
-		
 		JPanel panelBorderTilesToAbsolute = new JPanel();
 		panelBorderTilesContainer.add(panelBorderTilesToAbsolute, BorderLayout.CENTER);
 		panelBorderTilesToAbsolute.setLayout(null);
@@ -436,9 +431,9 @@ public class MainGUI extends JFrame
 						borderTileEditor.setMap(borderMap);
 						borderTileEditor.repaint();
 						
-						TileEditorPanel.getInstance().setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						TileEditorPanel.getInstance().setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						TileEditorPanel.getInstance().repaint();
+						tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+						tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+						tileEditorPanel.repaint();
 					}
 				}
 			}
