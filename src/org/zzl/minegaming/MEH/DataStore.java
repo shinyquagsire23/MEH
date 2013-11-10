@@ -53,6 +53,7 @@ public class DataStore {
 			ReadData(ROMHeader);//Grab inherited values
 		    
 		}
+		EngineVersion = ReadNumberEntry(ROMHeader, "Engine");
 		Name=iP.get(ROMHeader, "Name");
 		Language = ReadNumberEntry(ROMHeader, "Language" ); 
 		Cries= ReadNumberEntry(ROMHeader, "Cries" );
@@ -114,6 +115,7 @@ public class DataStore {
 		
 		
 	}
+	public static   long EngineVersion;
 	public static   String Inherit;
 	public static	String Name;
 	public static	long Language; 

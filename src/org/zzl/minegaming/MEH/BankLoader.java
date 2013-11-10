@@ -75,7 +75,15 @@ public class BankLoader extends Thread implements Runnable
 					mapList.add(dataPtr);
 					int mapName = BitConverter.GrabBytesAsInts(rom.getData(), (int)((dataPtr - (8 << 24)) + 0x14), 1)[0];
 					//mapName -= 0x58; //TODO: Add Jambo51's map header hack
-					int mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName - 0x58) * 4)); //TODO Use INIs
+					int mapNamePokePtr = 0;
+					if(DataStore.EngineVersion==1)
+					{//FRLG
+						mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName - 0x58) * 4)); //TODO use the actual structure
+					}else if(DataStore.EngineVersion==0)//RSE
+					{
+						mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName*8)+ 4));
+					}
+					
 					DefaultMutableTreeNode node = new DefaultMutableTreeNode(String.valueOf(rom.readPokeText(mapNamePokePtr) + " (" + mapNum + "." + miniMapNum + ")")); //TODO: Pull PokeText from header
 					findNode(root,String.valueOf(mapNum)).add(node);
 					miniMapNum++;
