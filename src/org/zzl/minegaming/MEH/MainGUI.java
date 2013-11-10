@@ -263,7 +263,7 @@ public class MainGUI extends JFrame
 		JPanel panelTilesContainer = new JPanel();
 		editorPanel.add(panelTilesContainer, BorderLayout.EAST);
 		panelTilesContainer.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
-		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16, 10));
+		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16 + 16, 10));
 		panelTilesContainer.setLayout(new BorderLayout(0, 0));
 		
 	
@@ -305,7 +305,7 @@ public class MainGUI extends JFrame
 			public void mouseMoved(MouseEvent e) {
 			}
 		});
-		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+8, ((0x280 + 0x56)/tileEditorPanel.editorWidth)*16));
+		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((0x280 + 0x56)/tileEditorPanel.editorWidth)*16));
 		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
 		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));

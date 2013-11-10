@@ -21,7 +21,7 @@ public class BankLoader extends Thread implements Runnable
 	JLabel lbl;
 	JTree tree;
 	public static final int[] numMaps = new int[]{5,123,60,66,4,6,8,10,6,8,20,10,8,2,10,4,2,2,2,1,1,2,2,3,2,3,2,1,1,1,1,7,5,5,8,8,5,5,1,1,1,2,1}; // TODO: Load this from ini
-	public static final int numBanks = 7; // TODO: Load this from ini
+	public static final int numBanks = 43; // TODO: Load this from ini
 	private static final int mapNamesPtr = (int)DataStore.MapLabels;
 	public static ArrayList<Long>[] maps = (ArrayList<Long>[])new ArrayList[numBanks];
 	public static ArrayList<Long> bankPointers = new ArrayList<Long>();
