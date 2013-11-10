@@ -144,12 +144,14 @@ public class MainGUI extends JFrame
 		btnOpenROM.setBorder(null);
 		btnOpenROM.setBorderPainted(false);
 		btnOpenROM.setPreferredSize(new Dimension(54, 48));
+		
 		btnOpenROM.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int i = GBARom.loadRom();
-				dataStore = new DataStore("PokeRoms.ini","BPRE");
+				
+				dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
 				if(1 != -1)
 				{
 					mapBanks.setModel(new DefaultTreeModel(
