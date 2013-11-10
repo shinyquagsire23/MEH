@@ -68,6 +68,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
+
 import java.awt.event.MouseMotionAdapter;
 
 public class MainGUI extends JFrame
@@ -93,7 +94,7 @@ public class MainGUI extends JFrame
 	public BorderEditorPanel borderTileEditor;
 	public TileEditorPanel tileEditorPanel;
 	public JLabel lblTileVal;
-	
+	public DataStore dataStore;
 	public MainGUI()
 	{
 		setPreferredSize(new Dimension(800, 800));
@@ -148,6 +149,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int i = GBARom.loadRom();
+				dataStore = new DataStore("PokeRoms.ini","BPRE");
 				if(1 != -1)
 				{
 					mapBanks.setModel(new DefaultTreeModel(
@@ -158,10 +160,11 @@ public class MainGUI extends JFrame
 					DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
 					model.reload();
 					BankLoader.reset();
+					
 				}
 				lblInfo.setText("Loading...");
 				
-				new BankLoader(0x3526A8,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
+				new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
 			}
 		});
 		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, -1, -2));

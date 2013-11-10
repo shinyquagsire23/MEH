@@ -5,3 +5,5 @@ Dependencies:
 Java 1.6
 
 GBAUtils (available on my repository)
+
+ini4j found at http://sourceforge.net/projects/ini4j, thanks to the author. 

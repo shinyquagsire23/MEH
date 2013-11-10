@@ -126,11 +126,11 @@ public class TileEditorPanel extends JPanel
 				}
 
 			}
-			//this.setSize(editorWidth*16, ((globalTiles.numBlocks/editorWidth)*16)+((localTiles.numBlocks/editorWidth)*16));
 			MainGUI.lblInfo.setText("Done!");
 		}
 		try
 		{
+			//best error image.
 			//I'll always remember you Smeargle <3
 			//g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")), 100, 240,null);
 		}
