@@ -189,6 +189,8 @@ public class Tileset
 	public void resetCustomTiles()
 	{
 		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[6];
+		for(int i = 0; i < 6; i++)
+			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 	}
 	
     private BufferedImage horizontalFlip(BufferedImage img) {
