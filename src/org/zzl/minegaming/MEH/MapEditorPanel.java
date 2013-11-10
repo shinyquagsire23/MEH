@@ -20,7 +20,7 @@ public class MapEditorPanel extends JPanel
 	private static final long serialVersionUID = -877213633894324075L;
 	private Tileset globalTiles;
 	private Tileset localTiles;
-	private BlockRenderer blockRenderer = new BlockRenderer();
+	public static BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
    
 	public MapEditorPanel() 
