@@ -18,22 +18,18 @@ public class MapTileData
 		{
 			for(int y = 0; y < mData.mapHeight; y++)
 			{
-				mapTiles[x][y] = getTile(x,y);
+				
+				int index = (int) ((y*mData.mapWidth) + x);
+				int raw = rom.readWord(dataLoc + index*2);
+				MapTile m = new MapTile((raw & 0x3FF),(raw&0xFC00) >> 10);
+				mapTiles[x][y] = m;
+				
 			}
 		}
 	}
 	
 	public MapTile getTile(int x, int y)
 	{
-		if(mapTiles[x][y] != null)
 			return mapTiles[x][y];
-		else
-		{
-			int index = (int) ((y*mData.mapWidth) + x);
-			int raw = rom.readWord(dataLoc + index*2);
-			MapTile m = new MapTile((raw & 0x3FF),(raw&0xFC00) >> 10);
-			mapTiles[x][y] = m;
-			return m;
-		}
 	}
 }

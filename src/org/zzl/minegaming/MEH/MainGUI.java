@@ -91,8 +91,12 @@ public class MainGUI extends JFrame
 	public MapEditorPanel mapEditorPanel;
 	public BorderEditorPanel borderTileEditor;
 	public TileEditorPanel tileEditorPanel;
+	public JLabel lblTileVal;
+	
 	public MainGUI()
 	{
+		MapEditorPanel.getInstance();
+		TileEditorPanel.getInstance();
 		setPreferredSize(new Dimension(800, 800));
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -124,7 +128,7 @@ public class MainGUI extends JFrame
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		panel_2.setPreferredSize(new Dimension(10, 24));
 		getContentPane().add(panel_2, BorderLayout.SOUTH);
-		
+	
 		lblInfo = new JLabel("No ROM Loaded!");
 		panel_2.add(lblInfo);
 		
@@ -181,6 +185,7 @@ public class MainGUI extends JFrame
 		FlowLayout fl_separator1 = (FlowLayout) separator1.getLayout();
 		fl_separator1.setVgap(0);
 		fl_separator1.setHgap(0);
+	
 		panelButtons.add(separator1);
 		
 		Component horizontalStrut_1 = Box.createHorizontalStrut(4);
@@ -242,6 +247,8 @@ public class MainGUI extends JFrame
 			}
 		});
 		splitPane.setDividerLocation(0.2);
+		
+		
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 		
 		JTabbedPane editorTabs = new JTabbedPane(JTabbedPane.TOP);
@@ -278,6 +285,12 @@ public class MainGUI extends JFrame
 		panelBorderTilesSplitter.setBackground(SystemColor.controlShadow);
 		panelBorderTilesSplitter.setPreferredSize(new Dimension(10, 1));
 		panelBorderTilesContainer.add(panelBorderTilesSplitter, BorderLayout.SOUTH);
+		//Set up tileset
+		
+		TileEditorPanel.getInstance().setPreferredSize(new Dimension(512, 512));
+		panelMapTilesContainer.add(TileEditorPanel.getInstance(), BorderLayout.WEST);
+		TileEditorPanel.getInstance().setLayout(null);
+		TileEditorPanel.getInstance().setBorder(UIManager.getBorder("SplitPane.border"));
 		
 		JPanel panelBorderTilesToAbsolute = new JPanel();
 		panelBorderTilesContainer.add(panelBorderTilesToAbsolute, BorderLayout.CENTER);
@@ -296,12 +309,12 @@ public class MainGUI extends JFrame
 		
 		JPanel panelMapTiles = new JPanel();
 		panelMapTilesContainer.add(panelMapTiles, BorderLayout.CENTER);
+		//Setup Map
 		
-		mapEditorPanel = new MapEditorPanel();
-		mapEditorPanel.setLayout(null);
-		mapEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
+		MapEditorPanel.getInstance().setLayout(null);
+		MapEditorPanel.getInstance().setBorder(UIManager.getBorder("SplitPane.border"));
 		
-		JScrollPane mapScrollPane = new JScrollPane(mapEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+		JScrollPane mapScrollPane = new JScrollPane(MapEditorPanel.getInstance(), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 			      JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		editorPanel.add(mapScrollPane, BorderLayout.CENTER);
 		mapScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
@@ -310,6 +323,8 @@ public class MainGUI extends JFrame
 
 		
 		JToolBar toolBar = new JToolBar();
+		lblTileVal=new JLabel("Current Tile: 0x0000");
+		toolBar.add(lblTileVal);
 		editorPanel.add(toolBar, BorderLayout.NORTH);
 		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		toolBar.setPreferredSize(new Dimension(128, 32));
@@ -411,19 +426,19 @@ public class MainGUI extends JFrame
 						loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
 						borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
 						reloadMimeLabels();
-						mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						mapEditorPanel.setMap(loadedMap);
-						mapEditorPanel.repaint();
+						MapEditorPanel.getInstance().setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+						MapEditorPanel.getInstance().setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+						MapEditorPanel.getInstance().setMap(loadedMap);
+						MapEditorPanel.getInstance().repaint();
 						
 						borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 						borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 						borderTileEditor.setMap(borderMap);
 						borderTileEditor.repaint();
 						
-						tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						tileEditorPanel.repaint();
+						TileEditorPanel.getInstance().setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+						TileEditorPanel.getInstance().setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+						TileEditorPanel.getInstance().repaint();
 					}
 				}
 			}
