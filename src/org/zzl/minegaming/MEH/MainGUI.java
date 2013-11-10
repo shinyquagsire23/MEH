@@ -66,6 +66,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
+import javax.swing.border.TitledBorder;
+import javax.swing.border.LineBorder;
 
 public class MainGUI extends JFrame
 {
@@ -75,6 +77,7 @@ public class MainGUI extends JFrame
 	public static JLabel lblInfo;
 	public JTree mapBanks;
 	public Map loadedMap;
+	public BorderMap borderMap;
 	private int selectedBank = 0;
 	private int selectedMap = 0;
 	public JLabel lblWidth;
@@ -86,6 +89,7 @@ public class MainGUI extends JFrame
 	public JLabel lblBorderHeight;
 	public JLabel lblGlobalTilesetPointer;
 	public MapEditorPanel mapEditorPanel;
+	public BorderEditorPanel borderTileEditor;
 	public TileEditorPanel tileEditorPanel;
 	public MainGUI()
 	{
@@ -275,15 +279,20 @@ public class MainGUI extends JFrame
 		panelBorderTilesSplitter.setPreferredSize(new Dimension(10, 1));
 		panelBorderTilesContainer.add(panelBorderTilesSplitter, BorderLayout.SOUTH);
 		
+		JPanel panelBorderTilesToAbsolute = new JPanel();
+		panelBorderTilesContainer.add(panelBorderTilesToAbsolute, BorderLayout.CENTER);
+		panelBorderTilesToAbsolute.setLayout(null);
+		
+		borderTileEditor = new BorderEditorPanel();
+		borderTileEditor.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Border Tiles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		borderTileEditor.setBounds(12, 12, 195, 75);
+		panelBorderTilesToAbsolute.add(borderTileEditor);
+		
 		tileEditorPanel = new TileEditorPanel();
 		tileEditorPanel.setPreferredSize(new Dimension(512, 512));
 		panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
 		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
-		
-		
-		
-		
 		
 		JPanel panelMapTiles = new JPanel();
 		panelMapTilesContainer.add(panelMapTiles, BorderLayout.CENTER);
@@ -296,6 +305,8 @@ public class MainGUI extends JFrame
 			      JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		editorPanel.add(mapScrollPane, BorderLayout.CENTER);
 		mapScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		mapScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		mapScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 
 		
 		JToolBar toolBar = new JToolBar();
@@ -398,12 +409,17 @@ public class MainGUI extends JFrame
 					{
 						lblInfo.setText("Loading map...");
 						loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
+						borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
 						reloadMimeLabels();
 						mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 						mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 						mapEditorPanel.setMap(loadedMap);
 						mapEditorPanel.repaint();
 						
+						borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+						borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+						borderTileEditor.setMap(borderMap);
+						borderTileEditor.repaint();
 						
 						tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 						tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));

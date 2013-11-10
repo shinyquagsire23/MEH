@@ -10,16 +10,16 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-public class MapEditorPanel extends JPanel
+public class BorderEditorPanel extends JPanel
 {
 
 	private static final long serialVersionUID = -877213633894324075L;
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private BlockRenderer blockRenderer = new BlockRenderer();
-	private Map map;
+	private BorderMap map;
 
-	public MapEditorPanel() 
+	public BorderEditorPanel() 
 	{
 
 	}
@@ -36,13 +36,9 @@ public class MapEditorPanel extends JPanel
 		blockRenderer.setLocalTileset(local);
 	}
 
-	public void setMap(Map m)
+	public void setMap(BorderMap m)
 	{
 		map = m;
-		Dimension size = new Dimension();
-		size.setSize((int)(m.getMapData().mapWidth + 1) * 16, (int)(m.getMapData().mapHeight + 1) * 16);
-		setPreferredSize(size);
-		this.setSize(size);
 	}
 
 	@Override
@@ -51,12 +47,12 @@ public class MapEditorPanel extends JPanel
 		super.paintComponent(g);
 		if(globalTiles != null)
 		{
-			for(int y = 0; y < map.getMapData().mapHeight; y++)
+			for(int y = 0; y < map.getMapData().borderHeight; y++)
 			{
-				for(int x = 0; x < map.getMapData().mapWidth; x++)
+				for(int x = 0; x < map.getMapData().borderWidth; x++)
 				{
-					if((x - 1)*16 < this.getVisibleRect().x + this.getVisibleRect().width && (x + 1)*16 > this.getVisibleRect().x && (y - 1)*16 < this.getVisibleRect().y + this.getVisibleRect().height && (y + 1)*16 > this.getVisibleRect().y)
-						g.drawImage((Image)blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), x*16, y*16, null); 
+					
+						g.drawImage((Image)blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), (this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + x*16, 20+y*16, null); 
 				}
 			}
 			MainGUI.lblInfo.setText("Done!");
