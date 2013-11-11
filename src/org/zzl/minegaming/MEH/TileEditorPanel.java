@@ -115,7 +115,7 @@ public class TileEditorPanel extends JPanel
 	{
 		imgBuffer = new BufferedImage(512,512,BufferedImage.TYPE_INT_ARGB);
 		gcBuff=imgBuffer.getGraphics();
-		for(int i = 0; i < globalTiles.numBlocks+localTiles.numBlocks; i++)
+		for(int i = 0; i < globalTiles.numBlocks+(DataStore.EngineVersion == 1 ? localTiles.numBlocks : 512); i++)
 		{
 			int x = (i % editorWidth) * 16;
 			int y = (i / editorWidth) * 16;
