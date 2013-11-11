@@ -77,7 +77,7 @@ public class Tileset
 		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-			if(!isPrimary && i > DataStore.MainTSPalCount && DataStore.EngineVersion == 0)
+			if(!isPrimary && i > DataStore.MainTSPalCount - 1 && DataStore.EngineVersion == 0)
 			{
 				lastPrimary.getPalette()[i] = palettes[i];
 			}
@@ -204,7 +204,7 @@ public class Tileset
 		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-			if(!isPrimary && i > DataStore.MainTSPalCount && DataStore.EngineVersion == 0)
+			if(!isPrimary && i > DataStore.MainTSPalCount - 1 && DataStore.EngineVersion == 0)
 			{
 				lastPrimary.getPalette()[i] = palettes[i];
 			}
