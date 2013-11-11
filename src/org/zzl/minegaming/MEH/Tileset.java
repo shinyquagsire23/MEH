@@ -72,19 +72,14 @@ public class Tileset
 			{
 				palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
 			}
-			lastPrimary.palettes = palettes;
 		}
 		
 		image = new GBAImage(uncompressedData,palettes[0],new Point(128,(isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));
 		
-		/*for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
-		{
-			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-		}*/
-		
 		if(!isPrimary)
 		{
 			renderPalettedTiles();
+			lastPrimary.palettes = palettes;
 			lastPrimary.renderPalettedTiles();
 			lastPrimary.startTileThreads();
 			startTileThreads();
@@ -100,17 +95,9 @@ public class Tileset
 	
 	public BufferedImage getTileWithCustomPal(int tileNum, Palette palette, boolean xFlip, boolean yFlip)
 	{
-		
-		/*CustomTile cT = new CustomTile(tileNum,palette,xFlip,yFlip);
-		if(customRenderedTiles.containsKey(cT)) //Check to see if we've cached that tile
-		{
-			return customRenderedTiles.get(cT);
-		}*/
 		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
 		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
 		BufferedImage toSend =  image.getBufferedImageFromPal(palette).getSubimage(x, y, 8, 8);
-		
-		//customRenderedTiles.put(cT, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
