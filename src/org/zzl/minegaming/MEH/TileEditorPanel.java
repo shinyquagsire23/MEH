@@ -131,11 +131,10 @@ public class TileEditorPanel extends JPanel
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		System.out.println(this.getVisibleRect());
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			for(int i = 0; i < globalTiles.numBlocks+localTiles.numBlocks; i++)
+			for(int i = 0; i < DataStore.MainTSBlocks+DataStore.LocalTSBlocks; i++)
 			{
 				int x = (i % editorWidth) * 16;
 				int y = (i / editorWidth) * 16;

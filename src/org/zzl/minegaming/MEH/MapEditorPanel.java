@@ -30,6 +30,7 @@ public class MapEditorPanel extends JPanel
 	private Tileset localTiles;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
+	private final boolean renderPalette = false;
 
 	public MapEditorPanel()
 	{
@@ -57,12 +58,12 @@ public class MapEditorPanel extends JPanel
 			@Override
 			public void mouseMoved(MouseEvent e)
 			{
-				
-				
+
+
 			}
 
 		});
-		
+
 		this.addMouseListener(new MouseListener()
 		{
 
@@ -180,6 +181,24 @@ public class MapEditorPanel extends JPanel
 		if (globalTiles != null)
 		{
 			g.drawImage(imgBuffer, 0, 0, this);
+			if(renderPalette)
+			{
+				int x = 0;
+				for(int i = 0; i < 12; i++)
+				{
+					while(x < 16)
+					{
+						try
+						{
+							g.setColor(globalTiles.getPalette()[i].getIndex(x));
+							g.fillRect(x*8, i*8, 8, 8);
+						}
+						catch(Exception e){}
+						x++;
+					}
+					x = 0;
+				}
+			}
 			MainGUI.lblInfo.setText("Done!");
 		}
 		try

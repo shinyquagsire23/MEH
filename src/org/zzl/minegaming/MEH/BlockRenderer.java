@@ -62,32 +62,14 @@ public class BlockRenderer extends Component
 			int palette = (global.getROM().readWord(blockPointer + i) & 0xF000) >> 12;
 			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
 			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
-			if(!transparency && top == 0)
+
+			if(tileNum < DataStore.MainTSSize)
 			{
-				try
-				{
-				g.setColor(local.getPalette()[palette].getIndex(0));
-				g.fillRect(x*8,y*8, 8, 8);
-				}
-				catch(Exception e)
-				{
-					palette = 0;
-				}
-			}
-			if(tileNum < global.numBlocks)
-			{
-				if(tileNum == global.numBlocks)
-				{
-					orig = orig;
-				}
-				//if(palette < 7)
-					g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
-				//else
-					//g.drawImage(global.getTileWithCustomPal(tileNum, local.getPalette()[palette],xFlip,yFlip),x*8,y*8,null);
+				g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
 			}
 			else
 			{
-				g.drawImage(local.getTile(tileNum - global.numBlocks, palette, xFlip, yFlip),x*8,y*8,null);
+				g.drawImage(local.getTile(tileNum - DataStore.MainTSSize, palette, xFlip, yFlip),x*8,y*8,null);
 			}
 			x++;
 			if(x > 1)
