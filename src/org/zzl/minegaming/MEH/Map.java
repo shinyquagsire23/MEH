@@ -8,10 +8,12 @@ public class Map implements ISaveable
 {
 	private MapData mapData;
 	private MapTileData mapTileData;
+	public boolean isEdited;
 	public Map(GBARom rom, int dataOffset)
 	{
 		mapData = new MapData(rom, rom.getPointerAsInt(dataOffset));
 		mapTileData = new MapTileData(rom, BitConverter.shortenPointer(mapData.mapTilesPtr),mapData);
+	    isEdited=true;
 	}
 	
 	public MapData getMapData()

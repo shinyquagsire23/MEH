@@ -68,6 +68,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
+
 import java.awt.event.MouseMotionAdapter;
 
 public class MainGUI extends JFrame
@@ -93,7 +94,7 @@ public class MainGUI extends JFrame
 	public BorderEditorPanel borderTileEditor;
 	public TileEditorPanel tileEditorPanel;
 	public JLabel lblTileVal;
-	
+	public DataStore dataStore;
 	public MainGUI()
 	{
 		setPreferredSize(new Dimension(800, 800));
@@ -143,11 +144,14 @@ public class MainGUI extends JFrame
 		btnOpenROM.setBorder(null);
 		btnOpenROM.setBorderPainted(false);
 		btnOpenROM.setPreferredSize(new Dimension(54, 48));
+		
 		btnOpenROM.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				int i = GBARom.loadRom();
+				
+				dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
 				if(1 != -1)
 				{
 					mapBanks.setModel(new DefaultTreeModel(
@@ -158,10 +162,11 @@ public class MainGUI extends JFrame
 					DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
 					model.reload();
 					BankLoader.reset();
+					
 				}
 				lblInfo.setText("Loading...");
 				
-				new BankLoader(0x3526A8,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
+				new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
 			}
 		});
 		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, -1, -2));
@@ -260,7 +265,7 @@ public class MainGUI extends JFrame
 		JPanel panelTilesContainer = new JPanel();
 		editorPanel.add(panelTilesContainer, BorderLayout.EAST);
 		panelTilesContainer.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
-		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16, 10));
+		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16 + 16, 10));
 		panelTilesContainer.setLayout(new BorderLayout(0, 0));
 		
 	
@@ -302,7 +307,7 @@ public class MainGUI extends JFrame
 			public void mouseMoved(MouseEvent e) {
 			}
 		});
-		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+8, ((0x280 + 0x56)/tileEditorPanel.editorWidth)*16));
+		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((0x280 + 0x56)/tileEditorPanel.editorWidth)*16));
 		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
 		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
@@ -436,6 +441,7 @@ public class MainGUI extends JFrame
 						mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 						mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 						mapEditorPanel.setMap(loadedMap);
+						mapEditorPanel.DrawMap();
 						mapEditorPanel.repaint();
 						
 						borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
@@ -445,6 +451,7 @@ public class MainGUI extends JFrame
 						
 						tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 						tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+						tileEditorPanel.DrawTileset();
 						tileEditorPanel.repaint();
 					}
 				}
