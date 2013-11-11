@@ -12,6 +12,7 @@ import javax.swing.tree.TreePath;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
+import org.zzl.minegaming.GBAUtils.ROMManager;
 
 public class BankLoader extends Thread implements Runnable
 {
@@ -19,9 +20,9 @@ public class BankLoader extends Thread implements Runnable
 	int tblOffs;
 	JLabel lbl;
 	JTree tree;
-	public static final int[] numMaps = new int[]{5,123,60,66,4,6,8,10,6,8,20,10,8,2,10,4,2,2,2,1,1,2,2,3,2,3,2,1,1,1,1,7,5,5,8,8,5,5,1,1,1,2,1}; // TODO: Load this from ini
-	public static final int numBanks = 43; // TODO: Load this from ini
-	private static final int mapNamesPtr = 0x3F1CAC;
+	public static final int[] numMaps = new int[]{53,4,4,5,6,6,7,6,6,12,7,16,9,23,12,12,13,1,1,1,2,0,0,0,85,43,11,1,0,12,0,0,2,0}; //new int[]{5,123,60,66,4,6,8,10,6,8,20,10,8,2,10,4,2,2,2,1,1,2,2,3,2,3,2,1,1,1,1,7,5,5,8,8,5,5,1,1,1,2,1}; // TODO: Load this from ini
+	public static final int numBanks = 33;//43; // TODO: Load this from ini
+	private static final int mapNamesPtr = (int)DataStore.MapLabels;
 	public static ArrayList<Long>[] maps = (ArrayList<Long>[])new ArrayList[numBanks];
 	public static ArrayList<Long> bankPointers = new ArrayList<Long>();
 	public static boolean banksLoaded = false;
@@ -36,7 +37,8 @@ public class BankLoader extends Thread implements Runnable
 	public BankLoader(int tableOffset, GBARom rom, JLabel label, JTree tree)
 	{
 		this.rom = rom;
-		tblOffs = tableOffset;
+		tblOffs = (int) ROMManager.currentROM.getPointer(tableOffset);
+	
 		lbl = label;
 		this.tree = tree;
 	}
@@ -73,7 +75,15 @@ public class BankLoader extends Thread implements Runnable
 					mapList.add(dataPtr);
 					int mapName = BitConverter.GrabBytesAsInts(rom.getData(), (int)((dataPtr - (8 << 24)) + 0x14), 1)[0];
 					//mapName -= 0x58; //TODO: Add Jambo51's map header hack
-					int mapNamePokePtr = rom.getPointerAsInt(rom.getPointerAsInt(0xC0C94) + ((mapName - 0x58) * 4)); //TODO Use INIs
+					int mapNamePokePtr = 0;
+					if(DataStore.EngineVersion==1)
+					{//FRLG
+						mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName - 0x58) * 4)); //TODO use the actual structure
+					}else if(DataStore.EngineVersion==0)//RSE
+					{
+						mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName*8)+ 4));
+					}
+					
 					DefaultMutableTreeNode node = new DefaultMutableTreeNode(String.valueOf(rom.readPokeText(mapNamePokePtr) + " (" + mapNum + "." + miniMapNum + ")")); //TODO: Pull PokeText from header
 					findNode(root,String.valueOf(mapNum)).add(node);
 					miniMapNum++;

@@ -25,11 +25,14 @@ public class Tileset
 	private GBAImage image;
 	private BufferedImage[] bi;
 	private Palette[] palettes; //Main gets 7, local gets 5
+	private static Tileset lastPrimary;
 	private boolean isPrimary = true;
 
 	private int blockPtr, animPtr;
 	public final int numBlocks;
 	private HashMap<Integer,BufferedImage>[] renderedTiles;
+	private HashMap<Integer,BufferedImage>[] customRenderedTiles;
+
 
 	@SuppressWarnings("unchecked")
 	public Tileset(GBARom rom, int offset)
@@ -41,6 +44,8 @@ public class Tileset
 		animPtr = rom.getPointerAsInt(offset+0x10);
 
 		isPrimary = (rom.readByte(offset+1) == 0);
+		if(isPrimary)
+			lastPrimary = this;
 		int[] uncompressedData = null;
 		byte b = rom.readByte(offset);
 
@@ -49,10 +54,14 @@ public class Tileset
 		if(uncompressedData == null)
 			uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (isPrimary ? 128*320 : 128*192) / 2)); //TODO: Hardcoded to FR tileset sizes
 
-		numBlocks = (isPrimary ? (128 / 8)*(320 / 8) : (128/8)*(192/8));
+		numBlocks = (isPrimary ? 0x280 : 0x56); //TODO: INI
 		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? 7 : 13];
+		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[6];
+		
 		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
+		for(int i = 0; i < 6; i++)
+			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 
 		palettes = new Palette[13];
 		bi = new BufferedImage[13];
@@ -68,7 +77,14 @@ public class Tileset
 		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
+			if(i > 7)
+			{
+				lastPrimary.getPalette()[i] = palettes[i];
+			}
 		}
+		
+		if(!isPrimary)
+			lastPrimary.rerenderCustomTiles();
 		
 		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
 			new TileLoader(renderedTiles,i).start();
@@ -76,9 +92,17 @@ public class Tileset
 	
 	public BufferedImage getTileWithCustomPal(int tileNum, Palette palette, boolean xFlip, boolean yFlip)
 	{
+		
+		/*CustomTile cT = new CustomTile(tileNum,palette,xFlip,yFlip);
+		if(customRenderedTiles.containsKey(cT)) //Check to see if we've cached that tile
+		{
+			return customRenderedTiles.get(cT);
+		}*/
 		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
 		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
 		BufferedImage toSend =  image.getBufferedImageFromPal(palette).getSubimage(x, y, 8, 8);
+		
+		//customRenderedTiles.put(cT, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
@@ -92,6 +116,8 @@ public class Tileset
 
 	public BufferedImage getTile(int tileNum, int palette, boolean xFlip, boolean yFlip)
 	{
+		if(palette < 7)
+		{
 		if(renderedTiles[palette].containsKey(tileNum)) //Check to see if we've cached that tile
 		{
 			if(xFlip && yFlip)
@@ -107,11 +133,33 @@ public class Tileset
 			
 			return renderedTiles[palette].get(tileNum);
 		}
+		}
+		else
+		{
+			if(customRenderedTiles[palette-7].containsKey(tileNum)) //Check to see if we've cached that tile
+			{
+				if(xFlip && yFlip)
+					return verticalFlip(horizontalFlip(customRenderedTiles[palette-7].get(tileNum)));
+				else if(xFlip)
+				{
+					return horizontalFlip(customRenderedTiles[palette-7].get(tileNum));
+				}
+				else if(yFlip)
+				{
+					return verticalFlip(customRenderedTiles[palette-7].get(tileNum));
+				}
+				
+				return customRenderedTiles[palette-7].get(tileNum);
+			}
+		}
 		
 		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
 		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
 		BufferedImage toSend =  bi[palette].getSubimage(x, y, 8, 8);
-		renderedTiles[palette].put(tileNum, toSend);
+		if(palette < 7 || renderedTiles.length > 7)
+			renderedTiles[palette].put(tileNum, toSend);
+		else
+			customRenderedTiles[palette-7].put(tileNum, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
@@ -126,6 +174,23 @@ public class Tileset
 	public Palette[] getPalette()
 	{
 		return palettes;
+	}
+	
+	public void rerenderTileSet(int palette)
+	{
+			bi[palette] = image.getBufferedImageFromPal(palettes[palette]);
+	}
+	
+	public void rerenderCustomTiles()
+	{
+		for(int i = 0; i < 6; i++)
+			rerenderTileSet(i+7);
+	}
+	public void resetCustomTiles()
+	{
+		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[6];
+		for(int i = 0; i < 6; i++)
+			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 	}
 	
     private BufferedImage horizontalFlip(BufferedImage img) {
