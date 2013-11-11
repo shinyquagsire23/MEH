@@ -77,13 +77,9 @@ public class Tileset
 		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-			if(!isPrimary && i > DataStore.MainTSPalCount - 1 && DataStore.EngineVersion == 0)
+			if(!isPrimary && i > DataStore.MainTSPalCount - 1)
 			{
-				lastPrimary.getPalette()[i] = palettes[i];
-			}
-			else if(!isPrimary && DataStore.EngineVersion == 1 && i >= DataStore.MainTSPalCount)
-			{
-				lastPrimary.getPalette()[i] = palettes[i];
+				//lastPrimary.getPalette()[i] = palettes[i];
 			}
 		}
 		
@@ -194,6 +190,11 @@ public class Tileset
 		return palettes;
 	}
 	
+	public void setPalette(Palette[] pal)
+	{
+		palettes = pal;
+	}
+	
 	public void rerenderTileSet(int palette)
 	{
 			bi[palette] = image.getBufferedImageFromPal(palettes[palette]);
@@ -201,20 +202,18 @@ public class Tileset
 	
 	public void rerenderCustomTiles()
 	{
-		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
+		if(!isPrimary)
+		{
+			lastPrimary.setPalette(palettes);
+		}
+		
+		for(int i = 0; i < 13; i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-			if(!isPrimary && i > DataStore.MainTSPalCount - 1 && DataStore.EngineVersion == 0)
-			{
-				lastPrimary.getPalette()[i] = palettes[i];
-			}
-			else if(!isPrimary && DataStore.EngineVersion == 1 && i >= DataStore.MainTSPalCount)
-			{
-				lastPrimary.getPalette()[i] = palettes[i];
-			}
+
 		}
-		for(int i = 0; i < 13-DataStore.MainTSPalCount; i++)
-			rerenderTileSet(i+DataStore.MainTSPalCount);
+		for(int i = 0; i < 13; i++)
+			rerenderTileSet(i);
 	}
 	public void resetCustomTiles()
 	{

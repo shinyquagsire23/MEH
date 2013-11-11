@@ -198,6 +198,22 @@ public class MapEditorPanel extends JPanel
 					}
 					x = 0;
 				}
+				
+				x = 0;
+				for(int i = 0; i < 12; i++)
+				{
+					while(x < 16)
+					{
+						try
+						{
+							g.setColor(localTiles.getPalette()[i].getIndex(x));
+							g.fillRect(128+x*8, i*8, 8, 8);
+						}
+						catch(Exception e){}
+						x++;
+					}
+					x = 0;
+				}
 			}
 			MainGUI.lblInfo.setText("Done!");
 		}
