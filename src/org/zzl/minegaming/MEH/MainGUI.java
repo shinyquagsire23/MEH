@@ -499,8 +499,6 @@ public class MainGUI extends JFrame
 		reloadMimeLabels();
 		mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 		mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).rerenderCustomTiles();
-		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).rerenderCustomTiles();
 		mapEditorPanel.setMap(loadedMap);
 		mapEditorPanel.DrawMap();
 		mapEditorPanel.repaint();
