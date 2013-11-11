@@ -66,25 +66,13 @@ public class Tileset
 		palettes = new Palette[13];
 		bi = new BufferedImage[13];
 		
-		if(!isPrimary)
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
-			for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
-			{
-				palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
-			}
+			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
 		}
 		
-		image = new GBAImage(uncompressedData,palettes[0],new Point(128,(isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));
 		
-		if(!isPrimary)
-		{
-			renderPalettedTiles();
-			lastPrimary.palettes = palettes;
-			lastPrimary.renderPalettedTiles();
-			lastPrimary.startTileThreads();
-			startTileThreads();
-		}
-		
+		image = new GBAImage(uncompressedData,palettes[0],new Point(128,(isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));	
 	}
 	
 	public void startTileThreads()
@@ -196,17 +184,14 @@ public class Tileset
 	}
 	
 	public void renderPalettedTiles()
-	{
-		if(!isPrimary)
-		{
-			lastPrimary.setPalette(palettes);
-		}
-		
+	{		
 		for(int i = 0; i < 13; i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
+
+		}
+		for(int i = 0; i < 13; i++)
 			rerenderTileSet(i);
-		}			
 	}
 	public void resetCustomTiles()
 	{
