@@ -202,13 +202,11 @@ public class Tileset
 			lastPrimary.setPalette(palettes);
 		}
 		
-		for(int i = 0; i < (isPrimary ? 13 : 13); i++)
+		for(int i = 0; i < 13; i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-
-		}
-		for(int i = 0; i < 13; i++)
 			rerenderTileSet(i);
+		}			
 	}
 	public void resetCustomTiles()
 	{
