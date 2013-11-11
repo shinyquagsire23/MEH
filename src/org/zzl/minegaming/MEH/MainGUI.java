@@ -441,6 +441,7 @@ public class MainGUI extends JFrame
 						mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 						mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 						mapEditorPanel.setMap(loadedMap);
+						mapEditorPanel.DrawMap();
 						mapEditorPanel.repaint();
 						
 						borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
@@ -450,6 +451,7 @@ public class MainGUI extends JFrame
 						
 						tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 						tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+						tileEditorPanel.DrawTileset();
 						tileEditorPanel.repaint();
 					}
 				}

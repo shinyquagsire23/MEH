@@ -2,6 +2,7 @@ package org.zzl.minegaming.MEH;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -105,7 +106,25 @@ public class TileEditorPanel extends JPanel
 		localTiles = local;
 		blockRenderer.setLocalTileset(local);
 	}
+	private Graphics gcBuff;
+	private Image imgBuffer = null;
+	public void DrawTileset(){
+		imgBuffer = createImage(512, 512);
+		gcBuff=imgBuffer.getGraphics();
+		for(int i = 0; i < globalTiles.numBlocks+localTiles.numBlocks; i++)
+		{
+			int x = (i % editorWidth) * 16;
+			int y = (i / editorWidth) * 16;
+			if((y + 1)*16 > this.getVisibleRect().y)
+				gcBuff.drawImage(blockRenderer.renderBlock(i), x, y, this);
+			if(baseSelectedTile == i)
+			{
+				gcBuff.setColor(Color.red);
+				gcBuff.drawRect(x, y, 15, 15);
+			}
 
+		}
+	}
 	@Override
 	protected void paintComponent(Graphics g)
 	{
@@ -113,19 +132,7 @@ public class TileEditorPanel extends JPanel
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			for(int i = 0; i < globalTiles.numBlocks+localTiles.numBlocks; i++)
-			{
-				int x = (i % editorWidth) * 16;
-				int y = (i / editorWidth) * 16;
-				if((y + 1)*16 > this.getVisibleRect().y)
-					g.drawImage(blockRenderer.renderBlock(i), x, y, null);
-				if(baseSelectedTile == i)
-				{
-					g.setColor(Color.red);
-					g.drawRect(x, y, 15, 15);
-				}
-
-			}
+			 g.drawImage(imgBuffer, 0, 0, this);
 			MainGUI.lblInfo.setText("Done!");
 		}
 		try
