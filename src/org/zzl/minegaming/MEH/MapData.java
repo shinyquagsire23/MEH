@@ -28,6 +28,11 @@ public class MapData implements ISaveable
 		localTileSetPtr = rom.getPointerAsInt(dataLoc+0x14);
 		borderWidth = rom.readBytes(dataLoc+0x18, 2)[0];
 		borderHeight = rom.readBytes(dataLoc+0x18, 2)[1];
+		if(rom.getGameCode().startsWith("AX")) //If this is a RSE game...
+		{
+			borderWidth = 2;
+			borderHeight = 2;
+		}
 	}
 	
 	public void save()

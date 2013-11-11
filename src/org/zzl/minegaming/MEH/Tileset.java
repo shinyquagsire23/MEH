@@ -54,30 +54,30 @@ public class Tileset
 		if(uncompressedData == null)
 			uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (isPrimary ? 128*320 : 128*192) / 2)); //TODO: Hardcoded to FR tileset sizes
 
-		numBlocks = (isPrimary ? 0x280 : 0x56); //TODO: INI
-		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? 7 : 13];
-		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[6];
+		numBlocks = (isPrimary ? DataStore.MainTSSize : DataStore.LocalTSSize); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
+		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? DataStore.MainTSPalCount : 13];
+		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[13-DataStore.MainTSPalCount];
 		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < 13-DataStore.MainTSPalCount; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 
 		palettes = new Palette[13];
 		bi = new BufferedImage[13];
 		
 		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
 			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
 		}
 		
 		image = new GBAImage(uncompressedData,palettes[0],new Point(128,320));
 		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
 			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-			if(i > 7)
+			if(i > DataStore.MainTSPalCount)
 			{
 				lastPrimary.getPalette()[i] = palettes[i];
 			}
@@ -86,7 +86,7 @@ public class Tileset
 		if(!isPrimary)
 			lastPrimary.rerenderCustomTiles();
 		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 			new TileLoader(renderedTiles,i).start();
 	}
 	
@@ -116,7 +116,7 @@ public class Tileset
 
 	public BufferedImage getTile(int tileNum, int palette, boolean xFlip, boolean yFlip)
 	{
-		if(palette < 7)
+		if(palette < DataStore.MainTSPalCount)
 		{
 		if(renderedTiles[palette].containsKey(tileNum)) //Check to see if we've cached that tile
 		{
@@ -136,30 +136,30 @@ public class Tileset
 		}
 		else
 		{
-			if(customRenderedTiles[palette-7].containsKey(tileNum)) //Check to see if we've cached that tile
+			if(customRenderedTiles[palette-DataStore.MainTSPalCount].containsKey(tileNum)) //Check to see if we've cached that tile
 			{
 				if(xFlip && yFlip)
 					return verticalFlip(horizontalFlip(customRenderedTiles[palette-7].get(tileNum)));
 				else if(xFlip)
 				{
-					return horizontalFlip(customRenderedTiles[palette-7].get(tileNum));
+					return horizontalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum));
 				}
 				else if(yFlip)
 				{
-					return verticalFlip(customRenderedTiles[palette-7].get(tileNum));
+					return verticalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum));
 				}
 				
-				return customRenderedTiles[palette-7].get(tileNum);
+				return customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum);
 			}
 		}
 		
 		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
 		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
 		BufferedImage toSend =  bi[palette].getSubimage(x, y, 8, 8);
-		if(palette < 7 || renderedTiles.length > 7)
+		if(palette < DataStore.MainTSPalCount || renderedTiles.length > DataStore.MainTSPalCount)
 			renderedTiles[palette].put(tileNum, toSend);
 		else
-			customRenderedTiles[palette-7].put(tileNum, toSend);
+			customRenderedTiles[palette-DataStore.MainTSPalCount].put(tileNum, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
@@ -183,8 +183,8 @@ public class Tileset
 	
 	public void rerenderCustomTiles()
 	{
-		for(int i = 0; i < 6; i++)
-			rerenderTileSet(i+7);
+		for(int i = 0; i < 13-DataStore.MainTSPalCount; i++)
+			rerenderTileSet(i+DataStore.MainTSPalCount);
 	}
 	public void resetCustomTiles()
 	{

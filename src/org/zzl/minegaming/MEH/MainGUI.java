@@ -70,6 +70,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class MainGUI extends JFrame
 {
@@ -92,8 +94,8 @@ public class MainGUI extends JFrame
 	public JLabel lblGlobalTilesetPointer;
 	public MapEditorPanel mapEditorPanel;
 	public BorderEditorPanel borderTileEditor;
-	public TileEditorPanel tileEditorPanel;
-	public JLabel lblTileVal;
+	public static TileEditorPanel tileEditorPanel;
+	public static JLabel lblTileVal;
 	public DataStore dataStore;
 	public MainGUI()
 	{
@@ -152,6 +154,7 @@ public class MainGUI extends JFrame
 				int i = GBARom.loadRom();
 				
 				dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
+				
 				if(1 != -1)
 				{
 					mapBanks.setModel(new DefaultTreeModel(
@@ -409,6 +412,13 @@ public class MainGUI extends JFrame
 		panel_3.setLayout(new BorderLayout(0, 0));
 
 		mapBanks = new JTree();
+		mapBanks.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) 
+			{
+					loadMap();
+			}
+		});
 		mapBanks.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) 
 			{
@@ -431,28 +441,7 @@ public class MainGUI extends JFrame
 				{
 					if(e.getClickCount() == 2)
 					{
-						lblInfo.setText("Loading map...");
-						if(loadedMap != null)
-							TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
-						
-						loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
-						borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
-						reloadMimeLabels();
-						mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						mapEditorPanel.setMap(loadedMap);
-						mapEditorPanel.DrawMap();
-						mapEditorPanel.repaint();
-						
-						borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						borderTileEditor.setMap(borderMap);
-						borderTileEditor.repaint();
-						
-						tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						tileEditorPanel.DrawTileset();
-						tileEditorPanel.repaint();
+						loadMap();
 					}
 				}
 			}
@@ -497,5 +486,36 @@ public class MainGUI extends JFrame
 		lblBorderTilesPointer.setText("Border Tiles Pointer: " + BitConverter.toHexString(loadedMap.getMapData().borderTilePtr));
 		lblGlobalTilesetPointer.setText("Global Tileset Pointer: " + BitConverter.toHexString(loadedMap.getMapData().globalTileSetPtr));
 		lblLocalTilesetPointer.setText("Local  Tileset  Pointer: " + BitConverter.toHexString(loadedMap.getMapData().localTileSetPtr));
+	}
+	
+	public void loadMap()
+	{
+		lblInfo.setText("Loading map...");
+		if(loadedMap != null)
+			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
+		
+		loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
+		borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
+		reloadMimeLabels();
+		mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+		mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		mapEditorPanel.setMap(loadedMap);
+		mapEditorPanel.DrawMap();
+		mapEditorPanel.repaint();
+		
+		borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+		borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		borderTileEditor.setMap(borderMap);
+		borderTileEditor.repaint();
+		
+		tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+		tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		tileEditorPanel.DrawTileset();
+		tileEditorPanel.repaint();
+	}
+	
+	public static void repaintTileEditorPanel()
+	{
+		tileEditorPanel.repaint();
 	}
 }

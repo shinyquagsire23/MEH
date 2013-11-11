@@ -16,7 +16,8 @@ public class DataStore {
 	private  Ini iP;
 	private static Boolean passedTraits;
 	//private Parser p;//For when we have YAML reading as well
-	long ReadNumberEntry(String Section, String key){
+	long ReadNumberEntry(String Section, String key)
+	{
 	
 		String nkey=iP.get(Section, key);
 		
@@ -43,6 +44,35 @@ public class DataStore {
 		}
 		return ReturnValue;
 	}
+	
+	String ReadString(String Section, String key)
+	{
+String nkey=iP.get(Section, key);
+		
+	    int CommentIndex=-1;
+	    String ReturnValue="";
+	    String FinalString="";
+	    try{
+	    	CommentIndex=nkey.indexOf(";");
+		    if(CommentIndex!=-1){
+			
+		    	nkey=nkey.substring(0, CommentIndex);//Get rid of the comment
+		    }
+		    FinalString=nkey;
+		    if(nkey.indexOf("0x") !=-1 ){
+		    FinalString=nkey.substring(2);
+		    
+		    }
+		    	 ReturnValue=FinalString;
+		}catch(Exception e){
+		 //There's a chance the key may not exist, let's come up with a way to handle this case
+			//
+			ReturnValue = "";
+		
+		}
+		return ReturnValue;
+	}
+	
 	void ReadData(String ROMHeader){
 	    //Read all the entries.
 		Inherit = iP.get(ROMHeader, "Inherit");
@@ -90,6 +120,16 @@ public class DataStore {
 		AttackTable= ReadNumberEntry(ROMHeader, "AttackTable" );
 		StartPosBoy= ReadNumberEntry(ROMHeader, "StartPosBoy" );
 		StartPosGirl= ReadNumberEntry(ROMHeader, "StartPosGirl" );
+		MainTSPalCount= (int) ReadNumberEntry(ROMHeader, "MainTSPalCount");
+		MainTSSize= (int) ReadNumberEntry(ROMHeader, "MainTSSize");
+		LocalTSSize= (int) ReadNumberEntry(ROMHeader, "LocalTSSize");
+		NumBanks= (int) ReadNumberEntry(ROMHeader, "NumBanks");
+		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
+		MapBankSize = new int[NumBanks];
+		for(int i = 0; i < mBS.length; i++)
+		{
+			MapBankSize[i] = Integer.parseInt(mBS[i]);
+		}
 		//Name=ip.getString(ROMHeader, "Name");
 	
 		
@@ -153,5 +193,10 @@ public class DataStore {
 	public static	long AttackTable;
 	public static	long StartPosBoy;
 	public static	long StartPosGirl;
+	public static   int	 MainTSPalCount;
+	public static	int  MainTSSize;
+	public static	int  LocalTSSize;
+	public static 	int  NumBanks;
+	public static	int[] MapBankSize;
 	
 }

@@ -10,6 +10,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import org.zzl.minegaming.GBAUtils.BitConverter;
+
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
@@ -64,6 +66,7 @@ public class TileEditorPanel extends JPanel
 				k += String.format("0x%8s",
 						Integer.toHexString(baseSelectedTile))
 						.replace(' ', '0');
+				MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
 				repaint();
 			}
 
@@ -116,8 +119,7 @@ public class TileEditorPanel extends JPanel
 		{
 			int x = (i % editorWidth) * 16;
 			int y = (i / editorWidth) * 16;
-			if((y + 1)*16 > this.getVisibleRect().y)
-				gcBuff.drawImage(blockRenderer.renderBlock(i), x, y, this);
+			gcBuff.drawImage(blockRenderer.renderBlock(i,false), x, y, this);
 			if(baseSelectedTile == i)
 			{
 				gcBuff.setColor(Color.red);
@@ -138,7 +140,7 @@ public class TileEditorPanel extends JPanel
 				int x = (i % editorWidth) * 16;
 				int y = (i / editorWidth) * 16;
 				if((y + 1)*16 > this.getVisibleRect().y)
-					g.drawImage(blockRenderer.renderBlock(i), x, y, null);
+					g.drawImage(blockRenderer.renderBlock(i,false), x, y, null);
 				if(baseSelectedTile == i)
 				{
 					g.setColor(Color.red);
