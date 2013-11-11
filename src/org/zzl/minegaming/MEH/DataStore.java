@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+import org.zzl.minegaming.GBAUtils.ROMManager;
+
 import ini4j.Ini;
 import ini4j.spi.IniBuilder;
 
@@ -90,6 +92,7 @@ String nkey=iP.get(Section, key);
 		MapHeaders= ReadNumberEntry(ROMHeader, "MapHeaders" );  
 		Maps= ReadNumberEntry(ROMHeader, "Maps" ); 
 		MapLabels= ReadNumberEntry(ROMHeader, "MapLabels" ); 
+		MapLabels=ROMManager.getActiveROM().getPointerAsInt((int)MapLabels);
 		MonsterNames= ReadNumberEntry(ROMHeader, "MonsterNames" );
 		MonsterBaseStats= ReadNumberEntry(ROMHeader, "MonsterBaseStats" );
 		MonsterDexData= ReadNumberEntry(ROMHeader, "MonsterDexData" );

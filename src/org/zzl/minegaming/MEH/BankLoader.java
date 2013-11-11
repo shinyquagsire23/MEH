@@ -16,7 +16,7 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 
 public class BankLoader extends Thread implements Runnable
 {
-	GBARom rom;
+	private static GBARom rom;
 	int tblOffs;
 	JLabel lbl;
 	JTree tree;
@@ -27,10 +27,17 @@ public class BankLoader extends Thread implements Runnable
 	
 	public static void reset()
 	{
-		mapNamesPtr = (int)DataStore.MapLabels;
-		maps = (ArrayList<Long>[])new ArrayList[DataStore.NumBanks];
-		bankPointers = new ArrayList<Long>();
-		banksLoaded = false;
+		try
+		{
+			mapNamesPtr = rom.getPointerAsInt((int)DataStore.MapLabels);
+			maps = (ArrayList<Long>[])new ArrayList[DataStore.NumBanks];
+			bankPointers = new ArrayList<Long>();
+			banksLoaded = false;
+		}
+		catch(Exception e)
+		{
+			
+		}
 	}
 
 	public BankLoader(int tableOffset, GBARom rom, JLabel label, JTree tree)
@@ -40,6 +47,7 @@ public class BankLoader extends Thread implements Runnable
 	
 		lbl = label;
 		this.tree = tree;
+		reset();
 	}
 
 	@Override
@@ -62,7 +70,7 @@ public class BankLoader extends Thread implements Runnable
 		int mapNum = 0;
 		for(long l : bankPointers)
 		{
-			ArrayList<byte[]> preMapList = rom.loadArrayOfStructuredData((int)(l - (0x8 << 24)), DataStore.MapBankSize[mapNum], 4);
+			ArrayList<byte[]> preMapList = rom.loadArrayOfStructuredData((int)(BitConverter.shortenPointer(l)), DataStore.MapBankSize[mapNum], 4);
 			ArrayList<Long> mapList = new ArrayList<Long>();
 			int miniMapNum = 0;
 			for(byte[] b : preMapList)
