@@ -117,7 +117,7 @@ public class MapEditorPanel extends JPanel
 			for(int x = 0; x < map.getMapData().mapWidth; x++)
 			{
 				
-				if((x - 1)*16 < rX + rW  && (x + 1)*16 > rX && (y - 1)*16 < rY + rH && (y + 1)*16 > rY)
+				//if((x - 1)*16 < rX + rW  && (x + 1)*16 > rX && (y - 1)*16 < rY + rH && (y + 1)*16 > rY)
 					gcBuff.drawImage((Image)blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), x*16, y*16, null); 
 			}
 		}
