@@ -1,1 +1,7 @@
 /bin
+*.gba
+*.bak
+*.sgm
+*.sav
+*.log
+*.*~
