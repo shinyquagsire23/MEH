@@ -178,13 +178,21 @@ public class MainGUI extends JFrame
 		panelButtons.add(btnOpenROM);
 
 		JButton btnSaveROM = new JButton("");
+		btnSaveROM.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				loadedMap.save();
+				ROMManager.currentROM.commitChangesToROMFile();
+			}
+		});
 		btnSaveROM.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/ROMsave.png")));
 		btnSaveROM.setFocusPainted(false);
 		btnSaveROM.setBorderPainted(false);
 		btnSaveROM.setPreferredSize(new Dimension(54, 48));
 		panelButtons.add(btnSaveROM);
 
-		Component horizontalStrut = Box.createHorizontalStrut(4);
+		Component horizontalStrut = Box.createHorizontalStrut(7);
 		horizontalStrut.setForeground(Color.BLACK);
 		panelButtons.add(horizontalStrut);
 
@@ -197,7 +205,7 @@ public class MainGUI extends JFrame
 
 		panelButtons.add(separator1);
 
-		Component horizontalStrut_1 = Box.createHorizontalStrut(4);
+		Component horizontalStrut_1 = Box.createHorizontalStrut(7);
 		horizontalStrut_1.setForeground(Color.BLACK);
 		panelButtons.add(horizontalStrut_1);
 
@@ -210,6 +218,33 @@ public class MainGUI extends JFrame
 				mapEditorPanel.repaint();
 			}
 		});
+		
+		JButton btnSaveMap = new JButton("");
+		btnSaveMap.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				loadedMap.save();
+			}
+		});
+		btnSaveMap.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/mapsave.png")));
+		btnSaveMap.setPreferredSize(new Dimension(48, 48));
+		btnSaveMap.setFocusPainted(false);
+		btnSaveMap.setBorderPainted(false);
+		panelButtons.add(btnSaveMap);
+		
+		Component horizontalStrut_2 = Box.createHorizontalStrut(7);
+		horizontalStrut_2.setForeground(Color.BLACK);
+		panelButtons.add(horizontalStrut_2);
+		
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(1, 46));
+		panel.setBackground(SystemColor.windowBorder);
+		panelButtons.add(panel);
+		
+		Component horizontalStrut_3 = Box.createHorizontalStrut(7);
+		horizontalStrut_3.setForeground(Color.BLACK);
+		panelButtons.add(horizontalStrut_3);
 		btnNewMap.setFocusPainted(false);
 		btnNewMap.setBorderPainted(false);
 		btnNewMap.setPreferredSize(new Dimension(48, 48));

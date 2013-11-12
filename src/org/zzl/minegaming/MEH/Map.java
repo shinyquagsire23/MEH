@@ -30,6 +30,7 @@ public class Map implements ISaveable
 	
 	public void save()
 	{
-		mapData.save();
+		//mapData.save();
+		mapTileData.save();
 	}
 }
