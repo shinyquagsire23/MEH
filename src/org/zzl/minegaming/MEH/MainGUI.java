@@ -169,8 +169,13 @@ public class MainGUI extends JFrame
         JPanel pmtc = new JPanel();
 		
         pmtc.setLayout(new BorderLayout(0, 0));
+		
+		panel_5 = new JPanel();
+		panel_5.setPreferredSize(new Dimension(160, 10));
+		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
+		eventsPanel.add(panel_5, BorderLayout.EAST);
+		panel_5.setLayout(new BorderLayout(0, 0));
 		eventEditorPanel = new EventEditorPanel();
-		eventsPanel.add(eventEditorPanel,BorderLayout.WEST);
 		eventEditorPanel.setLayout(null);
 		eventEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 		
@@ -449,6 +454,7 @@ public class MainGUI extends JFrame
 	}
 	JSplitPane splitPane2;
 	int paneSize2;
+	private JPanel panel_5;
 	void CreateSplitPane2(){
 		splitPane2 = new JSplitPane();
 		splitPane2.setResizeWeight(0.2);
