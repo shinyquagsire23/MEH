@@ -88,7 +88,6 @@ public class MainGUI extends JFrame
 	public JLabel lblHeight;
 	public JLabel lblBorderHeight;
 	public JLabel lblGlobalTilesetPointer;
-	public static SpriteLoader mainSpriteLoader;
 	public MapEditorPanel mapEditorPanel;
 	public BorderEditorPanel borderTileEditor;
 	public static TileEditorPanel tileEditorPanel;
@@ -174,7 +173,6 @@ public class MainGUI extends JFrame
 				lblInfo.setText("Loading...");
 
 				new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
-				//mainSpriteLoader = new SpriteLoader(ROMManager.getActiveROM()); Not fully setup yet. 
 			}
 		});
 		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, -1, -2));

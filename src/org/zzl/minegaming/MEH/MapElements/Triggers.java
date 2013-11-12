@@ -1,8 +1,9 @@
-package mapElements;
+package org.zzl.minegaming.MEH.MapElements;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
+import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class Triggers {
+public class Triggers implements ISaveable {
 	  public   byte bX;
 	  public   byte b2;
 	  public   byte bY;
@@ -12,8 +13,13 @@ public class Triggers {
 	  public  int hFlagValue;
 	  public  int h6;
 	  public  long pScript;
+	  private int pData;
+	  private GBARom rom;
 	  void LoadTriggers(GBARom rom)
 	  {
+		  pData = rom.internalOffset;
+		  this.rom = rom;
+		  
 		  bX=rom.readByte();
 		  b2=rom.readByte();
 		  bY=rom.readByte();
@@ -30,5 +36,19 @@ public class Triggers {
 	  }
 	  public  Triggers(GBARom rom){
 		  LoadTriggers(rom);
+	  }
+	  
+	  @Override
+	  public void save()
+	  {
+		  rom.writeByte(bX);
+		  rom.writeByte(b2);
+		  rom.writeByte(bY);
+		  rom.writeByte(b4);
+		  rom.writeWord(h3);
+		  rom.writeWord(hFlagCheck);
+		  rom.writeWord(hFlagValue);
+		  rom.writeWord(h6);
+		  rom.writePointer(pScript);
 	  }
 }

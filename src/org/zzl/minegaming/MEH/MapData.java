@@ -46,12 +46,13 @@ public class MapData implements ISaveable
 	
 	public void save()
 	{
-		rom.writePointer(mapWidth,dataLoc);
-		rom.writePointer(mapHeight,dataLoc+0x4);
-		rom.writePointer(borderTilePtr,dataLoc+0x8);
-		rom.writePointer(mapTilesPtr,dataLoc+0xC);
-		rom.writePointer(globalTileSetPtr,dataLoc+0x10);
-		rom.writePointer(localTileSetPtr,dataLoc+0x14);
-		rom.writeBytes(dataLoc+0x18, new byte[]{(byte)(borderWidth), (byte)(borderHeight)});
+		rom.Seek(dataLoc);
+		rom.writePointer(mapWidth);
+		rom.writePointer(mapHeight);
+		rom.writePointer(borderTilePtr);
+		rom.writePointer(mapTilesPtr);
+		rom.writePointer(globalTileSetPtr);
+		rom.writePointer(localTileSetPtr);
+		//rom.writeBytes(dataLoc, new byte[]{(byte)(borderWidth), (byte)(borderHeight)}); //Isn't quite working yet :/
 	}
 }

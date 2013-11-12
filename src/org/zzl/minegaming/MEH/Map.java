@@ -1,15 +1,14 @@
 package org.zzl.minegaming.MEH;
 
-import mapElements.MapHeader;
-import mapElements.Sprites;
-import mapElements.SpritesExitManager;
-import mapElements.SpritesNPCManager;
-import mapElements.SpritesSignManager;
-import mapElements.TriggerManager;
-
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
+import org.zzl.minegaming.MEH.MapElements.MapHeader;
+import org.zzl.minegaming.MEH.MapElements.Sprites;
+import org.zzl.minegaming.MEH.MapElements.SpritesExitManager;
+import org.zzl.minegaming.MEH.MapElements.SpritesNPCManager;
+import org.zzl.minegaming.MEH.MapElements.SpritesSignManager;
+import org.zzl.minegaming.MEH.MapElements.TriggerManager;
 
 
 public class Map implements ISaveable
@@ -22,7 +21,6 @@ public class Map implements ISaveable
 	public SpritesSignManager mapSignManager;
 	public SpritesExitManager mapExitManager;
 	public TriggerManager mapTriggerManager;
-	
 	public boolean isEdited;
 	public Map(GBARom rom, int dataOffset)
 	{
@@ -49,7 +47,12 @@ public class Map implements ISaveable
 	
 	public void save()
 	{
-		//mapData.save();
+		mapHeader.save();
+		mapNPCManager.save();
+		mapSignManager.save();
+		mapTriggerManager.save();
+		mapExitManager.save();
+		mapData.save();
 		mapTileData.save();
 	}
 }

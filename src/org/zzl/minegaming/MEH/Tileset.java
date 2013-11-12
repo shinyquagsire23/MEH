@@ -10,8 +10,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import mapElements.TilesetHeader;
-
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBAImage;
 import org.zzl.minegaming.GBAUtils.GBAImageType;
@@ -19,6 +17,7 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.Palette;
 import org.zzl.minegaming.GBAUtils.ROMManager;
+import org.zzl.minegaming.MEH.MapElements.TilesetHeader;
 
 public class Tileset
 {
