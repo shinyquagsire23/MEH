@@ -168,6 +168,8 @@ public class MapEditorPanel extends JPanel
 					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
 				}
 			}
+			DrawNPCs();
+			DrawTriggers();
 			this.repaint();
 		}
 		catch (Exception e)
@@ -179,7 +181,47 @@ public class MapEditorPanel extends JPanel
 		}
 
 	}
-
+    void DrawNPCs(){
+    	
+    	int i=0;
+    	for(i=0;i<map.mapNPCManager.mapNPCs.length;i++){
+    		SpritesNPC n=map.mapNPCManager.mapNPCs[i];
+    		
+    		
+    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
+    		 gcBuff.drawString("N",n.bX*16+1,n.bY*16+1);
+    	}
+    }
+    void DrawTriggers(){
+    	
+    	int i=0;
+    	for(i=0;i<map.mapTriggerManager.mapTriggers.length;i++){
+    		Triggers n=map.mapTriggerManager.mapTriggers[i];
+    		
+    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
+    		 gcBuff.drawString("T",n.bX*16+1,n.bY*16+1);
+    	}
+    }
+    void DrawSigns(){
+    	
+    	int i=0;
+    	for(i=0;i<map.mapSignManager.mapSigns.length;i++){
+    		SpritesSigns n=map.mapSignManager.mapSigns[i];
+    		
+    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
+    		 gcBuff.drawString("S",n.bX*16+1,n.bY*16+1);
+    	}
+    }
+    void DrawExits(){
+    	
+    	int i=0;
+    	for(i=0;i<map.mapExitManager.mapExits.length;i++){
+    		SpritesExit n=map.mapExitManager.mapExits[i];
+    		
+    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
+    		 gcBuff.drawString("E",n.bX*16+1,n.bY*16+1);
+    	}
+    }
 	@Override
 	protected void paintComponent(Graphics g)
 	{
