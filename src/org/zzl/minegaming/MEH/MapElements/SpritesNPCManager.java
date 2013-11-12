@@ -8,7 +8,17 @@ import org.zzl.minegaming.GBAUtils.ISaveable;
 
 public class SpritesNPCManager implements ISaveable {
 	public SpritesNPC[] mapNPCs;
-
+    public int IsPresent(int x, int y){
+    	int i=0;
+    	for(i=0;i<mapNPCs.length;i++){
+    		if(mapNPCs[i].bX==x && mapNPCs[i].bY==y){
+    			return i;
+    		}
+    	}
+    	
+    	return -1;
+    	
+    }
 	public  SpritesNPCManager(GBARom rom, int offset, int count)
 	{
 		rom.Seek(offset);
