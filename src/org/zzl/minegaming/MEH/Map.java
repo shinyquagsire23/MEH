@@ -47,7 +47,12 @@ public class Map implements ISaveable
 	
 	public void save()
 	{
-		//mapData.save();
+		mapHeader.save();
+		mapNPCManager.save();
+		mapSignManager.save();
+		mapTriggerManager.save();
+		mapExitManager.save();
+		mapData.save();
 		mapTileData.save();
 	}
 }
