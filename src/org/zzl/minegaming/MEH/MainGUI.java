@@ -69,6 +69,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 
 public class MainGUI extends JFrame
@@ -92,8 +94,8 @@ public class MainGUI extends JFrame
 	public JLabel lblGlobalTilesetPointer;
 	public MapEditorPanel mapEditorPanel;
 	public BorderEditorPanel borderTileEditor;
-	public TileEditorPanel tileEditorPanel;
-	public JLabel lblTileVal;
+	public static TileEditorPanel tileEditorPanel;
+	public static JLabel lblTileVal;
 	public DataStore dataStore;
 	
 	public MainGUI()
@@ -153,6 +155,7 @@ public class MainGUI extends JFrame
 				int i = GBARom.loadRom();
 				
 				dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
+				
 				if(1 != -1)
 				{
 					mapBanks.setModel(new DefaultTreeModel(
@@ -332,7 +335,7 @@ public class MainGUI extends JFrame
 			public void mouseMoved(MouseEvent e) {
 			}
 		});
-		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((0x280 + 0x56)/tileEditorPanel.editorWidth)*16));
+		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x280 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
 		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
 		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
@@ -435,6 +438,13 @@ public class MainGUI extends JFrame
 		panel_3.setLayout(new BorderLayout(0, 0));
 
 		mapBanks = new JTree();
+		mapBanks.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) 
+			{
+					loadMap();
+			}
+		});
 		mapBanks.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) 
 			{
@@ -457,28 +467,7 @@ public class MainGUI extends JFrame
 				{
 					if(e.getClickCount() == 2)
 					{
-						lblInfo.setText("Loading map...");
-						if(loadedMap != null)
-							TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
-						
-						loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
-						borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
-						reloadMimeLabels();
-						mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						mapEditorPanel.setMap(loadedMap);
-						mapEditorPanel.DrawMap();
-						mapEditorPanel.repaint();
-						
-						borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						borderTileEditor.setMap(borderMap);
-						borderTileEditor.repaint();
-						
-						tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-						tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-						tileEditorPanel.DrawTileset();
-						tileEditorPanel.repaint();
+						loadMap();
 					}
 				}
 			}
@@ -523,5 +512,43 @@ public class MainGUI extends JFrame
 		lblBorderTilesPointer.setText("Border Tiles Pointer: " + BitConverter.toHexString(loadedMap.getMapData().borderTilePtr));
 		lblGlobalTilesetPointer.setText("Global Tileset Pointer: " + BitConverter.toHexString(loadedMap.getMapData().globalTileSetPtr));
 		lblLocalTilesetPointer.setText("Local  Tileset  Pointer: " + BitConverter.toHexString(loadedMap.getMapData().localTileSetPtr));
+	}
+	
+	public void loadMap()
+	{
+		lblInfo.setText("Loading map...");
+		if(loadedMap != null)
+			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
+		long offset=BankLoader.maps[selectedBank].get(selectedMap);
+		loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
+		borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
+		reloadMimeLabels();
+		mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+		mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
+			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = TilesetCache.get(loadedMap.getMapData().localTileSetPtr).getPalette()[i];
+		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).setPalette(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette());
+		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).renderPalettedTiles();
+		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).renderPalettedTiles();
+		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).startTileThreads();
+		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).startTileThreads();
+		mapEditorPanel.setMap(loadedMap);
+		mapEditorPanel.DrawMap();
+		mapEditorPanel.repaint();
+		
+		borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+		borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		borderTileEditor.setMap(borderMap);
+		borderTileEditor.repaint();
+		
+		tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+		tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		tileEditorPanel.DrawTileset();
+		tileEditorPanel.repaint();
+	}
+	
+	public static void repaintTileEditorPanel()
+	{
+		tileEditorPanel.repaint();
 	}
 }

@@ -21,88 +21,79 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 public class Tileset
 {
 	private GBARom rom;
-	private int dataPtr;
+	
 	private GBAImage image;
 	private BufferedImage[] bi;
 	private Palette[] palettes; //Main gets 7, local gets 5
 	private static Tileset lastPrimary;
 	private boolean isPrimary = true;
+    public TilesetHeader tilesetHeader;
 
-	private int blockPtr, animPtr;
 	public final int numBlocks;
 	private HashMap<Integer,BufferedImage>[] renderedTiles;
 	private HashMap<Integer,BufferedImage>[] customRenderedTiles;
+	private final byte[] localTSLZHeader = new byte[] { 10, 80, 9, 00, 32, 00, 00 };
+	private final byte[] globalTSLZHeader = new byte[] { 10, 80, 9, 00, 32, 00, 00 };
 
 
 	@SuppressWarnings("unchecked")
 	public Tileset(GBARom rom, int offset)
 	{
 		this.rom = rom;
-		dataPtr = offset;
-		int imageDataPtr = rom.getPointerAsInt(offset+0x4);
-		blockPtr = rom.getPointerAsInt(offset+0xC);
-		animPtr = rom.getPointerAsInt(offset+0x10);
+		tilesetHeader=new TilesetHeader(rom, offset);
+		
 
-		isPrimary = (rom.readByte(offset+1) == 0);
-		if(isPrimary)
+		
+		if(tilesetHeader.isPrimary)
 			lastPrimary = this;
 		int[] uncompressedData = null;
-		byte b = rom.readByte(offset);
-
-		if(b == 1)
-			uncompressedData = Lz77.decompressLZ77(rom, imageDataPtr);
-		if(uncompressedData == null)
-			uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (isPrimary ? 128*320 : 128*192) / 2)); //TODO: Hardcoded to FR tileset sizes
-
-		numBlocks = (isPrimary ? 0x280 : 0x56); //TODO: INI
-		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? 7 : 13];
-		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[6];
 		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
+
+		if(tilesetHeader.bCompressed == 1)
+			uncompressedData = Lz77.decompressLZ77(rom, (int)tilesetHeader.pGFX);
+		if(uncompressedData == null)
+		{
+			GBARom backup = (GBARom) rom.clone(); //Backup in case repairs fail
+			rom.writeBytes(offset, (isPrimary ? globalTSLZHeader : localTSLZHeader)); //Attempt to repair the LZ77 data
+			uncompressedData = Lz77.decompressLZ77(rom, (int)tilesetHeader.pGFX);
+			rom = (GBARom) backup.clone(); //TODO add dialog to allow repairs to be permanant
+			if(uncompressedData == null) //If repairs didn't go well, revert ROM and pull uncompressed data
+			{
+				uncompressedData = BitConverter.ToInts(rom.readBytes((int)tilesetHeader.pGFX, (isPrimary ? 128*DataStore.MainTSHeight : 128*DataStore.LocalTSHeight) / 2)); //TODO: Hardcoded to FR tileset sizes
+			}
+		}
+		numBlocks = (isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
+		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? DataStore.MainTSPalCount : 13];
+		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[13-DataStore.MainTSPalCount];
+		
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
-		for(int i = 0; i < 6; i++)
+		for(int i = 0; i < 13-DataStore.MainTSPalCount; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 
 		palettes = new Palette[13];
 		bi = new BufferedImage[13];
 		
-		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
-			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
+			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes((int)tilesetHeader.pPalettes+(32*i),32));
 		}
 		
-		image = new GBAImage(uncompressedData,palettes[0],new Point(128,320));
 		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
-		{
-			bi[i] = image.getBufferedImageFromPal(palettes[i]);
-			if(i > 7)
-			{
-				lastPrimary.getPalette()[i] = palettes[i];
-			}
-		}
-		
-		if(!isPrimary)
-			lastPrimary.rerenderCustomTiles();
-		
-		for(int i = 0; i < (isPrimary ? 7 : 13); i++)
+		image = new GBAImage(uncompressedData,palettes[0],new Point(128,(isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));	
+	}
+	
+	public void startTileThreads()
+	{
+		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 			new TileLoader(renderedTiles,i).start();
 	}
 	
 	public BufferedImage getTileWithCustomPal(int tileNum, Palette palette, boolean xFlip, boolean yFlip)
 	{
-		
-		/*CustomTile cT = new CustomTile(tileNum,palette,xFlip,yFlip);
-		if(customRenderedTiles.containsKey(cT)) //Check to see if we've cached that tile
-		{
-			return customRenderedTiles.get(cT);
-		}*/
 		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
 		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
 		BufferedImage toSend =  image.getBufferedImageFromPal(palette).getSubimage(x, y, 8, 8);
-		
-		//customRenderedTiles.put(cT, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
@@ -116,7 +107,7 @@ public class Tileset
 
 	public BufferedImage getTile(int tileNum, int palette, boolean xFlip, boolean yFlip)
 	{
-		if(palette < 7)
+		if(palette < DataStore.MainTSPalCount)
 		{
 		if(renderedTiles[palette].containsKey(tileNum)) //Check to see if we've cached that tile
 		{
@@ -134,32 +125,46 @@ public class Tileset
 			return renderedTiles[palette].get(tileNum);
 		}
 		}
-		else
+		else if(palette < 13)
 		{
-			if(customRenderedTiles[palette-7].containsKey(tileNum)) //Check to see if we've cached that tile
+			if(customRenderedTiles[palette-DataStore.MainTSPalCount].containsKey(tileNum)) //Check to see if we've cached that tile
 			{
 				if(xFlip && yFlip)
-					return verticalFlip(horizontalFlip(customRenderedTiles[palette-7].get(tileNum)));
+					return verticalFlip(horizontalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum)));
 				else if(xFlip)
 				{
-					return horizontalFlip(customRenderedTiles[palette-7].get(tileNum));
+					return horizontalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum));
 				}
 				else if(yFlip)
 				{
-					return verticalFlip(customRenderedTiles[palette-7].get(tileNum));
+					return verticalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum));
 				}
 				
-				return customRenderedTiles[palette-7].get(tileNum);
+				return customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum);
 			}
 		}
+		else
+		{
+			System.out.println("Attempted to read tile " + tileNum + " of palette " + palette + " in " + (isPrimary ? "global" : "local") + " tileset!");
+			return new BufferedImage(8,8,BufferedImage.TYPE_INT_ARGB);
+		}
 		
-		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
-		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
-		BufferedImage toSend =  bi[palette].getSubimage(x, y, 8, 8);
-		if(palette < 7 || renderedTiles.length > 7)
+		int x = ((tileNum) % (128 / 8)) * 8;
+		int y = ((tileNum) / (128 / 8)) * 8;
+		BufferedImage toSend = new BufferedImage(8,8,BufferedImage.TYPE_INT_ARGB);
+		try
+		{
+			toSend =  bi[palette].getSubimage(x, y, 8, 8);
+		}
+		catch(Exception e)
+		{
+			//e.printStackTrace();
+			System.out.println("Attempted to read 8x8 at " + x + ", " + y);
+		}
+		if(palette < DataStore.MainTSPalCount || renderedTiles.length > DataStore.MainTSPalCount)
 			renderedTiles[palette].put(tileNum, toSend);
 		else
-			customRenderedTiles[palette-7].put(tileNum, toSend);
+			customRenderedTiles[palette-DataStore.MainTSPalCount].put(tileNum, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
@@ -176,20 +181,30 @@ public class Tileset
 		return palettes;
 	}
 	
+	public void setPalette(Palette[] pal)
+	{
+		palettes = pal;
+	}
+	
 	public void rerenderTileSet(int palette)
 	{
 			bi[palette] = image.getBufferedImageFromPal(palettes[palette]);
 	}
 	
-	public void rerenderCustomTiles()
-	{
-		for(int i = 0; i < 6; i++)
-			rerenderTileSet(i+7);
+	public void renderPalettedTiles()
+	{		
+		for(int i = 0; i < 13; i++)
+		{
+			bi[i] = image.getBufferedImageFromPal(palettes[i]);
+
+		}
+		for(int i = 0; i < 13; i++)
+			rerenderTileSet(i);
 	}
 	public void resetCustomTiles()
 	{
-		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[6];
-		for(int i = 0; i < 6; i++)
+		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[DataStore.MainTSPalCount];
+		for(int i = 0; i < DataStore.MainTSPalCount; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 	}
 	
@@ -221,12 +236,12 @@ public class Tileset
 
 	public int getBlockPointer()
 	{
-		return blockPtr;
+		return (int)(tilesetHeader.pBlocks);
 	}
 
 	public int getAnimationPointer()
 	{
-		return animPtr;
+		return (int)tilesetHeader.pAnimation;
 	}
 
 	public GBARom getROM()
@@ -247,7 +262,7 @@ public class Tileset
 		@Override
 		public void run()
 		{
-			int k = numBlocks;
+			int k = (isPrimary ? DataStore.MainTSSize : DataStore.LocalTSSize);
 			for(int i = 0; i < numBlocks; i++)
 			{
 					try
@@ -256,6 +271,7 @@ public class Tileset
 					}
 					catch(Exception e)
 					{
+						//e.printStackTrace();
 						System.out.println("An error occured while writing tile " + i + " with palette " + pal);
 					}
 			}
