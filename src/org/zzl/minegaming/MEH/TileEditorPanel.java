@@ -10,6 +10,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import org.zzl.minegaming.GBAUtils.BitConverter;
+
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelListener;
@@ -64,6 +66,7 @@ public class TileEditorPanel extends JPanel
 				k += String.format("0x%8s",
 						Integer.toHexString(baseSelectedTile))
 						.replace(' ', '0');
+				MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
 				repaint();
 			}
 
@@ -108,15 +111,15 @@ public class TileEditorPanel extends JPanel
 	}
 	private Graphics gcBuff;
 	private Image imgBuffer = null;
-	public void DrawTileset(){
-		imgBuffer = createImage(512, 512);
+	public void DrawTileset()
+	{
+		imgBuffer = new BufferedImage(512,512,BufferedImage.TYPE_INT_ARGB);
 		gcBuff=imgBuffer.getGraphics();
-		for(int i = 0; i < globalTiles.numBlocks+localTiles.numBlocks; i++)
+		for(int i = 0; i < globalTiles.numBlocks+(DataStore.EngineVersion == 1 ? localTiles.numBlocks : 512); i++)
 		{
 			int x = (i % editorWidth) * 16;
 			int y = (i / editorWidth) * 16;
-			if((y + 1)*16 > this.getVisibleRect().y)
-				gcBuff.drawImage(blockRenderer.renderBlock(i), x, y, this);
+			gcBuff.drawImage(blockRenderer.renderBlock(i,false), x, y, this);
 			if(baseSelectedTile == i)
 			{
 				gcBuff.setColor(Color.red);
@@ -128,11 +131,25 @@ public class TileEditorPanel extends JPanel
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		System.out.println(this.getVisibleRect());
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			 g.drawImage(imgBuffer, 0, 0, this);
+			for(int i = 0; i < DataStore.MainTSBlocks+DataStore.LocalTSBlocks; i++)
+			{
+				int x = (i % editorWidth) * 16;
+				int y = (i / editorWidth) * 16;
+				if((y + 1)*16 > this.getVisibleRect().y)
+					g.drawImage(blockRenderer.renderBlock(i,false), x, y, null);
+				if(baseSelectedTile == i)
+				{
+					g.setColor(Color.red);
+					g.drawRect(x, y, 15, 15);
+				}
+
+			}
+			//this.setSize(editorWidth*16, ((globalTiles.numBlocks/editorWidth)*16)+((localTiles.numBlocks/editorWidth)*16));
+
+			 //g.drawImage(imgBuffer, 0, 0, this);
 			MainGUI.lblInfo.setText("Done!");
 		}
 		try

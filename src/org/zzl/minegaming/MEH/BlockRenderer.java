@@ -33,13 +33,18 @@ public class BlockRenderer extends Component
     	this.local = local;
     }
 	
-	public Image renderBlock(int blockNum)
+    public Image renderBlock(int blockNum)
+    {
+    	return renderBlock(blockNum, true);
+    }
+    
+	public Image renderBlock(int blockNum, boolean transparency)
 	{
 		boolean isSecondaryBlock = false;
-		if(blockNum > 0x280)
+		if(blockNum >= DataStore.MainTSSize)
 		{
 			isSecondaryBlock = true;
-			blockNum -= 0x280;
+			blockNum -= DataStore.MainTSSize;
 		}
 		
 		int blockPointer = (isSecondaryBlock ? local.getBlockPointer() : global.getBlockPointer()) + (blockNum * 16);
@@ -49,6 +54,7 @@ public class BlockRenderer extends Component
                 RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 		int x = 0;
 		int y = 0;
+		int top = 0;
 		for(int i = 0; i < 16; i++)
 		{
 			int orig = global.getROM().readWord(blockPointer + i);
@@ -56,16 +62,19 @@ public class BlockRenderer extends Component
 			int palette = (global.getROM().readWord(blockPointer + i) & 0xF000) >> 12;
 			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
 			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
-			if(tileNum < global.numBlocks)
+			if(transparency && top == 0)
 			{
-				//if(palette < 7)
-					g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
-				//else
-					//g.drawImage(global.getTileWithCustomPal(tileNum, local.getPalette()[palette],xFlip,yFlip),x*8,y*8,null);
+				g.setColor(global.getPalette()[palette].getIndex(0));
+				g.fillRect(x*8, y*8, 8, 8);
+			}
+
+			if(tileNum < DataStore.MainTSSize)
+			{
+				g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
 			}
 			else
 			{
-				g.drawImage(local.getTile(tileNum - global.numBlocks, palette, xFlip, yFlip),x*8,y*8,null);
+				g.drawImage(local.getTile(tileNum - DataStore.MainTSSize, palette, xFlip, yFlip),x*8,y*8,null);
 			}
 			x++;
 			if(x > 1)
@@ -77,6 +86,7 @@ public class BlockRenderer extends Component
 			{
 				x = 0;
 				y = 0;
+				top = 1;
 			}
 			i++;
 		}
