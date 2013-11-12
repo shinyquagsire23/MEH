@@ -1,4 +1,4 @@
-package PokemonClasses;
+package mapElements;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 

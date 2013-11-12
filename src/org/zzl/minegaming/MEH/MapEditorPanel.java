@@ -10,12 +10,12 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import org.zzl.minegaming.GBAUtils.BitConverter;
+import mapElements.SpritesExit;
+import mapElements.SpritesNPC;
+import mapElements.SpritesSigns;
+import mapElements.Triggers;
 
-import PokemonClasses.SpritesExit;
-import PokemonClasses.SpritesNPC;
-import PokemonClasses.SpritesSigns;
-import PokemonClasses.Triggers;
+import org.zzl.minegaming.GBAUtils.BitConverter;
 
 public class MapEditorPanel extends JPanel
 {
@@ -173,8 +173,11 @@ public class MapEditorPanel extends JPanel
 					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
 				}
 			}
+			DrawSigns();
+			DrawExits();
 			DrawNPCs();
 			DrawTriggers();
+			
 			this.repaint();
 		}
 		catch (Exception e)
@@ -223,8 +226,8 @@ public class MapEditorPanel extends JPanel
     	for(i=0;i<map.mapExitManager.mapExits.length;i++){
     		SpritesExit n=map.mapExitManager.mapExits[i];
     		
-    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
-    		 gcBuff.drawString("E",n.bX*16+1,n.bY*16+1);
+    		 gcBuff.drawRect(      n.bX*16, n.bY*16, 16, 16);
+    		 gcBuff.drawString("E",n.bX*16, n.bY*16);
     	}
     }
 	@Override

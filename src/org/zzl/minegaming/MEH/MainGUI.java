@@ -227,7 +227,7 @@ public class MainGUI extends JFrame
 				loadedMap.save();
 			}
 		});
-		btnSaveMap.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/mapsave.png")));
+		//btnSaveMap.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/mapsave.png")));
 		btnSaveMap.setPreferredSize(new Dimension(48, 48));
 		btnSaveMap.setFocusPainted(false);
 		btnSaveMap.setBorderPainted(false);
