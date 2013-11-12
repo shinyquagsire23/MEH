@@ -189,15 +189,16 @@ public class MapEditorPanel extends JPanel
 		}
 
 	}
+	void DrawText(String Text, int x, int y){
+		 gcBuff.drawRect(x , y, 16, 16);
+		 gcBuff.drawString(Text,x,y+16);
+	}
     void DrawNPCs(){
     	
     	int i=0;
     	for(i=0;i<map.mapNPCManager.mapNPCs.length;i++){
     		SpritesNPC n=map.mapNPCManager.mapNPCs[i];
-    		
-    		
-    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
-    		 gcBuff.drawString("N",n.bX*16+1,n.bY*16+1);
+    	     DrawText("N", n.bX*16 , n.bY*16);
     	}
     }
     void DrawTriggers(){
@@ -206,8 +207,7 @@ public class MapEditorPanel extends JPanel
     	for(i=0;i<map.mapTriggerManager.mapTriggers.length;i++){
     		Triggers n=map.mapTriggerManager.mapTriggers[i];
     		
-    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
-    		 gcBuff.drawString("T",n.bX*16+1,n.bY*16+1);
+    		 DrawText("T", n.bX*16 , n.bY*16);
     	}
     }
     void DrawSigns(){
@@ -216,18 +216,16 @@ public class MapEditorPanel extends JPanel
     	for(i=0;i<map.mapSignManager.mapSigns.length;i++){
     		SpritesSigns n=map.mapSignManager.mapSigns[i];
     		
-    		 gcBuff.drawRect(n.bX*16 , n.bY*16-16, 16, 16);
-    		 gcBuff.drawString("S",n.bX*16+1,n.bY*16+1);
+    		DrawText("S", n.bX*16 , n.bY*16);
     	}
     }
     void DrawExits(){
     	
     	int i=0;
-    	for(i=0;i<map.mapExitManager.mapExits.length;i++){
-    		SpritesExit n=map.mapExitManager.mapExits[i];
-    		
-    		 gcBuff.drawRect(      n.bX*16, n.bY*16, 16, 16);
-    		 gcBuff.drawString("E",n.bX*16, n.bY*16);
+    	SpritesExit[] tmp=map.mapExitManager.mapExits;
+    	for(i=0;i<tmp.length;i++){
+    		SpritesExit n=tmp[i];
+    		DrawText("E", n.bX*16 , n.bY*16);
     	}
     }
 	@Override
