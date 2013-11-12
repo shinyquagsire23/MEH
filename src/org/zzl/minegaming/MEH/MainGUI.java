@@ -202,12 +202,28 @@ public class MainGUI extends JFrame
 		panelButtons.add(horizontalStrut_1);
 
 		JButton btnNewMap = new JButton("");
+		btnNewMap.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				MapEditorPanel.renderPalette = !MapEditorPanel.renderPalette;
+				mapEditorPanel.repaint();
+			}
+		});
 		btnNewMap.setFocusPainted(false);
 		btnNewMap.setBorderPainted(false);
 		btnNewMap.setPreferredSize(new Dimension(48, 48));
 		panelButtons.add(btnNewMap);
 
 		JButton btnImportMap = new JButton("");
+		btnImportMap.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				MapEditorPanel.renderTileset = !MapEditorPanel.renderTileset;
+				mapEditorPanel.repaint();
+			}
+		});
 		btnImportMap.setFocusPainted(false);
 		btnImportMap.setBorderPainted(false);
 		btnImportMap.setPreferredSize(new Dimension(48, 48));
