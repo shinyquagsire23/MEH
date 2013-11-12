@@ -32,6 +32,8 @@ public class Tileset
 	public final int numBlocks;
 	private HashMap<Integer,BufferedImage>[] renderedTiles;
 	private HashMap<Integer,BufferedImage>[] customRenderedTiles;
+	private final byte[] localTSLZHeader = new byte[] { 10, 80, 9, 00, 32, 00, 00 };
+	private final byte[] globalTSLZHeader = new byte[] { 10, 80, 9, 00, 32, 00, 00 };
 
 
 	@SuppressWarnings("unchecked")
@@ -52,8 +54,16 @@ public class Tileset
 		if(b == 1)
 			uncompressedData = Lz77.decompressLZ77(rom, imageDataPtr);
 		if(uncompressedData == null)
-			uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (isPrimary ? 128*DataStore.MainTSHeight : 128*DataStore.LocalTSHeight) / 2)); //TODO: Hardcoded to FR tileset sizes
-
+		{
+			GBARom backup = (GBARom) rom.clone(); //Backup in case repairs fail
+			rom.writeBytes(offset, (isPrimary ? globalTSLZHeader : localTSLZHeader)); //Attempt to repair the LZ77 data
+			uncompressedData = Lz77.decompressLZ77(rom, imageDataPtr);
+			rom = (GBARom) backup.clone(); //TODO add dialog to allow repairs to be permanant
+			if(uncompressedData == null) //If repairs didn't go well, revert ROM and pull uncompressed data
+			{
+				uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (isPrimary ? 128*DataStore.MainTSHeight : 128*DataStore.LocalTSHeight) / 2)); //TODO: Hardcoded to FR tileset sizes
+			}
+		}
 		numBlocks = (isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
 		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[isPrimary ? DataStore.MainTSPalCount : 13];
 		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[13-DataStore.MainTSPalCount];
@@ -195,8 +205,8 @@ public class Tileset
 	}
 	public void resetCustomTiles()
 	{
-		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[6];
-		for(int i = 0; i < 6; i++)
+		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[DataStore.MainTSPalCount];
+		for(int i = 0; i < DataStore.MainTSPalCount; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 	}
 	

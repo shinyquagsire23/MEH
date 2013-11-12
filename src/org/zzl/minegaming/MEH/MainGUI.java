@@ -499,8 +499,9 @@ public class MainGUI extends JFrame
 		reloadMimeLabels();
 		mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 		mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-		for(int i = DataStore.MainTSPalCount - 1; i < 13; i++)
+		for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
 			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = TilesetCache.get(loadedMap.getMapData().localTileSetPtr).getPalette()[i];
+		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).setPalette(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette());
 		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).renderPalettedTiles();
 		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).renderPalettedTiles();
 		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).startTileThreads();
