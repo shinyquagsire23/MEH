@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import mapElements.SpriteDataClass;
 import mapElements.SpritesExit;
 import mapElements.SpritesNPC;
 import mapElements.SpritesSigns;
@@ -177,7 +178,7 @@ public class MapEditorPanel extends JPanel
 			DrawExits();
 			DrawNPCs();
 			DrawTriggers();
-			
+	
 			this.repaint();
 		}
 		catch (Exception e)

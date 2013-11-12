@@ -22,6 +22,7 @@ public class Map implements ISaveable
 	public SpritesSignManager mapSignManager;
 	public SpritesExitManager mapExitManager;
 	public TriggerManager mapTriggerManager;
+	
 	public boolean isEdited;
 	public Map(GBARom rom, int dataOffset)
 	{
