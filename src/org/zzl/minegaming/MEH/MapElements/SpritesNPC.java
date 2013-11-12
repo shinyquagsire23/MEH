@@ -24,6 +24,9 @@ public class SpritesNPC implements ISaveable {
 	  public int iFlag;
 	  public byte b23;
 	  public byte b24;
+	  
+	  
+	  //Non struct vars
 	  private int pData;
 	  private GBARom rom;
 	  public SpritesNPC(GBARom rom){

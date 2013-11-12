@@ -77,9 +77,12 @@ public class MainGUI extends JFrame
 	public static JLabel lblInfo;
 	public JTree mapBanks;
 	public Map loadedMap;
+
 	public BorderMap borderMap;
 	private int selectedBank = 0;
 	private int selectedMap = 0;
+	private JTabbedPane editorTabs;
+	private JSplitPane splitPane;
 	public JLabel lblWidth;
 	public JLabel lblBorderTilesPointer;
 	public JLabel lblBorderWidth;
@@ -88,23 +91,106 @@ public class MainGUI extends JFrame
 	public JLabel lblHeight;
 	public JLabel lblBorderHeight;
 	public JLabel lblGlobalTilesetPointer;
-	public MapEditorPanel mapEditorPanel;
+	private JPanel panel_1;
+	JPanel panelTilesContainer;
+
 	public BorderEditorPanel borderTileEditor;
 	public static TileEditorPanel tileEditorPanel;
 	public static JLabel lblTileVal;
 	public DataStore dataStore;
-	public MainGUI()
-	{
-		setPreferredSize(new Dimension(800, 800));
-		addWindowListener(new WindowAdapter() {
+	private JPanel editorPanel;
+	void CreateToolbar(){
+		JToolBar toolBar = new JToolBar();
+		lblTileVal=new JLabel("Current Tile: 0x0000");
+		toolBar.add(lblTileVal);
+		editorPanel.add(toolBar, BorderLayout.NORTH);
+		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		toolBar.setPreferredSize(new Dimension(128, 32));
+	}
+	JPanel panelMapTilesContainer;
+	JPanel splitterMapTiles;
+	public MapEditorPanel mapEditorPanel;
+	public JScrollPane mapScrollPane;
+	void CreateBorderArea(){
+		JPanel panelBorderTilesContainer = new JPanel();
+		panelBorderTilesContainer.setPreferredSize(new Dimension(10, 100));
+		panelMapTilesContainer.add(panelBorderTilesContainer, BorderLayout.NORTH);
+		panelBorderTilesContainer.setLayout(new BorderLayout(0, 0));
+
+		JPanel panelBorderTilesSplitter = new JPanel();
+		panelBorderTilesSplitter.setBackground(SystemColor.controlShadow);
+		panelBorderTilesSplitter.setPreferredSize(new Dimension(10, 1));
+		panelBorderTilesContainer.add(panelBorderTilesSplitter, BorderLayout.SOUTH);
+		//Set up tileset
+
+		JPanel panelBorderTilesToAbsolute = new JPanel();
+		panelBorderTilesContainer.add(panelBorderTilesToAbsolute, BorderLayout.CENTER);
+		panelBorderTilesToAbsolute.setLayout(null);
+
+		borderTileEditor = new BorderEditorPanel();
+		borderTileEditor.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Border Tiles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		borderTileEditor.setBounds(12, 12, 114, 75);
+		panelBorderTilesToAbsolute.add(borderTileEditor);
+	}
+	JScrollPane tilesetScrollPane;
+	void CreateTilesetArea(){
+		tileEditorPanel = new TileEditorPanel();
+		tileEditorPanel.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) 
-			{
-				//TODO: Are you *sure* you want to exit / Check for saved changes
-				System.exit(0);
+			public void mouseMoved(MouseEvent e) {
 			}
 		});
+		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
+		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
+		tileEditorPanel.setLayout(null);
+		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 
+		tilesetScrollPane = new JScrollPane(tileEditorPanel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		panelMapTilesContainer.add(tilesetScrollPane, BorderLayout.WEST);
+		tilesetScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		tilesetScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		tilesetScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+	}
+	
+	EventEditor eventsPanel;
+	void CreateEventsPanel(){
+	
+		eventsPanel=new EventEditor();
+		editorTabs.addTab("Events", null, eventsPanel, null);
+	}
+	void CreateMapPanel(){
+		editorPanel = new JPanel();
+		editorTabs.addTab("Map", null, editorPanel, null);
+		editorPanel.setLayout(new BorderLayout(0, 0));
+		splitterMapTiles = new JPanel();
+		splitterMapTiles.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		splitterMapTiles.setPreferredSize(new Dimension(4, 10));
+		splitterMapTiles.setMaximumSize(new Dimension(4, 32767));
+		
+
+		panelMapTilesContainer = new JPanel();
+		
+		panelMapTilesContainer.setLayout(new BorderLayout(0, 0));
+		
+		mapEditorPanel = new MapEditorPanel();
+		mapEditorPanel.setLayout(null);
+		mapEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
+
+		mapScrollPane = new JScrollPane(mapEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		editorPanel.add(mapScrollPane, BorderLayout.CENTER);
+		mapScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		mapScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		mapScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		
+		panelTilesContainer = new JPanel();
+		editorPanel.add(panelTilesContainer, BorderLayout.EAST);
+		panelTilesContainer.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
+		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16 + 16, 10));
+		panelTilesContainer.setLayout(new BorderLayout(0, 0));
+
+	}
+	void CreateMenus(){
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		setJMenuBar(menuBar);
@@ -120,16 +206,8 @@ public class MainGUI extends JFrame
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
-
-		JPanel panel_2 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		panel_2.setPreferredSize(new Dimension(10, 24));
-		getContentPane().add(panel_2, BorderLayout.SOUTH);
-
-		lblInfo = new JLabel("No ROM Loaded!");
-		panel_2.add(lblInfo);
-
+	}
+	void CreateButtons(){
 		JPanel panelButtons = new JPanel();
 		panelButtons.setPreferredSize(new Dimension(10, 50));
 		panelButtons.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -266,8 +344,85 @@ public class MainGUI extends JFrame
 		btnImportMap.setBorderPainted(false);
 		btnImportMap.setPreferredSize(new Dimension(48, 48));
 		panelButtons.add(btnImportMap);
+		
+	}
+	JPanel wildPokemonPanel;
+	void CreateWildPokemonPanel(){
+		
+		wildPokemonPanel = new JPanel();
+		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
+	}
+	JPanel mimePanel;//Mr. Mime 2 dirty 4 mii
+	void CreateMimeTab(){
+		mimePanel = new JPanel();
+		editorTabs.addTab("Mime", null, mimePanel, null);
+		mimePanel.setLayout(null);
+		panel_1 = new JPanel();
+		panel_1.setBounds(0, 0, 796, 454);
+		mimePanel.add(panel_1);
+		panel_1.setBorder(UIManager.getBorder("SplitPane.border"));
+		panel_1.setLayout(null);
 
-		JSplitPane splitPane = new JSplitPane();
+		JLabel lblWelcome = new JLabel("<html><center>Welcome to the map mime!\n<br>\nHere we will mime out your map so you can like see it, but without actually physically seeing it and stuff.</center></html>");
+		lblWelcome.setBounds(90, 12, 559, 63);
+		panel_1.add(lblWelcome);
+
+		lblWidth = new JLabel("Width: ");
+		lblWidth.setBounds(64, 107, 157, 15);
+		panel_1.add(lblWidth);
+
+		lblHeight = new JLabel("Height: ");
+		lblHeight.setBounds(64, 123, 157, 15);
+		panel_1.add(lblHeight);
+
+		lblBorderHeight = new JLabel("Border Height: ");
+		lblBorderHeight.setBounds(64, 178, 164, 15);
+		panel_1.add(lblBorderHeight);
+
+		lblMapTilesPointer = new JLabel("Map Tiles Pointer: ");
+		lblMapTilesPointer.setBounds(245, 107, 339, 15);
+		panel_1.add(lblMapTilesPointer);
+
+		lblBorderTilesPointer = new JLabel("Border Tiles Pointer:");
+		lblBorderTilesPointer.setBounds(245, 123, 339, 15);
+		panel_1.add(lblBorderTilesPointer);
+
+		lblGlobalTilesetPointer = new JLabel("Global Tileset Pointer:");
+		lblGlobalTilesetPointer.setBounds(245, 162, 339, 15);
+		panel_1.add(lblGlobalTilesetPointer);
+
+		lblLocalTilesetPointer = new JLabel("Local  Tileset  Pointer:");
+		lblLocalTilesetPointer.setBounds(245, 178, 339, 15);
+		panel_1.add(lblLocalTilesetPointer);
+
+		lblBorderWidth = new JLabel("Border Width: ");
+		lblBorderWidth.setBounds(64, 162, 157, 15);
+		panel_1.add(lblBorderWidth);
+	}
+	void CreateTabbedPanels(){
+		getContentPane().add(splitPane, BorderLayout.CENTER);
+
+	    editorTabs = new JTabbedPane(JTabbedPane.TOP);
+		splitPane.setRightComponent(editorTabs);
+        CreateMapPanel();
+        CreateBorderArea();
+
+
+		panelTilesContainer.add(panelMapTilesContainer, BorderLayout.CENTER);
+		panelTilesContainer.add(splitterMapTiles, BorderLayout.WEST);
+		CreateToolbar();
+		CreateTilesetArea();
+		
+		CreateEventsPanel();
+		CreateWildPokemonPanel();
+		CreateMimeTab();
+
+		
+
+	
+	}
+	void CreateSplitPane(){
+		splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.2);
 		splitPane.setDividerSize(1);
 		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, 
@@ -310,144 +465,37 @@ public class MainGUI extends JFrame
 			}
 		});
 		splitPane.setDividerLocation(0.2);
+	}
+	void CreateStatusBar(){
+		JPanel panel_2 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		panel_2.setPreferredSize(new Dimension(10, 24));
+		getContentPane().add(panel_2, BorderLayout.SOUTH);
 
-
-		getContentPane().add(splitPane, BorderLayout.CENTER);
-
-		JTabbedPane editorTabs = new JTabbedPane(JTabbedPane.TOP);
-		splitPane.setRightComponent(editorTabs);
-
-		JPanel editorPanel = new JPanel();
-		editorTabs.addTab("Map", null, editorPanel, null);
-		editorPanel.setLayout(new BorderLayout(0, 0));
-
-		JPanel panelTilesContainer = new JPanel();
-		editorPanel.add(panelTilesContainer, BorderLayout.EAST);
-		panelTilesContainer.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
-		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16 + 16, 10));
-		panelTilesContainer.setLayout(new BorderLayout(0, 0));
-
-
-
-		JPanel splitterMapTiles = new JPanel();
-		splitterMapTiles.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		splitterMapTiles.setPreferredSize(new Dimension(4, 10));
-		splitterMapTiles.setMaximumSize(new Dimension(4, 32767));
-		panelTilesContainer.add(splitterMapTiles, BorderLayout.WEST);
-
-		JPanel panelMapTilesContainer = new JPanel();
-		panelTilesContainer.add(panelMapTilesContainer, BorderLayout.CENTER);
-		panelMapTilesContainer.setLayout(new BorderLayout(0, 0));
-
-		JPanel panelBorderTilesContainer = new JPanel();
-		panelBorderTilesContainer.setPreferredSize(new Dimension(10, 100));
-		panelMapTilesContainer.add(panelBorderTilesContainer, BorderLayout.NORTH);
-		panelBorderTilesContainer.setLayout(new BorderLayout(0, 0));
-
-		JPanel panelBorderTilesSplitter = new JPanel();
-		panelBorderTilesSplitter.setBackground(SystemColor.controlShadow);
-		panelBorderTilesSplitter.setPreferredSize(new Dimension(10, 1));
-		panelBorderTilesContainer.add(panelBorderTilesSplitter, BorderLayout.SOUTH);
-		//Set up tileset
-
-		JPanel panelBorderTilesToAbsolute = new JPanel();
-		panelBorderTilesContainer.add(panelBorderTilesToAbsolute, BorderLayout.CENTER);
-		panelBorderTilesToAbsolute.setLayout(null);
-
-		borderTileEditor = new BorderEditorPanel();
-		borderTileEditor.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Border Tiles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		borderTileEditor.setBounds(12, 12, 114, 75);
-		panelBorderTilesToAbsolute.add(borderTileEditor);
-
-
-		tileEditorPanel = new TileEditorPanel();
-		tileEditorPanel.addMouseMotionListener(new MouseMotionAdapter() {
+		lblInfo = new JLabel("No ROM Loaded!");
+		panel_2.add(lblInfo);
+	}
+	public MainGUI()
+	{
+		setPreferredSize(new Dimension(800, 800));
+		addWindowListener(new WindowAdapter() {
 			@Override
-			public void mouseMoved(MouseEvent e) {
+			public void windowClosing(WindowEvent e) 
+			{
+				//TODO: Are you *sure* you want to exit / Check for saved changes
+				System.exit(0);
 			}
 		});
-		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
-		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
-		tileEditorPanel.setLayout(null);
-		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
+		CreateMenus();
+		CreateStatusBar();
 
-		JScrollPane tilesetScrollPane = new JScrollPane(tileEditorPanel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		panelMapTilesContainer.add(tilesetScrollPane, BorderLayout.WEST);
-		tilesetScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		tilesetScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		tilesetScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-		//Setup Map
+		CreateButtons();
 
-		mapEditorPanel = new MapEditorPanel();
-		mapEditorPanel.setLayout(null);
-		mapEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
-
-		JScrollPane mapScrollPane = new JScrollPane(mapEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		editorPanel.add(mapScrollPane, BorderLayout.CENTER);
-		mapScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		mapScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		mapScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+        CreateSplitPane();
 
 
-		JToolBar toolBar = new JToolBar();
-		lblTileVal=new JLabel("Current Tile: 0x0000");
-		toolBar.add(lblTileVal);
-		editorPanel.add(toolBar, BorderLayout.NORTH);
-		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		toolBar.setPreferredSize(new Dimension(128, 32));
-
-		JPanel eventsPanel = new JPanel();
-		editorTabs.addTab("Events", null, eventsPanel, null);
-
-		JPanel wildPokemonPanel = new JPanel();
-		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
-
-		JPanel mimePanel = new JPanel();
-		editorTabs.addTab("Mime", null, mimePanel, null);
-		mimePanel.setLayout(null);
-
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 0, 796, 454);
-		mimePanel.add(panel_1);
-		panel_1.setBorder(UIManager.getBorder("SplitPane.border"));
-		panel_1.setLayout(null);
-
-		JLabel lblWelcome = new JLabel("<html><center>Welcome to the map mime!\n<br>\nHere we will mime out your map so you can like see it, but without actually physically seeing it and stuff.</center></html>");
-		lblWelcome.setBounds(90, 12, 559, 63);
-		panel_1.add(lblWelcome);
-
-		lblWidth = new JLabel("Width: ");
-		lblWidth.setBounds(64, 107, 157, 15);
-		panel_1.add(lblWidth);
-
-		lblHeight = new JLabel("Height: ");
-		lblHeight.setBounds(64, 123, 157, 15);
-		panel_1.add(lblHeight);
-
-		lblBorderHeight = new JLabel("Border Height: ");
-		lblBorderHeight.setBounds(64, 178, 164, 15);
-		panel_1.add(lblBorderHeight);
-
-		lblMapTilesPointer = new JLabel("Map Tiles Pointer: ");
-		lblMapTilesPointer.setBounds(245, 107, 339, 15);
-		panel_1.add(lblMapTilesPointer);
-
-		lblBorderTilesPointer = new JLabel("Border Tiles Pointer:");
-		lblBorderTilesPointer.setBounds(245, 123, 339, 15);
-		panel_1.add(lblBorderTilesPointer);
-
-		lblGlobalTilesetPointer = new JLabel("Global Tileset Pointer:");
-		lblGlobalTilesetPointer.setBounds(245, 162, 339, 15);
-		panel_1.add(lblGlobalTilesetPointer);
-
-		lblLocalTilesetPointer = new JLabel("Local  Tileset  Pointer:");
-		lblLocalTilesetPointer.setBounds(245, 178, 339, 15);
-		panel_1.add(lblLocalTilesetPointer);
-
-		lblBorderWidth = new JLabel("Border Width: ");
-		lblBorderWidth.setBounds(64, 162, 157, 15);
-		panel_1.add(lblBorderWidth);
+	    CreateTabbedPanels();
 
 		BufferedImage mime = null;
 		try
