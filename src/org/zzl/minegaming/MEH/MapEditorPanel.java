@@ -74,12 +74,18 @@ public class MapEditorPanel extends JPanel
 			{
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
+				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
+					return;
+				}
 				System.out.println(e.getButton());
 				if(e.getButton() == e.BUTTON1)
 				{
 					int tile = TileEditorPanel.baseSelectedTile;
+					try{
 					map.getMapTileData().getTile(x, y).SetID(tile);
-
+					}catch(Exception ex){
+						
+					}
 					map.isEdited = true;
 					// myParent.mapEditorPanel.setMap(myParent.loadedMap);
 					DrawMap();
@@ -151,20 +157,18 @@ public class MapEditorPanel extends JPanel
 			imgBuffer = createImage((int) map.getMapData().mapWidth * 16,
 					(int) map.getMapData().mapHeight * 16);
 			gcBuff = imgBuffer.getGraphics();
-			int rX = this.getVisibleRect().x;
-			int rW = this.getVisibleRect().width;
-			int rY = this.getVisibleRect().y;
-			int rH = this.getVisibleRect().height;
+		
 			for (int y = 0; y < map.getMapData().mapHeight; y++)
 			{
 				for (int x = 0; x < map.getMapData().mapWidth; x++)
 				{
-					gcBuff.drawImage(
-							(Image) blockRenderer.renderBlock(map
-									.getMapTileData().getTile(x, y).getID(),true),
-									x * 16, y * 16, null);
+					int TileID=(map.getMapTileData().getTile(x, y).getID());
+					int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
+					int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
+					gcBuff.drawImage(TileEditorPanel.imgBuffer, x * 16, y * 16, x * 16+16, y * 16+ 16, srcX, srcY,srcX+ 16,srcY+16, this);
 				}
 			}
+			this.repaint();
 		}
 		catch (Exception e)
 		{

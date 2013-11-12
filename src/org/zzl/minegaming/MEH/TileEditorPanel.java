@@ -109,8 +109,8 @@ public class TileEditorPanel extends JPanel
 		localTiles = local;
 		//blockRenderer.setLocalTileset(local);
 	}
-	private Graphics gcBuff;
-	private Image imgBuffer = null;
+	public static Graphics gcBuff;
+	static Image imgBuffer = null;
 	public void DrawTileset()
 	{
 		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSBlocks / editorWidth)*(DataStore.LocalTSBlocks / editorWidth) *16);
@@ -119,9 +119,16 @@ public class TileEditorPanel extends JPanel
 		gcBuff=imgBuffer.getGraphics();
 		for(int i = 0; i < DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? DataStore.LocalTSBlocks : 512); i++)
 		{
+		   
 			int x = (i % editorWidth) * 16;
 			int y = (i / editorWidth) * 16;
+
+			try{
 			gcBuff.drawImage(MapEditorPanel.blockRenderer.renderBlock(i,true), x, y, this);
+			}
+			catch(Exception e){
+				break;
+			}
 			if(baseSelectedTile == i)
 			{
 				gcBuff.setColor(Color.red);
@@ -136,22 +143,6 @@ public class TileEditorPanel extends JPanel
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			/*for(int i = 0; i < DataStore.MainTSBlocks+DataStore.LocalTSBlocks; i++)
-			{
-				int x = (i % editorWidth) * 16;
-				int y = (i / editorWidth) * 16;
-				if((y + 1)*16 > this.getVisibleRect().y)
-
-					g.drawImage(MapEditorPanel.blockRenderer.renderBlock(i,true), x, y, null);
-				if(baseSelectedTile == i)
-				{
-					g.setColor(Color.red);
-					g.drawRect(x, y, 15, 15);
-				}
-
-			}*/
-			//this.setSize(editorWidth*16, ((globalTiles.numBlocks/editorWidth)*16)+((localTiles.numBlocks/editorWidth)*16));
-
 			g.drawImage(imgBuffer, 0, 0, this);
 			MainGUI.lblInfo.setText("Done!");
 		}
