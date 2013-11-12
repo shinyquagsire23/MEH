@@ -281,6 +281,7 @@ public class MainGUI extends JFrame
 				lblInfo.setText("Loading...");
 
 				new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
+				new WildDataCache(ROMManager.getActiveROM()).start();
 			}
 		});
 		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, -1, -2));
