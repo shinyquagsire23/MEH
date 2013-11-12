@@ -21,14 +21,14 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 public class Tileset
 {
 	private GBARom rom;
-	private int dataPtr;
+	
 	private GBAImage image;
 	private BufferedImage[] bi;
 	private Palette[] palettes; //Main gets 7, local gets 5
 	private static Tileset lastPrimary;
 	private boolean isPrimary = true;
+    public TilesetHeader tilesetHeader;
 
-	private int blockPtr, animPtr;
 	public final int numBlocks;
 	private HashMap<Integer,BufferedImage>[] renderedTiles;
 	private HashMap<Integer,BufferedImage>[] customRenderedTiles;
@@ -40,28 +40,26 @@ public class Tileset
 	public Tileset(GBARom rom, int offset)
 	{
 		this.rom = rom;
-		dataPtr = offset;
-		int imageDataPtr = rom.getPointerAsInt(offset+0x4);
-		blockPtr = rom.getPointerAsInt(offset+0xC);
-		animPtr = rom.getPointerAsInt(offset+0x10);
+		tilesetHeader=new TilesetHeader(rom, offset);
+		
 
-		isPrimary = (rom.readByte(offset+1) == 0);
-		if(isPrimary)
+		
+		if(tilesetHeader.isPrimary)
 			lastPrimary = this;
 		int[] uncompressedData = null;
-		byte b = rom.readByte(offset);
+		
 
-		if(b == 1)
-			uncompressedData = Lz77.decompressLZ77(rom, imageDataPtr);
+		if(tilesetHeader.bCompressed == 1)
+			uncompressedData = Lz77.decompressLZ77(rom, (int)tilesetHeader.pGFX);
 		if(uncompressedData == null)
 		{
 			GBARom backup = (GBARom) rom.clone(); //Backup in case repairs fail
 			rom.writeBytes(offset, (isPrimary ? globalTSLZHeader : localTSLZHeader)); //Attempt to repair the LZ77 data
-			uncompressedData = Lz77.decompressLZ77(rom, imageDataPtr);
+			uncompressedData = Lz77.decompressLZ77(rom, (int)tilesetHeader.pGFX);
 			rom = (GBARom) backup.clone(); //TODO add dialog to allow repairs to be permanant
 			if(uncompressedData == null) //If repairs didn't go well, revert ROM and pull uncompressed data
 			{
-				uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (isPrimary ? 128*DataStore.MainTSHeight : 128*DataStore.LocalTSHeight) / 2)); //TODO: Hardcoded to FR tileset sizes
+				uncompressedData = BitConverter.ToInts(rom.readBytes((int)tilesetHeader.pGFX, (isPrimary ? 128*DataStore.MainTSHeight : 128*DataStore.LocalTSHeight) / 2)); //TODO: Hardcoded to FR tileset sizes
 			}
 		}
 		numBlocks = (isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
@@ -78,7 +76,7 @@ public class Tileset
 		
 		for(int i = 0; i < (isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
-			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
+			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes((int)tilesetHeader.pPalettes+(32*i),32));
 		}
 		
 		
@@ -238,12 +236,12 @@ public class Tileset
 
 	public int getBlockPointer()
 	{
-		return blockPtr;
+		return (int)(tilesetHeader.pBlocks);
 	}
 
 	public int getAnimationPointer()
 	{
-		return animPtr;
+		return (int)tilesetHeader.pAnimation;
 	}
 
 	public GBARom getROM()

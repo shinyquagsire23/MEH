@@ -68,7 +68,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
-
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -499,8 +498,9 @@ public class MainGUI extends JFrame
 		lblInfo.setText("Loading map...");
 		if(loadedMap != null)
 			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
-		
-		loadedMap = new Map(ROMManager.getActiveROM(), BitConverter.shortenPointer(BankLoader.maps[selectedBank].get(selectedMap)));
+
+		long offset=BankLoader.maps[selectedBank].get(selectedMap);
+		loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
 		borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
 		reloadMimeLabels();
 		mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));

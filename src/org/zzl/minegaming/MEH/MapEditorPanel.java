@@ -30,7 +30,8 @@ public class MapEditorPanel extends JPanel
 	private Tileset localTiles;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
-	private final boolean renderPalette = true;
+
+	private final boolean renderPalette = false;
 	private final boolean renderTileset = false;
 
 	public MapEditorPanel()
@@ -182,6 +183,7 @@ public class MapEditorPanel extends JPanel
 		if (globalTiles != null)
 		{
 			g.drawImage(imgBuffer, 0, 0, this);
+
 			if(renderPalette)
 			{
 				int x = 0;
