@@ -18,6 +18,8 @@ import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.Palette;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
+import PokemonClasses.TilesetHeader;
+
 public class Tileset
 {
 	private GBARom rom;
@@ -60,7 +62,7 @@ public class Tileset
 				uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (tilesetHeader.isPrimary ? 128*DataStore.MainTSHeight : 128*DataStore.LocalTSHeight) / 2)); //TODO: Hardcoded to FR tileset sizes
 			}
 		}
-		numBlocks = (tilesetHeader.isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
+		numBlocks = 1024; //(tilesetHeader.isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
 		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13];
 		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[13-DataStore.MainTSPalCount];
 		
@@ -267,7 +269,7 @@ public class Tileset
 		public void run()
 		{
 			int k = (tilesetHeader.isPrimary ? DataStore.MainTSSize : DataStore.LocalTSSize);
-			for(int i = 0; i < numBlocks; i++)
+			for(int i = 0; i < 1023; i++)
 			{
 					try
 					{
