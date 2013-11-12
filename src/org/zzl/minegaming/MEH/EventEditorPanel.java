@@ -16,15 +16,15 @@ import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
 import org.zzl.minegaming.MEH.MapElements.SpritesSigns;
 import org.zzl.minegaming.MEH.MapElements.Triggers;
 
-public class MapEditorPanel extends JPanel
+public class EventEditorPanel extends JPanel
 {
-	private static MapEditorPanel instance = null;
+	private static EventEditorPanel instance = null;
 
-	public static MapEditorPanel getInstance()
+	public static EventEditorPanel getInstance()
 	{
 		if (instance == null)
 		{
-			instance = new MapEditorPanel();
+			instance = new EventEditorPanel();
 		}
 		return instance;
 	}
@@ -38,7 +38,7 @@ public class MapEditorPanel extends JPanel
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
 
-	public MapEditorPanel()
+	public EventEditorPanel()
 	{
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
@@ -51,13 +51,7 @@ public class MapEditorPanel extends JPanel
 
 				if(e.getButton() == 0)
 				{
-					int tile = TileEditorPanel.baseSelectedTile;
-					map.getMapTileData().getTile(x, y).SetID(tile);
-
-					map.isEdited = true;
-					// myParent.mapEditorPanel.setMap(myParent.loadedMap);
-					DrawMap();
-					repaint();
+					
 				}
 			}
 
@@ -84,22 +78,11 @@ public class MapEditorPanel extends JPanel
 				System.out.println(e.getButton());
 				if(e.getButton() == e.BUTTON1)
 				{
-					int tile = TileEditorPanel.baseSelectedTile;
-					try{
-					map.getMapTileData().getTile(x, y).SetID(tile);
-					}catch(Exception ex){
-						
-					}
-					map.isEdited = true;
-					// myParent.mapEditorPanel.setMap(myParent.loadedMap);
-					DrawMap();
-					repaint();
+				
 				}
 				else if(e.getButton() == 3)
 				{
-					TileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
-					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
-					MainGUI.repaintTileEditorPanel();
+					
 				}
 			}
 
@@ -172,7 +155,10 @@ public class MapEditorPanel extends JPanel
 					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
 				}
 			}
-		
+			DrawSigns();
+			DrawExits();
+			DrawNPCs();
+			DrawTriggers();
 			
 			this.repaint();
 		}

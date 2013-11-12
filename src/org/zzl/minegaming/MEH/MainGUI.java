@@ -68,6 +68,7 @@ import javax.swing.border.LineBorder;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.BoxLayout;
 
 public class MainGUI extends JFrame
 {
@@ -93,8 +94,9 @@ public class MainGUI extends JFrame
 	public JLabel lblGlobalTilesetPointer;
 	private JPanel panel_1;
 	JPanel panelTilesContainer;
-
+	JPanel wildPokemonPanel;
 	public BorderEditorPanel borderTileEditor;
+	public EventEditorPanel eventEditorPanel;
 	public static TileEditorPanel tileEditorPanel;
 	public static JLabel lblTileVal;
 	public DataStore dataStore;
@@ -107,6 +109,8 @@ public class MainGUI extends JFrame
 		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		toolBar.setPreferredSize(new Dimension(128, 32));
 	}
+	
+	//Map Creation
 	JPanel panelMapTilesContainer;
 	JPanel splitterMapTiles;
 	public MapEditorPanel mapEditorPanel;
@@ -152,11 +156,32 @@ public class MainGUI extends JFrame
 		tilesetScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 	}
 	
-	EventEditor eventsPanel;
+	JPanel eventsPanel;
 	void CreateEventsPanel(){
-	
-		eventsPanel=new EventEditor();
+		
+		eventsPanel=new JPanel();
 		editorTabs.addTab("Events", null, eventsPanel, null);
+		eventsPanel.setLayout(new BorderLayout(0, 0));
+		JPanel splitm = new JPanel();
+		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		splitm.setPreferredSize(new Dimension(4, 10));
+		splitm.setMaximumSize(new Dimension(4, 32767));
+        JPanel pmtc = new JPanel();
+		
+        pmtc.setLayout(new BorderLayout(0, 0));
+		eventEditorPanel = new EventEditorPanel();
+		eventsPanel.add(eventEditorPanel,BorderLayout.WEST);
+		eventEditorPanel.setLayout(null);
+		eventEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
+		
+		JScrollPane eventScrollPane = new JScrollPane(eventEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		eventsPanel.add(eventScrollPane, BorderLayout.CENTER);
+		eventScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		eventScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		eventScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		
+		
 	}
 	void CreateMapPanel(){
 		editorPanel = new JPanel();
@@ -346,13 +371,14 @@ public class MainGUI extends JFrame
 		panelButtons.add(btnImportMap);
 		
 	}
-	JPanel wildPokemonPanel;
+	
 	void CreateWildPokemonPanel(){
 		
 		wildPokemonPanel = new JPanel();
 		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
 	}
 	JPanel mimePanel;//Mr. Mime 2 dirty 4 mii
+	private JPanel panel_4;
 	void CreateMimeTab(){
 		mimePanel = new JPanel();
 		editorTabs.addTab("Mime", null, mimePanel, null);
@@ -420,6 +446,53 @@ public class MainGUI extends JFrame
 		
 
 	
+	}
+	JSplitPane splitPane2;
+	int paneSize2;
+	void CreateSplitPane2(){
+		splitPane2 = new JSplitPane();
+		splitPane2.setResizeWeight(0.2);
+		splitPane2.setDividerSize(1);
+		splitPane2.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, 
+				new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent e)
+			{
+				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
+					((JSplitPane)e.getSource()).setDividerLocation(350);
+				else if(((JSplitPane)e.getSource()).getDividerLocation() < 200)
+					((JSplitPane)e.getSource()).setDividerLocation(200);
+
+				if(paneSize2 == 0)
+				{
+					paneSize2 = 250;
+					((JSplitPane)e.getSource()).setDividerLocation(paneSize);
+				}
+				else
+					paneSize2 = ((JSplitPane)e.getSource()).getDividerLocation();
+			}
+		});
+		splitPane2.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) 
+			{
+				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
+					((JSplitPane)e.getSource()).setDividerLocation(350);
+				else if(((JSplitPane)e.getSource()).getDividerLocation() < 200)
+					((JSplitPane)e.getSource()).setDividerLocation(200);
+				else
+					((JSplitPane)e.getSource()).setDividerLocation(paneSize2);
+
+				if(paneSize2 == 0)
+				{
+					paneSize2 = 250;
+					((JSplitPane)e.getSource()).setDividerLocation(paneSize2);
+				}
+				else
+					paneSize2 = ((JSplitPane)e.getSource()).getDividerLocation();
+			}
+		});
+		splitPane2.setDividerLocation(0.2);
 	}
 	void CreateSplitPane(){
 		splitPane = new JSplitPane();
@@ -610,6 +683,8 @@ public class MainGUI extends JFrame
 				reloadMimeLabels();
 				mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 				mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+				eventEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+				eventEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
 				TilesetCache.get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
 				for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
@@ -628,7 +703,9 @@ public class MainGUI extends JFrame
 				mapEditorPanel.setMap(loadedMap);
 				mapEditorPanel.DrawMap();
 				mapEditorPanel.repaint();
-
+				eventEditorPanel.setMap(loadedMap);
+				eventEditorPanel.DrawMap();
+				eventEditorPanel.repaint();
 				borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				borderTileEditor.setMap(borderMap);
@@ -637,6 +714,7 @@ public class MainGUI extends JFrame
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
 				MainGUI.lblInfo.setText("Done! Finished in " + (double)(time / 1000) + " seconds!");
+			//	panel_4.add(new SignPanel());
 			}
 		}.start();
 	}
