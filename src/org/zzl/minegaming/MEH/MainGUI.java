@@ -68,7 +68,6 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
-
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -165,7 +164,13 @@ public class MainGUI extends JFrame
 					DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
 					model.reload();
 					BankLoader.reset();
-					
+					TilesetCache.clearCache();
+					mapEditorPanel.reset();
+					borderTileEditor.reset();
+					tileEditorPanel.reset();
+					mapEditorPanel.repaint();
+					borderTileEditor.repaint();
+					tileEditorPanel.repaint();
 				}
 				lblInfo.setText("Loading...");
 				
@@ -310,7 +315,7 @@ public class MainGUI extends JFrame
 			public void mouseMoved(MouseEvent e) {
 			}
 		});
-		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x280 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
+		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
 		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
 		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
@@ -493,19 +498,30 @@ public class MainGUI extends JFrame
 		lblInfo.setText("Loading map...");
 		if(loadedMap != null)
 			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
+
 		long offset=BankLoader.maps[selectedBank].get(selectedMap);
 		loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
 		borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
 		reloadMimeLabels();
 		mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 		mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
+		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
 		for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
-			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = TilesetCache.get(loadedMap.getMapData().localTileSetPtr).getPalette()[i];
+			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = TilesetCache.get(loadedMap.getMapData().localTileSetPtr).getROMPalette()[i];
 		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).setPalette(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette());
 		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).renderPalettedTiles();
 		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).renderPalettedTiles();
 		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).startTileThreads();
 		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).startTileThreads();
+		
+		
+		tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+		tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		tileEditorPanel.DrawTileset();
+		tileEditorPanel.repaint();
+		
+		
 		mapEditorPanel.setMap(loadedMap);
 		mapEditorPanel.DrawMap();
 		mapEditorPanel.repaint();
@@ -514,11 +530,7 @@ public class MainGUI extends JFrame
 		borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 		borderTileEditor.setMap(borderMap);
 		borderTileEditor.repaint();
-		
-		tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-		tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-		tileEditorPanel.DrawTileset();
-		tileEditorPanel.repaint();
+
 	}
 	
 	public static void repaintTileEditorPanel()

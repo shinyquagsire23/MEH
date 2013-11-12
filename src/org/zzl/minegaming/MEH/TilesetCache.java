@@ -33,4 +33,9 @@ public class TilesetCache
 			return t;
 		}
 	}
+
+	public static void clearCache()
+	{
+		cache = new HashMap<Integer, Tileset>();
+	}
 }
