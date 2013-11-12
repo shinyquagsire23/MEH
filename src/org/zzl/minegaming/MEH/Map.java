@@ -4,6 +4,14 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
+import PokemonClasses.MapHeader;
+import PokemonClasses.Sprites;
+import PokemonClasses.SpritesExitManager;
+import PokemonClasses.SpritesNPCManager;
+import PokemonClasses.SpritesSignManager;
+import PokemonClasses.TriggerManager;
+
+
 public class Map implements ISaveable
 {
 	private MapData mapData;

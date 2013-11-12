@@ -1,10 +1,10 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class TriggerManager {
-Triggers[] mapTriggers;
-	void LoadTriggers(GBARom rom, int count){
+	  public Triggers[] mapTriggers;
+public void LoadTriggers(GBARom rom, int count){
 		
 		 mapTriggers=new Triggers[count];
 		int i=0;
@@ -14,11 +14,11 @@ Triggers[] mapTriggers;
 			
 		}
 	}
-	TriggerManager(GBARom rom, int count){
+public TriggerManager(GBARom rom, int count){
 		LoadTriggers(rom, count);
 		
 	}
-	TriggerManager(GBARom rom, int offset, int count){
+public TriggerManager(GBARom rom, int offset, int count){
 		rom.Seek(offset);
 		LoadTriggers(rom, count);
 	}

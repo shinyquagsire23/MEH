@@ -1,22 +1,22 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class MapHeader {
-	  long pMap;
-	  long pSprites;
-	  long pScript;
-	  long pConnect;
-	  int hSong;
-	  int hMap;
-	  byte bLabelID;
-	  byte bFlash;
-	  byte bWeather;
-	  byte bType;
-	  byte bUnused1;
-	  byte bUnused2;
-	  byte bLabelToggle;
-	  byte bUnused3;
+	  public   long pMap;
+	  public   long pSprites;
+	  public   long pScript;
+	  public   long pConnect;
+	  public  int hSong;
+	  public  int hMap;
+	  public  byte bLabelID;
+	  public  byte bFlash;
+	  public  byte bWeather;
+	  public  byte bType;
+	  public  byte bUnused1;
+	  public  byte bUnused2;
+	  public  byte bLabelToggle;
+	  public  byte bUnused3;
 	  int hdrSize;//This is internal and does not go into the ROM
 	 public MapHeader(GBARom rom, int offset){
 		  int bOffset=offset-0x8000000;

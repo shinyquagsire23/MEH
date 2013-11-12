@@ -1,18 +1,18 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class SpritesSigns {
-	  byte bX;
-	  byte b2;
-	  byte bY;
-	  byte b4;
-	  byte b5;
-	  byte b6;
-	  byte b7;
-	  byte b8;
-	  long pScript;
-	  SpritesSigns(GBARom rom){
+	  public  byte bX;
+	  public  byte b2;
+	  public  byte bY;
+	  public  byte b4;
+	  public  byte b5;
+	  public   byte b6;
+	  public   byte b7;
+	  public   byte b8;
+	  public   long pScript;
+	  public   SpritesSigns(GBARom rom){
 			 
 		   bX=rom.readByte();
 		   b2=rom.readByte();
@@ -24,7 +24,7 @@ public class SpritesSigns {
 		   b8=rom.readByte();
 		  pScript=rom.getPointer();
 		 }
-		 SpritesSigns(GBARom rom, int offset){
+	  public 	 SpritesSigns(GBARom rom, int offset){
 			 rom.Seek(offset);
 			 bX=rom.readByte();
 			   b2=rom.readByte();

@@ -1,4 +1,4 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
@@ -6,9 +6,9 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 
 
 public class SpritesExitManager {
-	 SpritesExit[] mapExits;
+	public SpritesExit[] mapExits;
 	
-	SpritesExitManager(GBARom rom, int offset, int count)
+    public SpritesExitManager(GBARom rom, int offset, int count)
 	{
 		rom.Seek(offset);
 		mapExits=new  SpritesExit[count];

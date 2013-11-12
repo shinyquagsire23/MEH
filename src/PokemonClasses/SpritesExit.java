@@ -1,16 +1,16 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class SpritesExit {
-	  byte bX;
-	  byte b2;
-	  byte bY;
-	  byte b4;
-	  byte b5;
-	  byte b6;
-	  int hLevel;
-	  SpritesExit(GBARom rom){
+	  public  byte bX;
+	  public byte b2;
+	  public byte bY;
+	  public byte b4;
+	  public byte b5;
+	  public byte b6;
+	  public int hLevel;
+	  public  SpritesExit(GBARom rom){
 
 		  
 		  
@@ -22,7 +22,7 @@ public class SpritesExit {
 		   b6=rom.readByte();
 		   hLevel=rom.readWord();
 		 }
-		 SpritesExit(GBARom rom, int offset){
+	  public SpritesExit(GBARom rom, int offset){
 			 rom.Seek(offset);
 			 
 			   bX=rom.readByte();

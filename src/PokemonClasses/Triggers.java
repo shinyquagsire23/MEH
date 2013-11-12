@@ -1,17 +1,17 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class Triggers {
-	  byte bX;
-	  byte b2;
-	  byte bY;
-	  byte b4;
-	  int h3;
-	  int hFlagCheck;
-	  int hFlagValue;
-	  int h6;
-	  long pScript;
+	  public   byte bX;
+	  public   byte b2;
+	  public   byte bY;
+	  public   byte b4;
+	  public   int h3;
+	  public  int hFlagCheck;
+	  public  int hFlagValue;
+	  public  int h6;
+	  public  long pScript;
 	  void LoadTriggers(GBARom rom)
 	  {
 		  bX=rom.readByte();
@@ -24,11 +24,11 @@ public class Triggers {
 		  h6=rom.readWord();
 		  pScript=rom.getPointer();
 	  }
-	  Triggers(GBARom rom, int offset){
+	  public   Triggers(GBARom rom, int offset){
 		  rom.Seek(offset);
 		  LoadTriggers(rom);
 	  }
-	  Triggers(GBARom rom){
+	  public  Triggers(GBARom rom){
 		  LoadTriggers(rom);
 	  }
 }

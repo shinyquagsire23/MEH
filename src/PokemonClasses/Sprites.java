@@ -1,17 +1,17 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class Sprites {
-	  byte bNumNPC;
-	  byte bNumExits;
-	  byte bNumTraps;
-	  byte bNumSigns;
-	  long pNPC;
-	  long pExits;
-	  long pTraps;
-	  long pSigns;
-	  Sprites(GBARom rom){
+	  public   byte bNumNPC;
+	  public   byte bNumExits;
+	  public   byte bNumTraps;
+	  public  byte bNumSigns;
+	  public  long pNPC;
+	  public  long pExits;
+	  public  long pTraps;
+	  public  long pSigns;
+	  public Sprites(GBARom rom){
 		  
 		  bNumNPC=rom.readByte();
 		  bNumExits=rom.readByte();
@@ -22,7 +22,7 @@ public class Sprites {
 		  pTraps=rom.getPointer();
 		  pSigns=rom.getPointer();
 	  }	  
-	  Sprites(GBARom rom, int offset){
+	  public Sprites(GBARom rom, int offset){
 		  
 		  rom.Seek(offset&0x1FFFFFF);
 		  bNumNPC=rom.readByte();

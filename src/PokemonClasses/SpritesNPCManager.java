@@ -1,4 +1,4 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
@@ -6,9 +6,9 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 
 
 public class SpritesNPCManager {
-	SpritesNPC[] mapNPCs;
+	  public SpritesNPC[] mapNPCs;
 	
-	SpritesNPCManager(GBARom rom, int offset, int count)
+	  public  SpritesNPCManager(GBARom rom, int offset, int count)
 	{
 		rom.Seek(offset);
 		mapNPCs=new SpritesNPC[count];

@@ -1,29 +1,29 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class SpritesNPC {
-	  byte b1;
-	  byte bSpriteSet;
-	  byte b3;
-	  byte b4;
-	  byte bX;
-	  byte b6;
-	  byte bY;
-	  byte b8;
-	  byte b9;
-	  byte bBehavior1;
-	  byte b10;
-	  byte bBehavior2;
-	  byte bIsTrainer;
-	  byte b14;
-	  byte bTrainerLOS;
-	  byte b16;
-	  long pScript;
-	  int iFlag;
-	  byte b23;
-	  byte b24;
-	  SpritesNPC(GBARom rom){
+	  public  byte b1;
+	  public  byte bSpriteSet;
+	  public  byte b3;
+	  public  byte b4;
+	  public byte bX;
+	  public byte b6;
+	  public byte bY;
+	  public byte b8;
+	  public byte b9;
+	  public byte bBehavior1;
+	  public byte b10;
+	  public byte bBehavior2;
+	  public byte bIsTrainer;
+	  public byte b14;
+	  public byte bTrainerLOS;
+	  public byte b16;
+	  public long pScript;
+	  public int iFlag;
+	  public byte b23;
+	  public byte b24;
+	  public SpritesNPC(GBARom rom){
 			 
 			 b1= rom.readByte();
 			 bSpriteSet= rom.readByte();
@@ -46,7 +46,7 @@ public class SpritesNPC {
 			 b23= rom.readByte();
 			 b24= rom.readByte();
 		 }
-		 SpritesNPC(GBARom rom, int offset){
+	  public  SpritesNPC(GBARom rom, int offset){
 			 rom.Seek(offset);
 			 b1= rom.readByte();
 			 bSpriteSet= rom.readByte();

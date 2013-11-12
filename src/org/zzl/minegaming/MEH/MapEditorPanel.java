@@ -12,6 +12,11 @@ import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 
+import PokemonClasses.SpritesExit;
+import PokemonClasses.SpritesNPC;
+import PokemonClasses.SpritesSigns;
+import PokemonClasses.Triggers;
+
 public class MapEditorPanel extends JPanel
 {
 	private static MapEditorPanel instance = null;

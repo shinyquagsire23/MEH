@@ -18,6 +18,8 @@ import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.Palette;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
+import PokemonClasses.TilesetHeader;
+
 public class Tileset
 {
 	private GBARom rom;
