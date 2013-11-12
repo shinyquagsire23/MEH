@@ -139,7 +139,7 @@ public class TileEditorPanel extends JPanel
 				int x = (i % editorWidth) * 16;
 				int y = (i / editorWidth) * 16;
 				if((y + 1)*16 > this.getVisibleRect().y)
-					g.drawImage(blockRenderer.renderBlock(i,false), x, y, null);
+					g.drawImage(blockRenderer.renderBlock(i,true), x, y, null);
 				if(baseSelectedTile == i)
 				{
 					g.setColor(Color.red);

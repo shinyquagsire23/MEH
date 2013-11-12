@@ -160,7 +160,7 @@ public class MapEditorPanel extends JPanel
 				{
 					gcBuff.drawImage(
 							(Image) blockRenderer.renderBlock(map
-									.getMapTileData().getTile(x, y).getID()),
+									.getMapTileData().getTile(x, y).getID(),true),
 									x * 16, y * 16, null);
 				}
 			}
