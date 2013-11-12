@@ -30,7 +30,7 @@ public class MapEditorPanel extends JPanel
 	private Tileset localTiles;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
-	private final boolean renderPalette = false;
+	private final boolean renderPalette = true;
 	private final boolean renderTileset = false;
 
 	public MapEditorPanel()
@@ -237,4 +237,10 @@ public class MapEditorPanel extends JPanel
 		}
 	}
 
+	public void reset()
+	{
+		globalTiles = null;
+		localTiles = null;
+		map = null;
+	}
 }

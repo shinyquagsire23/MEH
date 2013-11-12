@@ -9,6 +9,7 @@ public class BorderMap implements ISaveable
 	private Map map;
 	private MapData mapData;
 	private BorderTileData mapTileData;
+	public boolean isEdited = false;
 	public BorderMap(GBARom rom, Map m)
 	{
 		map = m;

@@ -164,4 +164,9 @@ public class TileEditorPanel extends JPanel
 		}
 	}
 
+	public void reset()
+	{
+		globalTiles = null;
+		localTiles = null;
+	}
 }

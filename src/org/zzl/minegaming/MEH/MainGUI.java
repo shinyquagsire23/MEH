@@ -165,7 +165,13 @@ public class MainGUI extends JFrame
 					DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
 					model.reload();
 					BankLoader.reset();
-					
+					TilesetCache.clearCache();
+					mapEditorPanel.reset();
+					borderTileEditor.reset();
+					tileEditorPanel.reset();
+					mapEditorPanel.repaint();
+					borderTileEditor.repaint();
+					tileEditorPanel.repaint();
 				}
 				lblInfo.setText("Loading...");
 				
