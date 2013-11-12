@@ -41,6 +41,7 @@ public class Triggers implements ISaveable {
 	  @Override
 	  public void save()
 	  {
+		  rom.Seek(pData);
 		  rom.writeByte(bX);
 		  rom.writeByte(b2);
 		  rom.writeByte(bY);
@@ -49,6 +50,6 @@ public class Triggers implements ISaveable {
 		  rom.writeWord(hFlagCheck);
 		  rom.writeWord(hFlagValue);
 		  rom.writeWord(h6);
-		  rom.writePointer(pScript);
+		  rom.writePointer((long)pScript + (pScript == 0 ? 0 : 0x08000000));
 	  }
 }

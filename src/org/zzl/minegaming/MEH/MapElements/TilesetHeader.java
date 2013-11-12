@@ -44,9 +44,9 @@ public class TilesetHeader implements ISaveable {
 		  rom.writeByte(b3);
 		  
 		  rom.writePointer(pGFX);
-		  rom.writePointer(pPalettes);
-		  rom.writePointer(pBlocks);
-		  rom.writePointer(pBehavior);
-		  rom.writePointer(pAnimation);
+		  rom.writePointer((int)pPalettes);
+		  rom.writePointer((int)pBlocks);
+		  rom.writePointer((int)pBehavior);
+		  rom.writePointer((int)pAnimation);
 	  }
 }

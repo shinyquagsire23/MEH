@@ -39,9 +39,10 @@ public class Sprites {
 		rom.writeByte(bNumExits);
 		rom.writeByte(bNumTraps);
 		rom.writeByte(bNumSigns);
-		rom.writePointer(pNPC);
-		rom.writePointer(pExits);
-		rom.writePointer(pTraps);
-		rom.writePointer(pSigns);
+		
+		rom.writePointer((int)pNPC);
+		rom.writePointer((int)pExits);
+		rom.writePointer((int)pTraps);
+		rom.writePointer((int)pSigns);
 	}
 }

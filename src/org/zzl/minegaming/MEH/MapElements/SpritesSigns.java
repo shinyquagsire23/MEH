@@ -44,6 +44,6 @@ public class SpritesSigns implements ISaveable {
 		   rom.writeByte(b6);
 		   rom.writeByte(b7);
 		   rom.writeByte(b8);
-		   rom.writePointer(pScript);
+		   rom.writePointer((long)pScript + (pScript == 0 ? 0 : 0x08000000));
 	  }
 }

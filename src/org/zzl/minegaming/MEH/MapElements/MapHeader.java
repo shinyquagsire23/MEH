@@ -61,10 +61,10 @@ public class MapHeader implements ISaveable {
 	 public void save()
 	 {
 		  rom.Seek(bOffset);
-  		  rom.writePointer(pMap);
-		  rom.writePointer(pSprites);
-		  rom.writePointer(pScript);
-		  rom.writePointer(pConnect);
+  		  rom.writePointer((int)pMap);
+		  rom.writePointer((int)pSprites);
+		  rom.writePointer((int)pScript);
+		  rom.writePointer((int)pConnect);
 		  rom.writeWord(hSong);
 		  rom.writeWord(hMap);
 

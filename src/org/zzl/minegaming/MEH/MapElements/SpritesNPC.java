@@ -78,7 +78,7 @@ public class SpritesNPC implements ISaveable {
 			 rom.writeByte(b14);
 			 rom.writeByte(bTrainerLOS);
 			 rom.writeByte(b16);
-			 rom.writePointer(pScript);
+			 rom.writePointer((long)pScript + (pScript == 0 ? 0 : 0x08000000));
 			 rom.writeWord(iFlag);
 			 rom.writeByte(b23);
 			 rom.writeByte(b24);
