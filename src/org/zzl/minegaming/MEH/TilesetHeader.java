@@ -15,17 +15,18 @@ public class TilesetHeader {
 	  long hdrSize;//This is internal and does not go into the ROM
 	  TilesetHeader(GBARom rom, int offset){
 		  int bOffset=offset;
-		  bCompressed=rom.readByte(bOffset);bOffset+=1;
-		  isPrimary=(rom.readByte(offset+1) == 0);bOffset+=1;//Reflect this when saving
-		  b2=rom.readByte(bOffset);bOffset+=1;
-		  b3=rom.readByte(bOffset);bOffset+=1;
+		  rom.Seek(bOffset);
+		  bCompressed=rom.readByte();
+		  isPrimary=(rom.readByte() == 0);//Reflect this when saving
+		  b2=rom.readByte();
+		  b3=rom.readByte();
 		  
-		  pGFX = rom.getPointer(bOffset);bOffset+=4;
-		  pPalettes = rom.getPointer(bOffset);bOffset+=4;
-		  pBlocks = rom.getPointer(bOffset);bOffset+=4;
-		  pBehavior = rom.getPointer(bOffset);bOffset+=4;
-		  pAnimation = rom.getPointer(bOffset);bOffset+=4;
-		  hdrSize=bOffset-offset;
+		  pGFX = rom.getPointer();
+		  pPalettes = rom.getPointer();
+		  pBlocks = rom.getPointer();
+		  pBehavior = rom.getPointer();
+		  pAnimation = rom.getPointer();
+		  hdrSize=rom.internalOffset-offset;
 		  
 	  }
 }
