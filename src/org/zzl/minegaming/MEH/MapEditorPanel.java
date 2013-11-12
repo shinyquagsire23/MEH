@@ -165,7 +165,7 @@ public class MapEditorPanel extends JPanel
 					int TileID=(map.getMapTileData().getTile(x, y).getID());
 					int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
 					int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
-					gcBuff.drawImage(TileEditorPanel.imgBuffer, x * 16, y * 16, x * 16+16, y * 16+ 16, srcX, srcY,srcX+ 16,srcY+16, this);
+					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
 				}
 			}
 			this.repaint();
@@ -230,7 +230,6 @@ public class MapEditorPanel extends JPanel
 					g.drawImage(localTiles.getTileSet(i),i*128,DataStore.MainTSHeight + 8,this);
 				}
 			}
-			MainGUI.lblInfo.setText("Done!");
 		}
 		try
 		{

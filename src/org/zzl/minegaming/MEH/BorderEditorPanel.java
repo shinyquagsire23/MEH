@@ -142,7 +142,6 @@ public class BorderEditorPanel extends JPanel
 						g.drawImage((Image)blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), (this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + x*16, 20+y*16, null); 
 				}
 			}
-			MainGUI.lblInfo.setText("Done!");
 		}
 		try
 		{

@@ -117,7 +117,7 @@ public class TileEditorPanel extends JPanel
 		imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
 		setSize(d);
 		gcBuff=imgBuffer.getGraphics();
-		for(int i = 0; i < DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? DataStore.LocalTSBlocks : 512); i++)
+		for(int i = 0; i < DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 512); i++) //TODO readd ini support here
 		{
 		   
 			int x = (i % editorWidth) * 16;
@@ -127,12 +127,8 @@ public class TileEditorPanel extends JPanel
 			gcBuff.drawImage(MapEditorPanel.blockRenderer.renderBlock(i,true), x, y, this);
 			}
 			catch(Exception e){
+				e.printStackTrace();
 				break;
-			}
-			if(baseSelectedTile == i)
-			{
-				gcBuff.setColor(Color.red);
-				gcBuff.drawRect(x, y, 15, 15);
 			}
 
 		}
@@ -144,7 +140,8 @@ public class TileEditorPanel extends JPanel
 		if (globalTiles != null)
 		{
 			g.drawImage(imgBuffer, 0, 0, this);
-			MainGUI.lblInfo.setText("Done!");
+			g.setColor(Color.red);
+			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
 		}
 		try
 		{
