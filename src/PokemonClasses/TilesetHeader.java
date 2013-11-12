@@ -1,19 +1,19 @@
-package org.zzl.minegaming.MEH;
+package PokemonClasses;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class TilesetHeader {
-	  byte bCompressed;
-	  boolean isPrimary;
-	  byte b2;
-	  byte b3;
-	  long pGFX;
-	  long pPalettes;
-	  long pBlocks;
-	  long pBehavior;
-	  long pAnimation;
-	  long hdrSize;//This is internal and does not go into the ROM
-	  TilesetHeader(GBARom rom, int offset){
+	  public   byte bCompressed;
+	  public   boolean isPrimary;
+	  public  byte b2;
+	  public  byte b3;
+	  public  long pGFX;
+	  public  long pPalettes;
+	  public  long pBlocks;
+	  public long pBehavior;
+	  public long pAnimation;
+	  public long hdrSize;//This is internal and does not go into the ROM
+	  public TilesetHeader(GBARom rom, int offset){
 		  int bOffset=offset;
 		  rom.Seek(bOffset);
 		  bCompressed=rom.readByte();
