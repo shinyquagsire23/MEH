@@ -315,7 +315,7 @@ public class MainGUI extends JFrame
 			public void mouseMoved(MouseEvent e) {
 			}
 		});
-		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x280 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
+		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
 		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
 		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
@@ -505,8 +505,10 @@ public class MainGUI extends JFrame
 		reloadMimeLabels();
 		mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 		mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
+		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
 		for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
-			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = TilesetCache.get(loadedMap.getMapData().localTileSetPtr).getPalette()[i];
+			TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = TilesetCache.get(loadedMap.getMapData().localTileSetPtr).getROMPalette()[i];
 		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).setPalette(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette());
 		TilesetCache.get(loadedMap.getMapData().localTileSetPtr).renderPalettedTiles();
 		TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).renderPalettedTiles();
