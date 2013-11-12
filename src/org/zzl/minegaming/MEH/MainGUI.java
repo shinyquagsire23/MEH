@@ -137,6 +137,7 @@ public class MainGUI extends JFrame
 		getContentPane().add(panelButtons, BorderLayout.NORTH);
 
 		JButton btnOpenROM = new JButton("");
+		btnOpenROM.setToolTipText("Open ROM for editing");
 		btnOpenROM.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/ROMopen.png")));
 		btnOpenROM.setFocusPainted(false);
 		btnOpenROM.setBorder(null);
@@ -178,6 +179,7 @@ public class MainGUI extends JFrame
 		panelButtons.add(btnOpenROM);
 
 		JButton btnSaveROM = new JButton("");
+		btnSaveROM.setToolTipText("Write changes to ROM file");
 		btnSaveROM.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -220,6 +222,7 @@ public class MainGUI extends JFrame
 		});
 		
 		JButton btnSaveMap = new JButton("");
+		btnSaveMap.setToolTipText("Save Map to VROM");
 		btnSaveMap.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
