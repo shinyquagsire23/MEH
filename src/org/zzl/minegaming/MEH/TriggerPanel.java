@@ -8,39 +8,47 @@ import javax.swing.SwingConstants;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 
-public class TriggerPanel extends JPanel {
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.MEH.MapElements.TriggerManager;
+import org.zzl.minegaming.MEH.MapElements.Triggers;
 
+public class TriggerPanel extends JPanel {
+
+	private JTextField txtFlagValue;
+	private JTextField txtScriptAddr;
+	private JTextField txtFlagCheck;
+    void Load(TriggerManager mgr, int index){
+    	Triggers t=mgr.mapTriggers[index];
+    	txtScriptAddr.setText(BitConverter.toHexString((int)t.pScript));
+    	txtFlagValue.setText(BitConverter.toHexString((int)t.hFlagValue));
+    	txtFlagCheck.setText(BitConverter.toHexString((int)t.hFlagCheck));
+    }
 	/**
 	 * Create the panel.
 	 */
-	public TriggerPanel() {
+	public TriggerPanel(TriggerManager mgr, int index) {
 		setBorder(new TitledBorder(null, "Triggers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JLabel lblScriptAddr = new JLabel("Script Addr:");
 		add(lblScriptAddr);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		add(textField_3);
+		txtScriptAddr = new JTextField();
+		txtScriptAddr.setColumns(10);
+		add(txtScriptAddr);
 		
 		JLabel lblFlagcheck = new JLabel("FlagCheck:");
 		add(lblFlagcheck);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
-		add(textField_4);
+		txtFlagCheck = new JTextField();
+		txtFlagCheck.setColumns(10);
+		add(txtFlagCheck);
 		
 		JLabel lblNewLabel = new JLabel("Flag Value:");
 		add(lblNewLabel);
 		
-		textField_2 = new JTextField();
-		add(textField_2);
-		textField_2.setColumns(10);
+		txtFlagValue = new JTextField();
+		add(txtFlagValue);
+		txtFlagValue.setColumns(10);
 		
 		JButton btnSave = new JButton("Save");
 		add(btnSave);
@@ -50,28 +58,8 @@ public class TriggerPanel extends JPanel {
 		add(panel);
 		panel.setLayout(null);
 		
-		JLabel lblFlag = new JLabel("Check");
-		lblFlag.setBounds(6, 19, 29, 14);
-		panel.add(lblFlag);
-		lblFlag.setHorizontalAlignment(SwingConstants.LEFT);
 		
-		textField = new JTextField();
-		textField.setBounds(35, 16, 86, 20);
-		panel.add(textField);
-		textField.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField.setColumns(10);
-		
-		JLabel lblValue = new JLabel("Value");
-		lblValue.setBounds(121, 19, 26, 14);
-		lblValue.setHorizontalAlignment(SwingConstants.LEFT);
-		panel.add(lblValue);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(147, 16, 86, 20);
-		textField_1.setHorizontalAlignment(SwingConstants.RIGHT);
-		textField_1.setColumns(10);
-		panel.add(textField_1);
-
+        Load(mgr, index);
 	}
 
 }

@@ -38,6 +38,7 @@ public class EventEditorPanel extends JPanel
     public static boolean Redraw = true;
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
+	public static NPCPane paneNPC;
     Point pointEvent;
     int moveSrcX;
     int moveSrcY;
@@ -73,7 +74,52 @@ public class EventEditorPanel extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
+				int x = (e.getX() / 16);
+				int y = (e.getY() / 16);
 				
+				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
+					return;
+				}
+			
+			
+				System.out.println(e.getButton());
+				if(e.getButton() == e.BUTTON1)
+				{
+			
+				//If there's two events on tile, we'll handle that later with some kind of picker 
+				
+					 IndexNPC=map.mapNPCManager.IsPresent(x,y);
+					 MainGUI.panel_5.removeAll();
+					if(IndexNPC!=-1){
+						
+						MainGUI.panel_5.add(new NPCPane(map.mapNPCManager,IndexNPC));
+						
+						
+					}
+					 IndexSign=map.mapSignManager.IsPresent(x,y);
+					if(IndexSign!=-1){
+						
+						MainGUI.panel_5.add(new SignPanel(map.mapSignManager, IndexSign));
+						
+						
+					}
+					IndexExit=map.mapExitManager.IsPresent(x,y);
+					if(IndexExit!=-1){
+						
+						MainGUI.panel_5.add(new ExitPanel(map.mapExitManager, IndexExit));
+					
+						
+					}
+					 IndexTriggers=map.mapTriggerManager.IsPresent(x,y);
+					if(IndexTriggers!=-1){
+						
+						MainGUI.panel_5.add(new TriggerPanel(map.mapTriggerManager, IndexTriggers));
+					
+						
+					}
+					MainGUI.panel_5.revalidate();
+					MainGUI.panel_5.repaint();
+				}
 			}
 
 			@Override
@@ -96,37 +142,25 @@ public class EventEditorPanel extends JPanel
 				
 					 IndexNPC=map.mapNPCManager.IsPresent(x,y);
 					if(IndexNPC!=-1){
-						MainGUI.panel_5.removeAll();
-						MainGUI.panel_5.add(new NPCPane().paneNPCs);
-						MainGUI.panel_5.revalidate();
-						MainGUI.panel_5.repaint();
+						
 						selectedEvent=0;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
-						return;
+						//return;
 					}
 					 IndexSign=map.mapSignManager.IsPresent(x,y);
 					if(IndexSign!=-1){
-						MainGUI.panel_5.removeAll();
-						MainGUI.panel_5.add(new SignPanel());
-						MainGUI.panel_5.revalidate();
-						MainGUI.panel_5.repaint();
+						
 						selectedEvent=1;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 						return;
 					}
 					IndexExit=map.mapExitManager.IsPresent(x,y);
 					if(IndexExit!=-1){
-						MainGUI.panel_5.removeAll();
-						MainGUI.panel_5.add(new ExitPanel());
-						MainGUI.panel_5.revalidate();
-						MainGUI.panel_5.repaint();
+					
 						selectedEvent=2;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 						return;
 					}
 					 IndexTriggers=map.mapTriggerManager.IsPresent(x,y);
 					if(IndexTriggers!=-1){
-						MainGUI.panel_5.removeAll();
-						MainGUI.panel_5.add(new TriggerPanel());
-						MainGUI.panel_5.revalidate();
-						MainGUI.panel_5.repaint();
+						
 						selectedEvent=3;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 						return;
 					}
@@ -159,7 +193,7 @@ public class EventEditorPanel extends JPanel
 				int srcY=moveSrcY;
 				int s=selectedEvent;
 				if(srcX!=x||srcY!=y){
-					
+					try{
 					switch(s){//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger)
 					case 0:
 						map.mapNPCManager.mapNPCs[IndexNPC].bX=(byte) x;
@@ -178,6 +212,9 @@ public class EventEditorPanel extends JPanel
 						map.mapTriggerManager.mapTriggers[IndexTriggers].bY=(byte) y;
 						break;
 					};
+					}catch(Exception e1){
+						System.out.println(e1.getMessage());
+					}
 					selectedEvent=-1;
 					DrawMap();
 					repaint();
