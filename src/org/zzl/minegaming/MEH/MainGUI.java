@@ -68,6 +68,7 @@ import javax.swing.border.LineBorder;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
 
@@ -468,7 +469,7 @@ public class MainGUI extends JFrame
 	}
 	JSplitPane splitPane2;
 	int paneSize2;
-	private JPanel panel_5;
+	public static JPanel panel_5;
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
 	private JMenuItem mntmNewMenuItem_1;
@@ -737,9 +738,9 @@ public class MainGUI extends JFrame
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
 				MainGUI.lblInfo.setText("Done! Finished in " + (double)(time / 1000) + " seconds!");
-				NPCPane n=new NPCPane();
 				
-				panel_5.add(n.paneNPCs);
+				
+				
 			}
 		}.start();
 	}

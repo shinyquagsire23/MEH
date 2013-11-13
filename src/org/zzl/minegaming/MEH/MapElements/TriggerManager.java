@@ -5,7 +5,8 @@ import org.zzl.minegaming.GBAUtils.ISaveable;
 
 public class TriggerManager implements ISaveable {
 	public Triggers[] mapTriggers;
-    public int IsPresent(int x, int y){
+    
+	public int IsPresent(int x, int y){
     	int i=0;
     	for(i=0;i<mapTriggers.length;i++){
     		if(mapTriggers[i].bX==x && mapTriggers[i].bY==y){
