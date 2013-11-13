@@ -166,13 +166,13 @@ public class MainGUI extends JFrame
 		JPanel splitm = new JPanel();
 		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		splitm.setPreferredSize(new Dimension(4, 10));
-		splitm.setMaximumSize(new Dimension(4, 32767));
+		splitm.setMaximumSize(new Dimension(4, 32000));
         JPanel pmtc = new JPanel();
 		
         pmtc.setLayout(new BorderLayout(0, 0));
 		
 		panel_5 = new JPanel();
-		panel_5.setPreferredSize(new Dimension(160, 10));
+		panel_5.setPreferredSize(new Dimension(220, 10));
 		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
 		eventsPanel.add(panel_5, BorderLayout.EAST);
 		panel_5.setLayout(new BorderLayout(0, 0));
@@ -687,7 +687,7 @@ public class MainGUI extends JFrame
 		lblGlobalTilesetPointer.setText("Global Tileset Pointer: " + BitConverter.toHexString(loadedMap.getMapData().globalTileSetPtr));
 		lblLocalTilesetPointer.setText("Local  Tileset  Pointer: " + BitConverter.toHexString(loadedMap.getMapData().localTileSetPtr));
 	}
-
+    
 	public void loadMap()
 	{
 		lblInfo.setText("Loading map...");
@@ -737,7 +737,9 @@ public class MainGUI extends JFrame
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
 				MainGUI.lblInfo.setText("Done! Finished in " + (double)(time / 1000) + " seconds!");
-			//	panel_4.add(new SignPanel());
+				NPCPane n=new NPCPane();
+				
+				panel_5.add(n.paneNPCs);
 			}
 		}.start();
 	}

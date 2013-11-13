@@ -3,6 +3,7 @@ package org.zzl.minegaming.MEH;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -34,10 +35,10 @@ public class EventEditorPanel extends JPanel
 	private Tileset localTiles;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
-
+    public static boolean Redraw = true;
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
-
+    Point pointEvent;
 	public EventEditorPanel()
 	{
 		this.addMouseMotionListener(new MouseMotionListener()
@@ -75,10 +76,47 @@ public class EventEditorPanel extends JPanel
 				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
 					return;
 				}
+				
 				System.out.println(e.getButton());
 				if(e.getButton() == e.BUTTON1)
 				{
+			
+				//If there's two events on tile, we'll handle that later with some kind of picker 
 				
+					int IndexNPC=map.mapNPCManager.IsPresent(x,y);
+					if(IndexNPC!=-1){
+						MainGUI.panel_5.removeAll();
+						MainGUI.panel_5.add(new NPCPane().paneNPCs);
+						MainGUI.panel_5.revalidate();
+						MainGUI.panel_5.repaint();
+						
+						return;
+					}
+					int IndexSign=map.mapSignManager.IsPresent(x,y);
+					if(IndexSign!=-1){
+						MainGUI.panel_5.removeAll();
+						MainGUI.panel_5.add(new SignPanel());
+						MainGUI.panel_5.revalidate();
+						MainGUI.panel_5.repaint();
+						return;
+					}
+					int IndexExit=map.mapExitManager.IsPresent(x,y);
+					if(IndexExit!=-1){
+						MainGUI.panel_5.removeAll();
+						MainGUI.panel_5.add(new ExitPanel());
+						MainGUI.panel_5.revalidate();
+						MainGUI.panel_5.repaint();
+						return;
+					}
+					int IndexTriggers=map.mapTriggerManager.IsPresent(x,y);
+					if(IndexTriggers!=-1){
+						MainGUI.panel_5.removeAll();
+						MainGUI.panel_5.add(new TriggerPanel());
+						MainGUI.panel_5.revalidate();
+						MainGUI.panel_5.repaint();
+						
+						return;
+					}
 				}
 				else if(e.getButton() == 3)
 				{
@@ -145,22 +183,13 @@ public class EventEditorPanel extends JPanel
 					(int) map.getMapData().mapHeight * 16);
 			gcBuff = imgBuffer.getGraphics();
 		
-			for (int y = 0; y < map.getMapData().mapHeight; y++)
-			{
-				for (int x = 0; x < map.getMapData().mapWidth; x++)
-				{
-					int TileID=(map.getMapTileData().getTile(x, y).getID());
-					int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
-					int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
-					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
-				}
-			}
+			gcBuff.drawImage(MapEditorPanel.imgBuffer, 0, 0, this);
 			DrawSigns();
 			DrawExits();
 			DrawNPCs();
 			DrawTriggers();
 			
-			this.repaint();
+			
 		}
 		catch (Exception e)
 		{
@@ -216,50 +245,13 @@ public class EventEditorPanel extends JPanel
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
+			if(Redraw){
+				DrawMap();
+				Redraw=false;
+			}
 			g.drawImage(imgBuffer, 0, 0, this);
-
-			if(renderPalette)
-			{
-				int x = 0;
-				for(int i = 0; i < 12; i++)
-				{
-					while(x < 16)
-					{
-						try
-						{
-							g.setColor(globalTiles.getPalette()[i].getIndex(x));
-							g.fillRect(x*8, i*8, 8, 8);
-						}
-						catch(Exception e){}
-						x++;
-					}
-					x = 0;
-				}
-				
-				x = 0;
-				for(int i = 0; i < 12; i++)
-				{
-					while(x < 16)
-					{
-						try
-						{
-							g.setColor(localTiles.getPalette()[i].getIndex(x));
-							g.fillRect(128+x*8, i*8, 8, 8);
-						}
-						catch(Exception e){}
-						x++;
-					}
-					x = 0;
-				}
-			}
-			if(renderTileset)
-			{
-				for(int i = 0; i < 13; i++)
-				{
-					g.drawImage(globalTiles.getTileSet(i),i*128,0,this);
-					g.drawImage(localTiles.getTileSet(i),i*128,DataStore.MainTSHeight + 8,this);
-				}
-			}
+           
+			
 		}
 		try
 		{

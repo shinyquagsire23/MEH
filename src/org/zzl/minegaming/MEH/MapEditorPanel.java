@@ -57,6 +57,8 @@ public class MapEditorPanel extends JPanel
 					map.isEdited = true;
 					// myParent.mapEditorPanel.setMap(myParent.loadedMap);
 					DrawMap();
+					
+				
 					repaint();
 				}
 			}
@@ -150,8 +152,8 @@ public class MapEditorPanel extends JPanel
 		this.setSize(size);
 	}
 
-	private Graphics gcBuff;
-	private Image imgBuffer = null;
+	public static Graphics gcBuff;
+	static  Image imgBuffer = null;
 
 	public void DrawMap()
 	{
@@ -172,8 +174,8 @@ public class MapEditorPanel extends JPanel
 					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
 				}
 			}
-		
-			
+		 
+			EventEditorPanel.Redraw=true;
 			this.repaint();
 		}
 		catch (Exception e)
