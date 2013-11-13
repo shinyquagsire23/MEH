@@ -69,6 +69,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.BoxLayout;
+import javax.swing.JMenuItem;
 
 public class MainGUI extends JFrame
 {
@@ -227,6 +228,43 @@ public class MainGUI extends JFrame
 
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
+		
+		mnOpen = new JMenuItem("Open...");
+		mnOpen.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				openROM();
+			}
+		});
+		mnFile.add(mnOpen);
+		
+		mnSave = new JMenuItem("Save");
+		mnSave.enable(false);
+		mnSave.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				loadedMap.save();
+				ROMManager.getActiveROM().commitChangesToROMFile();
+			}
+		});
+		mnFile.add(mnSave);
+		mnFile.addSeparator();
+		
+		JMenuItem mnSaveMap = new JMenuItem("Save Map...");
+		mnFile.add(mnSaveMap);
+		mnSaveMap.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				loadedMap.save();
+			}
+		});
+		mnFile.addSeparator();
+		
+		mntmNewMenuItem_1 = new JMenuItem("Save Map to PNG...");
+		mnFile.add(mntmNewMenuItem_1);
 
 		JMenu mnSettings = new JMenu("Settings");
 		menuBar.add(mnSettings);
@@ -256,32 +294,7 @@ public class MainGUI extends JFrame
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				int i = GBARom.loadRom();
-
-				dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
-
-				if(1 != -1)
-				{
-					mapBanks.setModel(new DefaultTreeModel(
-							new DefaultMutableTreeNode("By Bank...") {
-
-							}
-							));
-					DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
-					model.reload();
-					BankLoader.reset();
-					TilesetCache.clearCache();
-					mapEditorPanel.reset();
-					borderTileEditor.reset();
-					tileEditorPanel.reset();
-					mapEditorPanel.repaint();
-					borderTileEditor.repaint();
-					tileEditorPanel.repaint();
-				}
-				lblInfo.setText("Loading...");
-
-				new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
-				new WildDataCache(ROMManager.getActiveROM()).start();
+				openROM();
 			}
 		});
 		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, -1, -2));
@@ -456,6 +469,9 @@ public class MainGUI extends JFrame
 	JSplitPane splitPane2;
 	int paneSize2;
 	private JPanel panel_5;
+	private JMenuItem mnOpen;
+	private JMenuItem mnSave;
+	private JMenuItem mntmNewMenuItem_1;
 	void CreateSplitPane2(){
 		splitPane2 = new JSplitPane();
 		splitPane2.setResizeWeight(0.2);
@@ -729,5 +745,41 @@ public class MainGUI extends JFrame
 	public static void repaintTileEditorPanel()
 	{
 		tileEditorPanel.repaint();
+	}
+	
+	public void openROM()
+	{
+		int i = GBARom.loadRom();
+
+		dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
+
+		if(1 != -1)
+		{
+			mapBanks.setModel(new DefaultTreeModel(
+					new DefaultMutableTreeNode("By Bank...") {
+
+					}
+					));
+			DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
+			model.reload();
+			BankLoader.reset();
+			TilesetCache.clearCache();
+			mapEditorPanel.reset();
+			borderTileEditor.reset();
+			tileEditorPanel.reset();
+			mapEditorPanel.repaint();
+			borderTileEditor.repaint();
+			tileEditorPanel.repaint();
+		}
+		lblInfo.setText("Loading...");
+
+		new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
+		new WildDataCache(ROMManager.getActiveROM()).start();
+		mnSave.enable(true);
+	}
+	
+	public void saveROM()
+	{
+		
 	}
 }
