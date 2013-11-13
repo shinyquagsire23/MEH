@@ -1,8 +1,10 @@
-package org.zzl.minegaming.MEH;
+package org.zzl.minegaming.MEH.MapElements;
 
 import java.util.HashMap;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
+import org.zzl.minegaming.MEH.DataStore;
+import org.zzl.minegaming.MEH.MapID;
 
 public class WildDataCache extends Thread implements Runnable
 {

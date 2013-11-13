@@ -8,6 +8,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
+import org.zzl.minegaming.MEH.MapElements.Tileset;
+
 public class BlockRenderer extends Component
 {
 	private Tileset global;

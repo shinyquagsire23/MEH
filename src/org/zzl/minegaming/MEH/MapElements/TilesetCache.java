@@ -1,4 +1,4 @@
-package org.zzl.minegaming.MEH;
+package org.zzl.minegaming.MEH.MapElements;
 
 import java.util.HashMap;
 

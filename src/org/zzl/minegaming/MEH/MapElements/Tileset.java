@@ -1,4 +1,4 @@
-package org.zzl.minegaming.MEH;
+package org.zzl.minegaming.MEH.MapElements;
 
 import java.awt.Component;
 import java.awt.Graphics2D;
@@ -17,7 +17,7 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.Palette;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-import org.zzl.minegaming.MEH.MapElements.TilesetHeader;
+import org.zzl.minegaming.MEH.DataStore;
 
 public class Tileset
 {

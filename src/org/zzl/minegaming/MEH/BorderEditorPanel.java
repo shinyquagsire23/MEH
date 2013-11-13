@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.MEH.MapElements.Tileset;
 
 public class BorderEditorPanel extends JPanel
 {
