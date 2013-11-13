@@ -44,7 +44,7 @@ public class MapTileData implements ISaveable
 			{
 				
 				int index = (int) ((y*mData.mapWidth) + x);
-				//rom.writeWord(dataLoc + index*2, mapTiles[x][y].getID() + ((mapTiles[x][y].getMeta() & 0x3F) << 10));
+				rom.writeWord(dataLoc + index*2, mapTiles[x][y].getID() + ((mapTiles[x][y].getMeta() & 0x3F) << 10));
 			}
 		}
 	}
