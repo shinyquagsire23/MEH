@@ -8,7 +8,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
@@ -39,6 +41,10 @@ public class EventEditorPanel extends JPanel
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
 	public static NPCPane paneNPC;
+	public Image  imgTrigger;
+	public Image  imgWarp;
+	public Image  imgSign;
+	public Image imgNPC;
     Point pointEvent;
     int moveSrcX;
     int moveSrcY;
@@ -50,6 +56,17 @@ public class EventEditorPanel extends JPanel
 	public EventEditorPanel()
 	{
 		selectedEvent=-1;
+		
+		
+		try {
+			imgTrigger=ImageIO.read(MainGUI.class.getResource("/resources/trigger.png").openStream());
+			imgWarp=ImageIO.read(MainGUI.class.getResource("/resources/warp.png").openStream());
+			imgSign=ImageIO.read(MainGUI.class.getResource("/resources/sign.png").openStream());
+			imgNPC=ImageIO.read(MainGUI.class.getResource("/resources/npc.png").openStream());
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
@@ -284,7 +301,7 @@ public class EventEditorPanel extends JPanel
     	int i=0;
     	for(i=0;i<map.mapNPCManager.mapNPCs.length;i++){
     		SpritesNPC n=map.mapNPCManager.mapNPCs[i];
-    	     DrawText("N", n.bX*16 , n.bY*16);
+    		gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);
     	}
     }
     void DrawTriggers(){
@@ -293,7 +310,7 @@ public class EventEditorPanel extends JPanel
     	for(i=0;i<map.mapTriggerManager.mapTriggers.length;i++){
     		Triggers n=map.mapTriggerManager.mapTriggers[i];
     		
-    		 DrawText("T", n.bX*16 , n.bY*16);
+    		 gcBuff.drawImage(imgTrigger, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);
     	}
     }
     void DrawSigns(){
@@ -302,7 +319,7 @@ public class EventEditorPanel extends JPanel
     	for(i=0;i<map.mapSignManager.mapSigns.length;i++){
     		SpritesSigns n=map.mapSignManager.mapSigns[i];
     		
-    		DrawText("S", n.bX*16 , n.bY*16);
+    		 gcBuff.drawImage(imgSign, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);
     	}
     }
     void DrawExits(){
@@ -311,7 +328,7 @@ public class EventEditorPanel extends JPanel
     	SpritesExit[] tmp=map.mapExitManager.mapExits;
     	for(i=0;i<tmp.length;i++){
     		SpritesExit n=tmp[i];
-    		DrawText("E", n.bX*16 , n.bY*16);
+    		 gcBuff.drawImage(imgWarp, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);
     	}
     }
 	@Override
