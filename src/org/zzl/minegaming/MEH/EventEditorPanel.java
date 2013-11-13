@@ -39,94 +39,103 @@ public class EventEditorPanel extends JPanel
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
     Point pointEvent;
+    int moveSrcX;
+    int moveSrcY;
+    int selectedEvent;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
+	int IndexNPC;
+	int IndexSign;
+	int IndexExit;
+	int IndexTriggers;
 	public EventEditorPanel()
 	{
+		selectedEvent=-1;
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
 			@Override
 			public void mouseDragged(MouseEvent e)
 			{
-				int x = (e.getX() / 16);
-				int y = (e.getY() / 16);
-
-				if(e.getButton() == 0)
-				{
-					
-				}
+				
 			}
 
 			@Override
 			public void mouseMoved(MouseEvent e)
 			{
-
+				
 
 			}
 
 		});
-
+        
 		this.addMouseListener(new MouseListener()
 		{
 
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e)
+			{
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
+				moveSrcX=x;
+				moveSrcY=y;
 				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
 					return;
 				}
-				
+			
+			
 				System.out.println(e.getButton());
 				if(e.getButton() == e.BUTTON1)
 				{
 			
 				//If there's two events on tile, we'll handle that later with some kind of picker 
 				
-					int IndexNPC=map.mapNPCManager.IsPresent(x,y);
+					 IndexNPC=map.mapNPCManager.IsPresent(x,y);
 					if(IndexNPC!=-1){
 						MainGUI.panel_5.removeAll();
 						MainGUI.panel_5.add(new NPCPane().paneNPCs);
 						MainGUI.panel_5.revalidate();
 						MainGUI.panel_5.repaint();
-						
+						selectedEvent=0;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 						return;
 					}
-					int IndexSign=map.mapSignManager.IsPresent(x,y);
+					 IndexSign=map.mapSignManager.IsPresent(x,y);
 					if(IndexSign!=-1){
 						MainGUI.panel_5.removeAll();
 						MainGUI.panel_5.add(new SignPanel());
 						MainGUI.panel_5.revalidate();
 						MainGUI.panel_5.repaint();
+						selectedEvent=1;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 						return;
 					}
-					int IndexExit=map.mapExitManager.IsPresent(x,y);
+					IndexExit=map.mapExitManager.IsPresent(x,y);
 					if(IndexExit!=-1){
 						MainGUI.panel_5.removeAll();
 						MainGUI.panel_5.add(new ExitPanel());
 						MainGUI.panel_5.revalidate();
 						MainGUI.panel_5.repaint();
+						selectedEvent=2;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 						return;
 					}
-					int IndexTriggers=map.mapTriggerManager.IsPresent(x,y);
+					 IndexTriggers=map.mapTriggerManager.IsPresent(x,y);
 					if(IndexTriggers!=-1){
 						MainGUI.panel_5.removeAll();
 						MainGUI.panel_5.add(new TriggerPanel());
 						MainGUI.panel_5.revalidate();
 						MainGUI.panel_5.repaint();
-						
+						selectedEvent=3;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 						return;
 					}
+					
 				}
 				else if(e.getButton() == 3)
 				{
 					
 				}
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e)
-			{
 			}
 
 			@Override
@@ -144,6 +153,35 @@ public class EventEditorPanel extends JPanel
 			@Override
 			public void mouseReleased(MouseEvent e)
 			{
+				int x = (e.getX() / 16);
+				int y = (e.getY() / 16);
+				int srcX=moveSrcX;
+				int srcY=moveSrcY;
+				int s=selectedEvent;
+				if(srcX!=x||srcY!=y){
+					
+					switch(s){//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger)
+					case 0:
+						map.mapNPCManager.mapNPCs[IndexNPC].bX=(byte) x;
+						map.mapNPCManager.mapNPCs[IndexNPC].bY=(byte) y;
+						break;
+					case 1:
+						map.mapSignManager.mapSigns[IndexSign].bX=(byte) x;
+						map.mapSignManager.mapSigns[IndexSign].bY=(byte) y;
+						break;
+					case 2:
+						map.mapExitManager.mapExits[IndexExit].bX=(byte) x;
+						map.mapExitManager.mapExits[IndexExit].bY=(byte) y;
+						break;
+					case 3:
+						map.mapTriggerManager.mapTriggers[IndexTriggers].bX=(byte) x;
+						map.mapTriggerManager.mapTriggers[IndexTriggers].bY=(byte) y;
+						break;
+					};
+					selectedEvent=-1;
+					DrawMap();
+					repaint();
+				}
 			}
 
 		});

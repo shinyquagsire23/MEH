@@ -468,7 +468,7 @@ public class MainGUI extends JFrame
 	}
 	JSplitPane splitPane2;
 	int paneSize2;
-	private JPanel panel_5;
+	public static JPanel panel_5;
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
 	private JMenuItem mntmNewMenuItem_1;
