@@ -17,10 +17,10 @@ public class Map implements ISaveable
 	private MapTileData mapTileData;
 	public MapHeader mapHeader; 
 	public Sprites mapSprites;
-	public SpritesNPCManager mapNPCManager;
-	public SpritesSignManager mapSignManager;
-	public SpritesExitManager mapExitManager;
-	public TriggerManager mapTriggerManager;
+	public static SpritesNPCManager mapNPCManager;
+	public static SpritesSignManager mapSignManager;
+	public static SpritesExitManager mapExitManager;
+	public static TriggerManager mapTriggerManager;
 	public boolean isEdited;
 	public Map(GBARom rom, int dataOffset)
 	{

@@ -11,22 +11,32 @@ import javax.swing.JButton;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.MEH.MapElements.TriggerManager;
 import org.zzl.minegaming.MEH.MapElements.Triggers;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class TriggerPanel extends JPanel {
 
 	private JTextField txtFlagValue;
 	private JTextField txtScriptAddr;
 	private JTextField txtFlagCheck;
+	int myIndex;
     void Load(TriggerManager mgr, int index){
     	Triggers t=mgr.mapTriggers[index];
     	txtScriptAddr.setText(BitConverter.toHexString((int)t.pScript));
     	txtFlagValue.setText(BitConverter.toHexString((int)t.hFlagValue));
     	txtFlagCheck.setText(BitConverter.toHexString((int)t.hFlagCheck));
     }
+    
+    public void Save(TriggerManager mgr){
+    	mgr.mapTriggers[myIndex].pScript= Integer.parseInt(txtScriptAddr.getText(), 16);
+    	mgr.mapTriggers[myIndex].hFlagValue = Integer.parseInt(txtFlagValue.getText(), 16);
+    	mgr.mapTriggers[myIndex].hFlagCheck = Integer.parseInt(txtFlagCheck.getText(), 16);
+    }
 	/**
 	 * Create the panel.
 	 */
 	public TriggerPanel(TriggerManager mgr, int index) {
+		myIndex=index;
 		setBorder(new TitledBorder(null, "Triggers", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
 		JLabel lblScriptAddr = new JLabel("Script Addr:");
@@ -51,6 +61,11 @@ public class TriggerPanel extends JPanel {
 		txtFlagValue.setColumns(10);
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			
+			}
+		});
 		add(btnSave);
 		
 		JPanel panel = new JPanel();

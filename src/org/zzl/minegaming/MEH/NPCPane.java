@@ -31,6 +31,8 @@ import org.zzl.minegaming.MEH.MapElements.Triggers;
 
 import javax.swing.JButton;
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class NPCPane extends JPanel{
 
@@ -60,6 +62,8 @@ public class NPCPane extends JPanel{
 	JLabel lbliFlag;JTextField txtiFlag;   
 	JLabel lblb23;
 	JLabel lblb24;
+	int myIndex;
+	
 	private JTextField textField;
 	private JTextField textField_1;
 	void Load(SpritesNPCManager mgr, int NPCIndex){
@@ -72,11 +76,24 @@ public class NPCPane extends JPanel{
 		txtScript.setText(String.format("%X", ((int)t.pScript)));
 		txtiFlag.setText(BitConverter.toHexString((int)t.iFlag));
 	}
+	void Save(SpritesNPCManager mgr){
+		SpritesNPC t = mgr.mapNPCs[myIndex];
+		mgr.mapNPCs[myIndex].bSpriteSet = Byte.parseByte(txtSpriteSet.getText());
+		mgr.mapNPCs[myIndex].bBehavior1 = Byte.parseByte(txtBehavior1.getText());
+		mgr.mapNPCs[myIndex].bBehavior2 = Byte.parseByte(txtBehavior2.getText());
+		mgr.mapNPCs[myIndex].bIsTrainer = (byte) (chkIsTrainer.isSelected() ? 1:0);
+		
+		mgr.mapNPCs[myIndex].bTrainerLOS= Byte.parseByte(txtTrainerLOS.getText());
+		mgr.mapNPCs[myIndex].pScript= Integer.parseInt(txtScript.getText(), 16);
+		mgr.mapNPCs[myIndex].iFlag = Integer.parseInt(txtiFlag.getText());
+	}
+	
     void CreateNPCPane(){
     	
     }
 	@SuppressWarnings("deprecation")
 	NPCPane(SpritesNPCManager mgr, int NPCIndex){
+		myIndex=NPCIndex;
 		setBorder(new TitledBorder(null, "NPC", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
@@ -152,6 +169,11 @@ public class NPCPane extends JPanel{
 		txtScript.setBounds(90, 150, 32, 16);
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Save(Map.mapNPCManager);
+			}
+		});
 		add(btnSave);
 		btnSave.setBounds(55, 163, 89, 23);
 		Load(mgr, NPCIndex);
