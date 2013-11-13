@@ -28,14 +28,12 @@ import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPCManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesSigns;
 import org.zzl.minegaming.MEH.MapElements.Triggers;
+
 import javax.swing.JButton;
+import java.awt.FlowLayout;
 
 public class NPCPane extends JPanel{
-    
-	JPanel paneNPCs;
-	JPanel paneTriggers;
-	JPanel paneScripts;
-	JPanel paneExits;
+
 	//NPC Controls
 	JLabel lblNPCNum;
 	JComboBox numNPCs;
@@ -62,82 +60,100 @@ public class NPCPane extends JPanel{
 	JLabel lbliFlag;JTextField txtiFlag;   
 	JLabel lblb23;
 	JLabel lblb24;
-	void Load(SpritesNPCManager mgr){
-		
+	private JTextField textField;
+	private JTextField textField_1;
+	void Load(SpritesNPCManager mgr, int NPCIndex){
+		SpritesNPC t = mgr.mapNPCs[NPCIndex];
+		txtSpriteSet.setText(Byte.toString(t.bSpriteSet));
+		txtBehavior1.setText(Byte.toString(t.bBehavior1));
+		txtBehavior2.setText(Byte.toString(t.bBehavior2));
+		chkIsTrainer.setSelected(t.bIsTrainer==1);
+		txtTrainerLOS.setText(Byte.toString(t.bTrainerLOS));
+		txtScript.setText(String.format("%X", ((int)t.pScript)));
+		txtiFlag.setText(BitConverter.toHexString((int)t.iFlag));
 	}
     void CreateNPCPane(){
     	
     }
 	@SuppressWarnings("deprecation")
-	NPCPane(){
-		//4 "Layers"
-		LayoutManager mgr;
-	
-		paneNPCs=new JPanel();
-		paneNPCs.setBounds(16, 16, 207, 179);
-		paneNPCs.setLayout(null);
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "NPCs", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_1.setBounds(10, 11, 187, 157);
-		paneNPCs.add(panel_1);
+	NPCPane(SpritesNPCManager mgr, int NPCIndex){
+		setBorder(new TitledBorder(null, "NPC", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
-		panel_1.setLayout(null);
+		
 		
 		lblSpriteSet=new JLabel("Spriteset:");
-		txtSpriteSet =new JTextField();
+		add(lblSpriteSet);
 		lblSpriteSet.setBounds(10,38,lblSpriteSet.getText().length()*8,16);
 		Rectangle r=lblSpriteSet.getBounds();
+		txtSpriteSet =new JTextField();
+		txtSpriteSet.setColumns(2);
+		add(txtSpriteSet);
 		txtSpriteSet.setBounds(90,38,87,16);
 		txtSpriteSet.disable();
 		
 		
 		lblBehavior1=new JLabel("Behavior1:");
-		txtBehavior1 =new JTextField();
+		add(lblBehavior1);
 		lblBehavior1.setBounds(10,54,lblBehavior1.getText().length()*8,16);
 		r=lblBehavior1.getBounds();
+		txtBehavior1 =new JTextField();
+		txtBehavior1.setColumns(2);
+		add(txtBehavior1);
 		txtBehavior1.setBounds(90,54,32,16);
 		
 		
 		lblBehavior2=new JLabel("Behavior2:");
-		txtBehavior2 =new JTextField();
+		add(lblBehavior2);
 		lblBehavior2.setBounds(10,70,lblBehavior2.getText().length()*8,16);
 		r=lblBehavior2.getBounds();
+		txtBehavior2 =new JTextField();
+		txtBehavior2.setColumns(2);
+		add(txtBehavior2);
 		txtBehavior2.setBounds(90,70,64,16);
 		
 		
 		lblIsTrainer=new JLabel("Is a Trainer:");
-		chkIsTrainer =new JCheckBox();
+		add(lblIsTrainer);
 		lblIsTrainer.setBounds(10,86,lblIsTrainer.getText().length()*8,16);
 		r=lblIsTrainer.getBounds();
-		chkIsTrainer.setBounds(114,86,32,16);
+        chkIsTrainer =new JCheckBox();
+        add(chkIsTrainer);
+        chkIsTrainer.setBounds(114,86,32,16);
 		
 		
         lblTrainerLOS=new JLabel("TrainerLOS:");
+        add(lblTrainerLOS);
+        lblTrainerLOS.setBounds(10,102,lblTrainerLOS.getText().length()*8,16);
+        r=lblTrainerLOS.getBounds();
 		txtTrainerLOS =new JTextField();
-		lblTrainerLOS.setBounds(10,102,lblTrainerLOS.getText().length()*8,16);
-		r=lblTrainerLOS.getBounds();
-		txtTrainerLOS.setBounds(98,102,32,16);
-
+		txtTrainerLOS.setColumns(3);
+		add(txtTrainerLOS);
+		txtTrainerLOS.setBounds(90,102,32,16);
 		
+		 lbliFlag = new JLabel("NPC Flag:");
+		 add(lbliFlag);
+		 lbliFlag.setBounds(10, 128, 88, 16);
 		
+		txtiFlag = new JTextField();
+		txtiFlag.setColumns(4);
+		add(txtiFlag);
+		txtiFlag .setText("0");
+		txtiFlag .setBounds(90, 128, 32, 16);
 		
+		lblScript = new JLabel("NPC Pointer:");
+		add(lblScript);
+		lblScript.setBounds(10, 150, 88, 16);
 		
-		
-		panel_1.add(lblIsTrainer,BorderLayout.WEST);
-		panel_1.add(chkIsTrainer,BorderLayout.EAST);
-		panel_1.add(lblSpriteSet,BorderLayout.WEST);
-		panel_1.add(txtSpriteSet,BorderLayout.EAST);
-		panel_1.add(lblBehavior1,BorderLayout.WEST);
-		panel_1.add(txtBehavior1,BorderLayout.EAST);
-		panel_1.add(lblBehavior2,BorderLayout.WEST);
-		panel_1.add(txtBehavior2,BorderLayout.EAST);
-		panel_1.add(lblIsTrainer,BorderLayout.WEST);
-		panel_1.add(chkIsTrainer,BorderLayout.EAST);
-		panel_1.add(lblTrainerLOS,BorderLayout.WEST);
-		panel_1.add(txtTrainerLOS,BorderLayout.EAST);
+		txtScript = new JTextField();
+		txtScript.setColumns(9);
+		add(txtScript);
+		txtScript.setText("0");
+		txtScript.setBounds(90, 150, 32, 16);
 		
 		JButton btnSave = new JButton("Save");
-		btnSave.setBounds(54, 123, 89, 23);
-		panel_1.add(btnSave);
+		add(btnSave);
+		btnSave.setBounds(55, 163, 89, 23);
+		Load(mgr, NPCIndex);
 	}
 }
