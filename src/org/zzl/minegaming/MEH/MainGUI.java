@@ -48,6 +48,8 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ImagePanel;
 import org.zzl.minegaming.GBAUtils.ROMManager;
+import org.zzl.minegaming.MEH.MapElements.TilesetCache;
+import org.zzl.minegaming.MEH.MapElements.WildDataCache;
 
 import javax.swing.JPopupMenu;
 

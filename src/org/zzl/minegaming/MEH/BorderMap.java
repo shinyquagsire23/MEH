@@ -3,6 +3,8 @@ package org.zzl.minegaming.MEH;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
+import org.zzl.minegaming.MEH.MapElements.BorderTileData;
+import org.zzl.minegaming.MEH.MapElements.MapData;
 
 public class BorderMap implements ISaveable
 {

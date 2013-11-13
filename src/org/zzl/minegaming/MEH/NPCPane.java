@@ -158,7 +158,7 @@ public class NPCPane extends JPanel{
 		txtiFlag .setText("0");
 		txtiFlag .setBounds(90, 128, 32, 16);
 		
-		lblScript = new JLabel("NPC Pointer:");
+		lblScript = new JLabel("NPC Script Pointer:");
 		add(lblScript);
 		lblScript.setBounds(10, 150, 88, 16);
 		
