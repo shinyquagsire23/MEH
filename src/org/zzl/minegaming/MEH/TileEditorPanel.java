@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -28,10 +30,21 @@ public class TileEditorPanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
-
+    static Rectangle mouseTracker;
+    public void SetRect(int width, int heigh){
+    	mouseTracker.height=heigh;
+    	mouseTracker.width=width;
+    }
+    public void SetRect(){
+    	mouseTracker.height=16;
+    	mouseTracker.width=16;
+    }
+    int srcX;
+    int srcY;
 	public TileEditorPanel()
 	{
-
+       mouseTracker=new Rectangle(0,0,16,16);
+       
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
@@ -44,7 +57,9 @@ public class TileEditorPanel extends JPanel
 			@Override
 			public void mouseMoved(MouseEvent e)
 			{
-				
+				mouseTracker.x=e.getX();
+				mouseTracker.y=e.getY();
+				repaint();
 				
 			}
 
@@ -61,6 +76,8 @@ public class TileEditorPanel extends JPanel
 
 				x = (e.getX() / 16);
 				y = (e.getY() / 16);
+				srcX=x;
+				srcY=y;
 				baseSelectedTile = x + (y * editorWidth);
 				String k = "Current Tile: ";
 				k += String.format("0x%8s",
@@ -79,7 +96,7 @@ public class TileEditorPanel extends JPanel
 			@Override
 			public void mouseExited(MouseEvent e)
 			{
-
+				
 			}
 
 			@Override
@@ -92,6 +109,12 @@ public class TileEditorPanel extends JPanel
 			public void mouseReleased(MouseEvent e)
 			{
 				isMouseDown = false;
+				if(e.getButton()==3){
+				int x=e.getX()/16;
+				int y=e.getY()/16;
+				SetRect((x-srcX)*16, (y-srcY)*16);
+					
+				}
 			}
 
 		});
@@ -143,6 +166,8 @@ public class TileEditorPanel extends JPanel
 			g.drawImage(imgBuffer, 0, 0, this);
 			g.setColor(Color.red);
 			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
+			g.setColor(Color.GREEN);
+			g.drawRect(mouseTracker.x,mouseTracker.y,mouseTracker.width,mouseTracker.height);
 		}
 		try
 		{

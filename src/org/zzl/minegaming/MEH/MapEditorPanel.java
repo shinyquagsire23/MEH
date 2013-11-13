@@ -46,21 +46,7 @@ public class MapEditorPanel extends JPanel
 			@Override
 			public void mouseDragged(MouseEvent e)
 			{
-				int x = (e.getX() / 16);
-				int y = (e.getY() / 16);
-
-				if(e.getButton() == 0)
-				{
-					int tile = TileEditorPanel.baseSelectedTile;
-					map.getMapTileData().getTile(x, y).SetID(tile);
-
-					map.isEdited = true;
-					// myParent.mapEditorPanel.setMap(myParent.loadedMap);
-					DrawMap();
-					
 				
-					repaint();
-				}
 			}
 
 			@Override
@@ -84,17 +70,28 @@ public class MapEditorPanel extends JPanel
 					return;
 				}
 				System.out.println(e.getButton());
-				if(e.getButton() == e.BUTTON1)
+			
+
+				if(e.getButton() == 1)
 				{
 					int tile = TileEditorPanel.baseSelectedTile;
-					try{
-					map.getMapTileData().getTile(x, y).SetID(tile);
-					}catch(Exception ex){
-						
+					int tWidth= TileEditorPanel.editorWidth;
+					int widthLoop=(TileEditorPanel.mouseTracker.width/tWidth)-2;
+					int heightLoop=(TileEditorPanel.mouseTracker.height/16);
+					int DrawX=0;
+					int DrawY=0;
+					for(DrawX=0;DrawX<widthLoop;DrawX++){
+						for(DrawY=0;DrawY<heightLoop;DrawY++){
+							map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID((tile+DrawX) + (DrawY*tWidth));
+						}
 					}
+					
+
 					map.isEdited = true;
 					// myParent.mapEditorPanel.setMap(myParent.loadedMap);
 					DrawMap();
+					
+				
 					repaint();
 				}
 				else if(e.getButton() == 3)
