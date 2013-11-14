@@ -13,6 +13,7 @@ public class OverworldSpritesManager {
    }
    
    public OverworldSpritesManager(GBARom rom, SpritesNPC[] NPCs){
+	   if(DataStore.mehSettingShowSprites == 0) return;//Don't load if not enabled.
 	   Sprites=new OverworldSprites[NPCs.length];
 	   int i=0; 
 	   for(i=0;i<NPCs.length;i++){
