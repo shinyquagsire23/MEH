@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-import org.zzl.minegaming.MEH.MapElements.OverworldSpriteManager;
+
 import org.zzl.minegaming.MEH.MapElements.OverworldSprites;
 import org.zzl.minegaming.MEH.MapElements.SpritesExit;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
@@ -50,7 +50,7 @@ public class EventEditorPanel extends JPanel
 	public Image  imgWarp;
 	public Image  imgSign;
 	public Image imgNPC;
-	public OverworldSprites k;
+	
     Point pointEvent;
     int moveSrcX;
     int moveSrcY;
@@ -272,16 +272,13 @@ public class EventEditorPanel extends JPanel
 	private Graphics gcBuff;
 	private Image imgBuffer = null;
 
-	public void DrawMap(GBARom rom){
-		k=new OverworldSprites(rom, (int)DataStore.SpriteBase+(1*36));
-		DrawMap();
-	}
+	
 	
 	public void DrawMap()
 	{
 		try
 		{
-
+ 
 			imgBuffer = createImage((int) map.getMapData().mapWidth * 16,
 					(int) map.getMapData().mapHeight * 16);
 			gcBuff = imgBuffer.getGraphics();
@@ -310,12 +307,18 @@ public class EventEditorPanel extends JPanel
     void DrawNPCs(){
     	
     	int i=0;
-    	gcBuff.drawImage(k.imgBuffer,0, 0, 64, 64,0,0,64,64,null);
+    	
     	for(i=0;i<Map.mapNPCManager.mapNPCs.length;i++){
     		SpritesNPC n=Map.mapNPCManager.mapNPCs[i];
-    		Image imgNPC=Map.overworldSpriteManager.imgSprites[n.bSpriteSet];
-    	
-    		gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 64, n.bY*16 + 64, 0, 0, 64, 64, this);
+    		if(DataStore.mehSettingShowSprites==1){
+	    	
+	    		
+	    		Image imgNPCs=Map.overworldSpritesManager.GetImage(i);
+	    	    
+	    		gcBuff.drawImage(imgNPCs, n.bX*16, n.bY*16,n.bX*16+ 64, n.bY*16 + 64, 0, 0, 64, 64, this);
+    		}else{
+    			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
+    		}
     	}
     }
     void DrawTriggers(){
