@@ -138,7 +138,7 @@ String nkey=iP.get(Section, key);
 			MapBankSize[i] = Integer.parseInt(mBS[i]);
 		}
 		//Name=ip.getString(ROMHeader, "Name");
-	
+		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
 		
 		
 		
@@ -209,5 +209,7 @@ String nkey=iP.get(Section, key);
 	public static	int  LocalTSHeight;
 	public static 	int  NumBanks;
 	public static	int[] MapBankSize;
+	public static   int mehSettingShowSprites;
+	
 	
 }

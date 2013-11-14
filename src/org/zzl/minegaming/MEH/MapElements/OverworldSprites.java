@@ -51,7 +51,7 @@ public class OverworldSprites {
 	public static Palette[] myPal;
 	private BufferedImage[] bi;
 	
-	int mSpriteSize;
+	public int mSpriteSize;
 	 
 	/*			if(renderTileset)
 				{
@@ -95,73 +95,26 @@ public class OverworldSprites {
     //AutoX and AutoY are only for drawlarge 
    
     void DrawLarge(){
-
-		  
-	     
-	    
-	    gcBuff.drawImage(getTile(0,iPal&0xf), 0, 0,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(1,iPal&0xf), 8, 0,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(2,iPal&0xf), 16, 0,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(3,iPal&0xf), 24, 0,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(4,iPal&0xf), 0, 8,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(5,iPal&0xf), 8, 8,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(6,iPal&0xf), 16, 8,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(7,iPal&0xf), 24, 8,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(8,iPal&0xf), 0, 16,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(9,iPal&0xf), 8, 16,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(10,iPal&0xf), 16, 16,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(11,iPal&0xf), 24, 16,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(12,iPal&0xf), 0, 24,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(13,iPal&0xf), 8, 24,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(14,iPal&0xf), 16, 24,null);
-	  
-	     
-	    
-	    gcBuff.drawImage(getTile(15,iPal&0xf), 24, 24,null);
-	    
-	
+     try{
+     gcBuff.drawImage(getTile(0,iPal&0xf), 0, 0,null);
+	 gcBuff.drawImage(getTile(1,iPal&0xf), 8, 0,null);
+	 gcBuff.drawImage(getTile(2,iPal&0xf), 16, 0,null);
+	 gcBuff.drawImage(getTile(3,iPal&0xf), 24, 0,null);
+	 gcBuff.drawImage(getTile(4,iPal&0xf), 0, 8,null);
+	 gcBuff.drawImage(getTile(5,iPal&0xf), 8, 8,null);
+	 gcBuff.drawImage(getTile(6,iPal&0xf), 16, 8,null);
+	 gcBuff.drawImage(getTile(7,iPal&0xf), 24, 8,null);
+	 gcBuff.drawImage(getTile(8,iPal&0xf), 0, 16,null);
+	 gcBuff.drawImage(getTile(9,iPal&0xf), 8, 16,null);
+	 gcBuff.drawImage(getTile(10,iPal&0xf), 16, 16,null);
+	 gcBuff.drawImage(getTile(11,iPal&0xf), 24, 16,null);
+	 gcBuff.drawImage(getTile(12,iPal&0xf), 0, 24,null);
+	 gcBuff.drawImage(getTile(13,iPal&0xf), 8, 24,null);
+	 gcBuff.drawImage(getTile(14,iPal&0xf), 16, 24,null);
+	 gcBuff.drawImage(getTile(15,iPal&0xf), 24, 24,null);
+     }catch(Exception e){
+	 gcBuff.drawRect(0, 0, 24, 24);   
+     }
    
     }
 	void PaintMeLikeYourWomenInMagazines(){
@@ -169,7 +122,7 @@ public class OverworldSprites {
 			
 			
 			
-			imgBuffer = new BufferedImage(64,64,BufferedImage.TYPE_INT_ARGB);
+			imgBuffer = new BufferedImage(128,128,BufferedImage.TYPE_INT_ARGB);
 			
 			gcBuff=imgBuffer.getGraphics();
 			switch(mSpriteSize){
@@ -213,7 +166,7 @@ public class OverworldSprites {
 			mSpriteSize=2;
 			
 		}else{
-			sz=(8*32)/2;
+			sz=(32*32)/2;
 			mSpriteSize=1;
 				
 				
@@ -227,7 +180,7 @@ public class OverworldSprites {
 			DataBuffer=BitConverter.ToInts(dBuff); //Read decompressed data
 	    
 	
-		rawImage = new GBAImage(DataBuffer,myPal[iPal&0xF],new Point(128,64));//pntSz);	
+		rawImage = new GBAImage(DataBuffer,myPal[iPal&0xF],new Point(128,128));//pntSz);	
 		
 		bi = new BufferedImage[16];
 		for(i=0;i<16;i++){

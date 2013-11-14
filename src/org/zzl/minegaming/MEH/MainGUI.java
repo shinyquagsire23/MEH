@@ -733,7 +733,7 @@ public class MainGUI extends JFrame
 				mapEditorPanel.DrawMap();
 				mapEditorPanel.repaint();
 				eventEditorPanel.setMap(loadedMap);
-				eventEditorPanel.DrawMap(ROMManager.getActiveROM());
+				eventEditorPanel.DrawMap();
 				eventEditorPanel.repaint();
 				borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
