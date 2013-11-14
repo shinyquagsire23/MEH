@@ -18,6 +18,7 @@ public class PluginManager
 	private static ArrayList<Plugin> plugins = new ArrayList<Plugin>();
 	public static void loadAllPlugins() throws Exception
 	{
+		if(DataStore.mehUsePlugins==0) return;//If they're off, don't load! 
 		File search = new File("plugins/");
 		for(File f : search.listFiles())
 		{

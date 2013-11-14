@@ -67,6 +67,7 @@ public class MapEditorPanel extends JPanel
 			{
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
+				if(map==null) return;
 				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
 					return;
 				}

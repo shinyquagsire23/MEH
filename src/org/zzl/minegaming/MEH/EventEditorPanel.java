@@ -317,7 +317,7 @@ public class EventEditorPanel extends JPanel
 	    	    
 	    		gcBuff.drawImage(imgNPCs, n.bX*16, n.bY*16,n.bX*16+ 64, n.bY*16 + 64, 0, 0, 64, 64, this);
     		}else{
-    			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 64, n.bY*16 + 64, 0, 0, 64, 64, this);
+    			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
     		}
     	}
     }

@@ -15,10 +15,10 @@ import ini4j.spi.IniBuilder;
 public class DataStore {
 	
 	//Everything we parse from the Ini
-	private  Ini iP;
+	public static Ini iP;
 	private static Boolean passedTraits;
 	//private Parser p;//For when we have YAML reading as well
-	long ReadNumberEntry(String Section, String key)
+ public	long ReadNumberEntry(String Section, String key)
 	{
 	
 		String nkey=iP.get(Section, key);
@@ -49,7 +49,7 @@ public class DataStore {
 	
 	String ReadString(String Section, String key)
 	{
-String nkey=iP.get(Section, key);
+		String nkey=iP.get(Section, key);
 		
 	    int CommentIndex=-1;
 	    String ReturnValue="";
@@ -139,12 +139,30 @@ String nkey=iP.get(Section, key);
 		}
 		//Name=ip.getString(ROMHeader, "Name");
 		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
-		
+		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
 		
 		
 	}
 	
-	
+	public static void WriteNumberEntry(String Section, String key, int val)//Writes can happen at any time...currently.... move to mapsave function for later
+	{
+	   
+		String nkey=iP.get(Section, key);
+		
+	    int CommentIndex=-1;
+	    long ReturnValue=0;
+	    String FinalString="";
+	    try{
+	    	FinalString=Integer.toString(val);
+	    	 iP.put(Section, key, FinalString);
+		}catch(Exception e){
+		 //There's a chance the key may not exist, let's come up with a way to handle this case
+			//
+			ReturnValue =  0;
+		
+		}
+		
+	}
 	public DataStore(String FilePath, String ROMHeader){
 		try {
 			iP=new Ini(new File(FilePath));
@@ -209,6 +227,8 @@ String nkey=iP.get(Section, key);
 	public static	int  LocalTSHeight;
 	public static 	int  NumBanks;
 	public static	int[] MapBankSize;
+	
+	public static   int mehUsePlugins;
 	public static   int mehSettingShowSprites;
 	
 	
