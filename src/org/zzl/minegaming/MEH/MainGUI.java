@@ -87,6 +87,8 @@ public class MainGUI extends JFrame
 	public BorderMap borderMap;
 	private int selectedBank = 0;
 	private int selectedMap = 0;
+	private int currentBank = 0;
+	private int currentMap = 0;
 	private JTabbedPane editorTabs;
 	private JSplitPane splitPane;
 	public JLabel lblWidth;
@@ -250,7 +252,8 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
-				ROMManager.getActiveROM().commitChangesToROMFile();
+				PluginManager.fireMapSave(currentBank, currentMap);
+				saveROM();
 			}
 		});
 		mnFile.add(mnSave);
@@ -263,6 +266,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
+				PluginManager.fireMapSave(currentBank, currentMap);
 			}
 		});
 		mnFile.addSeparator();
@@ -279,8 +283,9 @@ public class MainGUI extends JFrame
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 	}
+	public static JPanel panelButtons;
 	void CreateButtons(){
-		JPanel panelButtons = new JPanel();
+		panelButtons = new JPanel();
 		panelButtons.setPreferredSize(new Dimension(10, 50));
 		panelButtons.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panelButtons.setMinimumSize(new Dimension(10, 50));
@@ -311,7 +316,8 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
-				ROMManager.currentROM.commitChangesToROMFile();
+				PluginManager.fireMapSave(currentBank, currentMap);
+				saveROM();
 			}
 		});
 		btnSaveROM.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/ROMsave.png")));
@@ -354,6 +360,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
+				PluginManager.fireMapSave(currentBank, currentMap);
 			}
 		});
 		btnSaveMap.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/mapsave.png")));
@@ -584,6 +591,7 @@ public class MainGUI extends JFrame
 			public void windowClosing(WindowEvent e) 
 			{
 				//TODO: Are you *sure* you want to exit / Check for saved changes
+				PluginManager.unloadAllPlugins();
 				System.exit(0);
 			}
 		});
@@ -706,7 +714,8 @@ public class MainGUI extends JFrame
 
 				long offset=BankLoader.maps[selectedBank].get(selectedMap);
 				loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
-			
+				currentBank = selectedBank;
+				currentMap = selectedMap;
 			
 				borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
 				reloadMimeLabels();
@@ -744,7 +753,7 @@ public class MainGUI extends JFrame
 				long time = eD.getTime() - d.getTime();
 				MainGUI.lblInfo.setText("Done! Finished in " + (double)(time / 1000) + " seconds!");
 				
-				
+				PluginManager.fireMapLoad(selectedBank, selectedMap);
 				
 			}
 		}.start();
@@ -784,10 +793,12 @@ public class MainGUI extends JFrame
 		new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
 		new WildDataCache(ROMManager.getActiveROM()).start();
 		mnSave.enable(true);
+		PluginManager.fireROMLoad();
 	}
 	
 	public void saveROM()
 	{
-		
+		PluginManager.fireROMSave();
+		ROMManager.getActiveROM().commitChangesToROMFile();
 	}
 }
