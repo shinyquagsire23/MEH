@@ -66,7 +66,11 @@ public class BlockRenderer extends Component
 			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
 			if(transparency && top == 0)
 			{
-				g.setColor(global.getPalette()[palette].getIndex(0));
+				try{
+						g.setColor(global.getPalette()[palette].getIndex(0));
+				}catch(Exception e){
+					
+				}
 				g.fillRect(x*8, y*8, 8, 8);
 			}
 

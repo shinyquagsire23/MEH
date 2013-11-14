@@ -48,6 +48,7 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ImagePanel;
 import org.zzl.minegaming.GBAUtils.ROMManager;
+import org.zzl.minegaming.MEH.MapElements.OverworldSprites;
 import org.zzl.minegaming.MEH.MapElements.TilesetCache;
 import org.zzl.minegaming.MEH.MapElements.WildDataCache;
 
@@ -705,6 +706,8 @@ public class MainGUI extends JFrame
 
 				long offset=BankLoader.maps[selectedBank].get(selectedMap);
 				loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
+			
+			
 				borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
 				reloadMimeLabels();
 				mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
@@ -730,7 +733,7 @@ public class MainGUI extends JFrame
 				mapEditorPanel.DrawMap();
 				mapEditorPanel.repaint();
 				eventEditorPanel.setMap(loadedMap);
-				eventEditorPanel.DrawMap();
+				eventEditorPanel.DrawMap(ROMManager.getActiveROM());
 				eventEditorPanel.repaint();
 				borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
