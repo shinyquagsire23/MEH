@@ -303,6 +303,9 @@ public class MainGUI extends JFrame
 			public void menuKeyTyped(MenuKeyEvent arg0) {
 			}
 		});
+		
+		chckbxmntmScriptEditor = new JCheckBoxMenuItem("Script Editor");
+		mnMehSettings.add(chckbxmntmScriptEditor);
 
 
 		mnMehSettings.add(chckbxmntmDrawSprites);
@@ -516,6 +519,7 @@ public class MainGUI extends JFrame
 	private JMenu mnMehSettings;
 	private JCheckBoxMenuItem chckbxmntmUsePlugins;
 	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
+	private JCheckBoxMenuItem chckbxmntmScriptEditor;
 	void CreateSplitPane2(){
 		splitPane2 = new JSplitPane();
 		splitPane2.setResizeWeight(0.2);
@@ -801,7 +805,7 @@ public class MainGUI extends JFrame
 	{
 		int i = GBARom.loadRom();
 
-		dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
+		dataStore = new DataStore("MEH.ini", ROMManager.currentROM.getGameCode() );
 
 		if(1 != -1)
 		{

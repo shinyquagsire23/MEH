@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-
 import org.zzl.minegaming.MEH.MapElements.OverworldSprites;
 import org.zzl.minegaming.MEH.MapElements.SpritesExit;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
@@ -59,6 +58,34 @@ public class EventEditorPanel extends JPanel
 	int IndexSign;
 	int IndexExit;
 	int IndexTriggers;
+	public void GrabSelectedEvent(MouseEvent e){
+		int x = (e.getX() / 16);
+		int y = (e.getY() / 16);
+		 IndexNPC=Map.mapNPCManager.IsPresent(x,y);
+			if(IndexNPC!=-1){
+				
+				selectedEvent=0;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
+				//return;
+			}
+			 IndexSign=Map.mapSignManager.IsPresent(x,y);
+			if(IndexSign!=-1){
+				
+				selectedEvent=1;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
+				return;
+			}
+			IndexExit=Map.mapExitManager.IsPresent(x,y);
+			if(IndexExit!=-1){
+			
+				selectedEvent=2;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
+				return;
+			}
+			 IndexTriggers=Map.mapTriggerManager.IsPresent(x,y);
+			if(IndexTriggers!=-1){
+				
+				selectedEvent=3;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
+				return;
+			}
+	}
 	public EventEditorPanel()
 	{
 		selectedEvent=-1;
@@ -91,9 +118,9 @@ public class EventEditorPanel extends JPanel
 
 		});
         
-		this.addMouseListener(new MouseListener()
-		{
+		this.addMouseListener(new MouseListener(){
 
+			@SuppressWarnings("unused")
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
@@ -103,45 +130,74 @@ public class EventEditorPanel extends JPanel
 				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
 					return;
 				}
-			
+				GrabSelectedEvent(e);
 			
 				System.out.println(e.getButton());
 				if(e.getButton() == MouseEvent.BUTTON1)
 				{
 			
 				//If there's two events on tile, we'll handle that later with some kind of picker 
-				
-					 IndexNPC=Map.mapNPCManager.IsPresent(x,y);
-					 MainGUI.panel_5.removeAll();
-					if(IndexNPC!=-1){
-						
+					switch(selectedEvent){
+					case 0:
 						MainGUI.panel_5.add(new NPCPane(Map.mapNPCManager,IndexNPC));
 						
-						
-					}
-					 IndexSign=Map.mapSignManager.IsPresent(x,y);
-					if(IndexSign!=-1){
+						break;
+					case 1:
 						
 						MainGUI.panel_5.add(new SignPanel(Map.mapSignManager, IndexSign));
-						
-						
-					}
-					IndexExit=Map.mapExitManager.IsPresent(x,y);
-					if(IndexExit!=-1){
-						
+						break;
+					case 2:
 						MainGUI.panel_5.add(new ExitPanel(Map.mapExitManager, IndexExit));
-					
-						
-					}
-					 IndexTriggers=Map.mapTriggerManager.IsPresent(x,y);
-					if(IndexTriggers!=-1){
+						break;
+					case 3:
 						
 						MainGUI.panel_5.add(new TriggerPanel(Map.mapTriggerManager, IndexTriggers));
+						break;
 					
 						
+						
 					}
+				 
 					MainGUI.panel_5.revalidate();
 					MainGUI.panel_5.repaint();
+				}
+				else if(e.getButton()==3)
+				{
+					
+						//Execute script editor if any
+						int offset=0;
+						int tmp=0;
+						switch(selectedEvent){
+						case 0:
+							tmp=IndexNPC;
+							offset =(int) Map.mapNPCManager.mapNPCs[tmp].pScript;
+							
+							break;
+						case 1:
+							
+							offset =(int) Map.mapSignManager.mapSigns[IndexSign].pScript;
+							break;
+					
+						case 3:
+							
+							offset =(int) Map.mapTriggerManager.mapTriggers[IndexTriggers].pScript;
+							break;
+						
+							
+							
+						}
+						
+						if(offset!=0){
+							try {
+								String[] Params=new String[]{ROMManager.currentROM.input_filepath,Long.toHexString(offset)};
+								Process p = Runtime.getRuntime().exec(DataStore.mehSettingCallScriptEditor+" "+ROMManager.currentROM.input_filepath+":"+Long.toHexString(offset));//",Params);  Elitemap is dumb//ScriptEd is for testing, not versatile enough
+							
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+						}
+						
 				}
 			}
 
@@ -150,49 +206,25 @@ public class EventEditorPanel extends JPanel
 			{
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
-				moveSrcX=x;
-				moveSrcY=y;
+				
 				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
 					return;
 				}
 			
-			
-				System.out.println(e.getButton());
-				if(e.getButton() == MouseEvent.BUTTON1)
-				{
-			
-				//If there's two events on tile, we'll handle that later with some kind of picker 
+				GrabSelectedEvent(e);
 				
-					 IndexNPC=Map.mapNPCManager.IsPresent(x,y);
-					if(IndexNPC!=-1){
+				
+						if(e.getButton() == MouseEvent.BUTTON1)
+						{
+							moveSrcX=x;
+							moveSrcY=y;
 						
-						selectedEvent=0;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
-						//return;
-					}
-					 IndexSign=Map.mapSignManager.IsPresent(x,y);
-					if(IndexSign!=-1){
+						}
+					
+					
+							
 						
-						selectedEvent=1;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
-						return;
-					}
-					IndexExit=Map.mapExitManager.IsPresent(x,y);
-					if(IndexExit!=-1){
-					
-						selectedEvent=2;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
-						return;
-					}
-					 IndexTriggers=Map.mapTriggerManager.IsPresent(x,y);
-					if(IndexTriggers!=-1){
-						
-						selectedEvent=3;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
-						return;
-					}
-					
-				}
-				else if(e.getButton() == 3)
-				{
-					
-				}
+				
 			}
 
 			@Override
@@ -311,11 +343,11 @@ public class EventEditorPanel extends JPanel
     	for(i=0;i<Map.mapNPCManager.mapNPCs.length;i++){
     		SpritesNPC n=Map.mapNPCManager.mapNPCs[i];
     		if(DataStore.mehSettingShowSprites==1){
-	    	
-	    		
+	    	   
 	    		Image imgNPCs=Map.overworldSpritesManager.GetImage(i);
-	    	    
-	    		gcBuff.drawImage(imgNPCs, n.bX*16, n.bY*16,n.bX*16+ 64, n.bY*16 + 64, 0, 0, 64, 64, this);
+	    		 int dstX=(n.bX*16);
+	    		 int dstY=(n.bY*16)-16;
+	    		gcBuff.drawImage(imgNPCs, dstX , dstY, dstX+ 64,  dstY + 64, 0, 0, 64, 64, this);
     		}else{
     			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
     		}

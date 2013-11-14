@@ -75,6 +75,7 @@ public class DataStore {
 		return ReturnValue;
 	}
 	
+	
 	void ReadData(String ROMHeader){
 	    //Read all the entries.
 		Inherit = iP.get(ROMHeader, "Inherit");
@@ -138,9 +139,12 @@ public class DataStore {
 			MapBankSize[i] = Integer.parseInt(mBS[i]);
 		}
 		//Name=ip.getString(ROMHeader, "Name");
+		//Read the data for MEH
+		
+		
 		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
 		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
-		
+		mehSettingCallScriptEditor = ReadString("MEH","mehSettingCallScriptEditor"); 
 		
 	}
 	
@@ -230,6 +234,6 @@ public class DataStore {
 	
 	public static   int mehUsePlugins;
 	public static   int mehSettingShowSprites;
-	
+	public static   String mehSettingCallScriptEditor;
 	
 }
