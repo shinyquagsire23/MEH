@@ -13,5 +13,14 @@ public class Main
 		window.setSize(1000, 600);
 		window.setTitle("Map Editor of Happiness - No ROM Loaded");
 		window.setVisible(true);
+		try
+		{
+			PluginManager.loadAllPlugins();
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
