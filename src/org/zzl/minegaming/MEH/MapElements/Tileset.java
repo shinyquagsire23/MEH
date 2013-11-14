@@ -145,7 +145,7 @@ public class Tileset
 		}
 		else
 		{
-			System.out.println("Attempted to read tile " + tileNum + " of palette " + palette + " in " + (tilesetHeader.isPrimary ? "global" : "local") + " tileset!");
+		//	System.out.println("Attempted to read tile " + tileNum + " of palette " + palette + " in " + (tilesetHeader.isPrimary ? "global" : "local") + " tileset!");
 			return new BufferedImage(8,8,BufferedImage.TYPE_INT_ARGB);
 		}
 		
@@ -159,7 +159,7 @@ public class Tileset
 		catch(Exception e)
 		{
 			//e.printStackTrace();
-			System.out.println("Attempted to read 8x8 at " + x + ", " + y);
+		//	System.out.println("Attempted to read 8x8 at " + x + ", " + y);
 		}
 		if(palette < DataStore.MainTSPalCount || renderedTiles.length > DataStore.MainTSPalCount)
 			renderedTiles[palette].put(tileNum, toSend);
