@@ -174,13 +174,13 @@ public class EventEditorPanel extends JPanel
 							
 							break;
 						case 1:
-							
-							offset =(int) Map.mapSignManager.mapSigns[IndexSign].pScript;
+							tmp=IndexSign;
+							offset =(int) Map.mapSignManager.mapSigns[tmp].pScript;
 							break;
 					
 						case 3:
-							
-							offset =(int) Map.mapTriggerManager.mapTriggers[IndexTriggers].pScript;
+							tmp=IndexTriggers;
+							offset =(int) Map.mapTriggerManager.mapTriggers[tmp].pScript;
 							break;
 						
 							
@@ -194,7 +194,7 @@ public class EventEditorPanel extends JPanel
 							
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
-								e1.printStackTrace();
+								MainGUI.lblInfo.setText("Script failed to load, please check to see if " + DataStore.mehSettingCallScriptEditor + " exists");
 							}
 						}
 						

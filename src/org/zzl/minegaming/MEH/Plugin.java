@@ -9,8 +9,9 @@ public class Plugin
 	private ImageIcon buttonImage;
 	private String toolTip;
 	protected GBARom rom;
-	
+	public boolean bLoadROM;
 	public boolean createButton = true;
+	
 	public void load()
 	{
 		//Stuff to do on load
@@ -24,6 +25,7 @@ public class Plugin
 	public void loadROM(GBARom rom)
 	{
 		this.rom = rom;
+		new DataStore("../MEH.ini", rom.getFriendlyROMHeader());//Init our data store and grab ini from outside plugin folder
 		//Do stuff when ROM is loaded
 	}
 	
