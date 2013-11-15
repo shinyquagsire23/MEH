@@ -73,6 +73,9 @@ public class TriggerPanel extends JPanel {
 		add(panel);
 		panel.setLayout(null);
 		
+		JButton button = new JButton("New button");
+		add(button);
+		
 		
         Load(mgr, index);
 	}

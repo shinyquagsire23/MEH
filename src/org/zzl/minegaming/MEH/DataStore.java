@@ -75,6 +75,7 @@ public class DataStore {
 		return ReturnValue;
 	}
 	
+	
 	void ReadData(String ROMHeader){
 	    //Read all the entries.
 		Inherit = iP.get(ROMHeader, "Inherit");
@@ -133,14 +134,20 @@ public class DataStore {
 		NumBanks= (int) ReadNumberEntry(ROMHeader, "NumBanks");
 		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
 		MapBankSize = new int[NumBanks];
+
 		for(int i = 0; i < mBS.length; i++)
 		{
 			MapBankSize[i] = Integer.parseInt(mBS[i]);
 		}
 		//Name=ip.getString(ROMHeader, "Name");
+		//Read the data for MEH
+		WorldMapGFX= (int) ReadNumberEntry(ROMHeader, "WorldMapGFXPointer");
+		WorldMapPal= (int) ReadNumberEntry(ROMHeader, "WorldMapPalPointer");
+		WorldMapTileMap= (int) ReadNumberEntry(ROMHeader, "WorldMapTileMap");
+		WorldMapSlot =(int)  ReadNumberEntry(ROMHeader, "WorldMapSlot");
 		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
 		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
-		
+		mehSettingCallScriptEditor = ReadString("MEH","mehSettingCallScriptEditor"); 
 		
 	}
 	
@@ -166,6 +173,7 @@ public class DataStore {
 	public DataStore(String FilePath, String ROMHeader){
 		try {
 			iP=new Ini(new File(FilePath));
+			bDataStoreInited=true;
 			passedTraits=false; 
 			Inherit="";
 			ReadData(ROMHeader);
@@ -227,9 +235,18 @@ public class DataStore {
 	public static	int  LocalTSHeight;
 	public static 	int  NumBanks;
 	public static	int[] MapBankSize;
+	public static	int WorldMapGFX;
+	public static	int		WorldMapPal;
+	public static	int		WorldMapSlot;
+	public static	int		WorldMapTileMap;
+	
+	
 	
 	public static   int mehUsePlugins;
 	public static   int mehSettingShowSprites;
+	public static   String mehSettingCallScriptEditor;
 	
+	
+	public static   boolean bDataStoreInited;//Not stored in INI :p
 	
 }

@@ -17,7 +17,12 @@ public class OverworldSpritesManager {
 	   Sprites=new OverworldSprites[NPCs.length];
 	   int i=0; 
 	   for(i=0;i<NPCs.length;i++){
+		   try{
 		   Sprites[i]=new OverworldSprites(rom,(int)DataStore.SpriteBase+(NPCs[i].bSpriteSet*36) );
+		   }
+		   catch(Exception e){
+			  
+		   }
 	   }
 	   
 	
