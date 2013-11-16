@@ -1,6 +1,6 @@
 package org.zzl.minegaming.MEH.MapElements;
 
-public class MapTile
+public class MapTile implements Cloneable
 {
 	private int ID; 
 	private int Meta;//Interdpth - Now sure what this is for? flip and pal data? 
@@ -22,5 +22,11 @@ public class MapTile
 	public int getMeta()
 	{
 		return Meta;
+	}
+
+	@Override
+	public Object clone()
+	{
+		return new MapTile(ID,Meta);
 	}
 }
