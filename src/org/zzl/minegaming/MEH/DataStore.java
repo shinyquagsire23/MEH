@@ -15,10 +15,10 @@ import ini4j.spi.IniBuilder;
 public class DataStore {
 	
 	//Everything we parse from the Ini
-	private  Ini iP;
+	public static Ini iP;
 	private static Boolean passedTraits;
 	//private Parser p;//For when we have YAML reading as well
-	long ReadNumberEntry(String Section, String key)
+ public	long ReadNumberEntry(String Section, String key)
 	{
 	
 		String nkey=iP.get(Section, key);
@@ -49,7 +49,7 @@ public class DataStore {
 	
 	String ReadString(String Section, String key)
 	{
-String nkey=iP.get(Section, key);
+		String nkey=iP.get(Section, key);
 		
 	    int CommentIndex=-1;
 	    String ReturnValue="";
@@ -74,6 +74,7 @@ String nkey=iP.get(Section, key);
 		}
 		return ReturnValue;
 	}
+	
 	
 	void ReadData(String ROMHeader){
 	    //Read all the entries.
@@ -133,21 +134,46 @@ String nkey=iP.get(Section, key);
 		NumBanks= (int) ReadNumberEntry(ROMHeader, "NumBanks");
 		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
 		MapBankSize = new int[NumBanks];
+
 		for(int i = 0; i < mBS.length; i++)
 		{
 			MapBankSize[i] = Integer.parseInt(mBS[i]);
 		}
 		//Name=ip.getString(ROMHeader, "Name");
-	
-		
-		
+		//Read the data for MEH
+		WorldMapGFX= (int) ReadNumberEntry(ROMHeader, "WorldMapGFXPointer");
+		WorldMapPal= (int) ReadNumberEntry(ROMHeader, "WorldMapPalPointer");
+		WorldMapTileMap= (int) ReadNumberEntry(ROMHeader, "WorldMapTileMap");
+		WorldMapSlot =(int)  ReadNumberEntry(ROMHeader, "WorldMapSlot");
+		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
+		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
+		mehSettingCallScriptEditor = ReadString("MEH","mehSettingCallScriptEditor"); 
 		
 	}
 	
-	
+	public static void WriteNumberEntry(String Section, String key, int val)//Writes can happen at any time...currently.... move to mapsave function for later
+	{
+	   
+		String nkey=iP.get(Section, key);
+		
+	    int CommentIndex=-1;
+	    long ReturnValue=0;
+	    String FinalString="";
+	    try{
+	    	FinalString=Integer.toString(val);
+	    	 iP.put(Section, key, FinalString);
+		}catch(Exception e){
+		 //There's a chance the key may not exist, let's come up with a way to handle this case
+			//
+			ReturnValue =  0;
+		
+		}
+		
+	}
 	public DataStore(String FilePath, String ROMHeader){
 		try {
 			iP=new Ini(new File(FilePath));
+			bDataStoreInited=true;
 			passedTraits=false; 
 			Inherit="";
 			ReadData(ROMHeader);
@@ -209,5 +235,18 @@ String nkey=iP.get(Section, key);
 	public static	int  LocalTSHeight;
 	public static 	int  NumBanks;
 	public static	int[] MapBankSize;
+	public static	int WorldMapGFX;
+	public static	int		WorldMapPal;
+	public static	int		WorldMapSlot;
+	public static	int		WorldMapTileMap;
+	
+	
+	
+	public static   int mehUsePlugins;
+	public static   int mehSettingShowSprites;
+	public static   String mehSettingCallScriptEditor;
+	
+	
+	public static   boolean bDataStoreInited;//Not stored in INI :p
 	
 }

@@ -74,6 +74,9 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.event.MenuKeyListener;
+import javax.swing.event.MenuKeyEvent;
 
 public class MainGUI extends JFrame
 {
@@ -276,6 +279,36 @@ public class MainGUI extends JFrame
 
 		JMenu mnSettings = new JMenu("Settings");
 		menuBar.add(mnSettings);
+		
+		mnMehSettings = new JMenu("MEH Settings");
+		mnSettings.add(mnMehSettings);
+		
+	
+		chckbxmntmDrawSprites = new JCheckBoxMenuItem("Draw Sprites");
+		chckbxmntmDrawSprites.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				DataStore.mehSettingShowSprites=chckbxmntmUsePlugins.isSelected() ? 1 : 0;
+				
+			    DataStore.WriteNumberEntry("MEH", "mehSettingShowSprites",DataStore.mehSettingShowSprites );
+			    if(eventEditorPanel!=null)eventEditorPanel.DrawMap();	
+			}
+		});
+		chckbxmntmDrawSprites.addMenuKeyListener(new MenuKeyListener() {
+			public void menuKeyPressed(MenuKeyEvent arg0) {
+			}
+			public void menuKeyReleased(MenuKeyEvent arg0) {
+			}
+			public void menuKeyTyped(MenuKeyEvent arg0) {
+			}
+		});
+		
+		chckbxmntmScriptEditor = new JCheckBoxMenuItem("Script Editor");
+		mnMehSettings.add(chckbxmntmScriptEditor);
+
+
+		mnMehSettings.add(chckbxmntmDrawSprites);
 
 		JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
@@ -483,6 +516,10 @@ public class MainGUI extends JFrame
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
 	private JMenuItem mntmNewMenuItem_1;
+	private JMenu mnMehSettings;
+	private JCheckBoxMenuItem chckbxmntmUsePlugins;
+	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
+	private JCheckBoxMenuItem chckbxmntmScriptEditor;
 	void CreateSplitPane2(){
 		splitPane2 = new JSplitPane();
 		splitPane2.setResizeWeight(0.2);
@@ -742,7 +779,7 @@ public class MainGUI extends JFrame
 				mapEditorPanel.DrawMap();
 				mapEditorPanel.repaint();
 				eventEditorPanel.setMap(loadedMap);
-				eventEditorPanel.DrawMap(ROMManager.getActiveROM());
+				eventEditorPanel.DrawMap();
 				eventEditorPanel.repaint();
 				borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
@@ -768,7 +805,7 @@ public class MainGUI extends JFrame
 	{
 		int i = GBARom.loadRom();
 
-		dataStore = new DataStore("PokeRoms.ini", ROMManager.currentROM.getGameCode() );
+		dataStore = new DataStore("MEH.ini", ROMManager.currentROM.getGameCode() );
 
 		if(1 != -1)
 		{
@@ -789,7 +826,7 @@ public class MainGUI extends JFrame
 			tileEditorPanel.repaint();
 		}
 		lblInfo.setText("Loading...");
-
+		chckbxmntmDrawSprites.setSelected(DataStore.mehSettingShowSprites==1);
 		new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
 		new WildDataCache(ROMManager.getActiveROM()).start();
 		mnSave.enable(true);

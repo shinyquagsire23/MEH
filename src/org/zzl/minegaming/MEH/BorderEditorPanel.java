@@ -19,7 +19,7 @@ import org.zzl.minegaming.MEH.MapElements.Tileset;
 public class BorderEditorPanel extends JPanel
 {
 
-	private static final long serialVersionUID = -877213633894324075L;
+	
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private BlockRenderer blockRenderer = new BlockRenderer();

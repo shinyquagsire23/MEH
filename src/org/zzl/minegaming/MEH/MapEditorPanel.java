@@ -105,6 +105,8 @@ public class MapEditorPanel extends JPanel
 			{
 				int x = (mouseTracker.x / 16);
 				int y = (mouseTracker.y / 16);
+				if(map==null) return;
+
 				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
 					return;
 				}
