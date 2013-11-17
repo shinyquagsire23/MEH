@@ -31,7 +31,7 @@ public class TileEditorPanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
-    static Rectangle mouseTracker;
+    public static Rectangle mouseTracker;
     public void SetRect(int width, int heigh){
     
         if(heigh>16) heigh=16;
