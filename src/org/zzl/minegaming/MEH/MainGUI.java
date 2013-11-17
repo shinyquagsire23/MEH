@@ -183,7 +183,9 @@ public class MainGUI extends JFrame
 		panel_5 = new JPanel();
 		panel_5.setPreferredSize(new Dimension(220, 10));
 		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
-		eventsPanel.add(panel_5, BorderLayout.EAST);
+		JScrollPane selectedEventScroll = new JScrollPane(panel_5, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		eventsPanel.add(selectedEventScroll, BorderLayout.EAST);
 		panel_5.setLayout(new BorderLayout(0, 0));
 		eventEditorPanel = new EventEditorPanel();
 		eventEditorPanel.setLayout(null);

@@ -7,6 +7,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.awt.image.RenderedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBAImage;
@@ -65,13 +69,13 @@ public class OverworldSprites {
 	
 	void GrabPal(GBARom rom)
 	{
-		  rom.Seek((int) DataStore.SpriteColors);
 		  OverworldSprites.myPal = new Palette[16];
 		  
 			
 			for(int i = 0; i < 16; i++)
 			{
-				OverworldSprites.myPal[i] = new Palette(GBAImageType.c16, rom.readBytes(32));
+				int ptr = rom.getPointerAsInt((int)DataStore.SpriteColors + (i * 8));
+				OverworldSprites.myPal[rom.readByte((int)DataStore.SpriteColors + (i * 8) + 4)] = new Palette(GBAImageType.c16, BitConverter.GrabBytes(rom.getData(), ptr,32));
 			}
 		  
 	
@@ -184,7 +188,7 @@ public class OverworldSprites {
 		
 		bi = new BufferedImage[16];
 		for(i=0;i<16;i++){
-			this.bi[i] = rawImage.getBufferedImageFromPal(OverworldSprites.myPal[iPal&0xF]);
+			this.bi[i] = rawImage.getBufferedImageFromPal(OverworldSprites.myPal[i]);
 		}
 		 PaintMeLikeYourWomenInMagazines();//Honestly not sure what I'm totally doing here. 
 	}

@@ -381,7 +381,7 @@ public class MapEditorPanel extends JPanel
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 

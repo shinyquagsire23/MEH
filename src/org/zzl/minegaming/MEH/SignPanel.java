@@ -10,6 +10,11 @@ import org.zzl.minegaming.MEH.MapElements.SpritesSignManager;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import java.awt.CardLayout;
+import net.miginfocom.swing.MigLayout;
+import java.awt.FlowLayout;
 
 public class SignPanel extends JPanel {
 	private JTextField textField;
@@ -26,6 +31,7 @@ public class SignPanel extends JPanel {
 	public SignPanel(SpritesSignManager mgr, int index) {
 		myIndex=index;
 		setBorder(new TitledBorder(null, "Sign", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		JLabel lblScriptPointer = new JLabel("Script Pointer");
 		add(lblScriptPointer);
