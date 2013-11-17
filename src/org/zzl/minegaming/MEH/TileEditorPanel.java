@@ -32,6 +32,7 @@ public class TileEditorPanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
+
 	static Rectangle mouseTracker;
 	public void SetRect(int width, int heigh){
 
@@ -46,6 +47,7 @@ public class TileEditorPanel extends JPanel
 	}
 	int srcX;
 	int srcY;
+
 	public TileEditorPanel()
 	{
 		mouseTracker=new Rectangle(0,0,16,16);

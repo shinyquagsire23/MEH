@@ -246,6 +246,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				openROM();
+				
 			}
 		});
 		mnFile.add(mnOpen);
@@ -828,6 +829,7 @@ public class MainGUI extends JFrame
 			tileEditorPanel.repaint();
 		}
 		lblInfo.setText("Loading...");
+		
 		chckbxmntmDrawSprites.setSelected(DataStore.mehSettingShowSprites==1);
 		new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
 		new WildDataCache(ROMManager.getActiveROM()).start();

@@ -17,25 +17,18 @@ public class DataStore
 	// Everything we parse from the Ini
 	public static Ini iP;
 	private static Boolean passedTraits;
+	//private Parser p;//For when we have YAML reading as well
+	public long Str2Num(String nkey){
+		int CommentIndex=-1;
+		long ReturnValue=0;
+		String FinalString="";
+		try{
+			CommentIndex=nkey.indexOf(";");
+			if(CommentIndex!=-1){
 
-	// private Parser p;//For when we have YAML reading as well
-	public long ReadNumberEntry(String Section, String key)
-	{
-
-		String nkey = iP.get(Section, key);
-
-		int CommentIndex = -1;
-		long ReturnValue = 0;
-		String FinalString = "";
-		try
-		{
-			CommentIndex = nkey.indexOf(";");
-			if (CommentIndex != -1)
-			{
-
-				nkey = nkey.substring(0, CommentIndex);// Get rid of the comment
+				nkey=nkey.substring(0, CommentIndex);//Get rid of the comment
 			}
-			FinalString = nkey;
+			FinalString=nkey;
 			if (nkey.indexOf("0x") != -1)
 			{
 				FinalString = nkey.substring(2);
@@ -43,16 +36,17 @@ public class DataStore
 			}
 			else
 				ReturnValue = Long.parseLong(FinalString, 16);
-		}
-		catch (Exception e)
-		{
-			// There's a chance the key may not exist, let's come up with a way
-			// to handle this case
+		}catch(Exception e){
+			//There's a chance the key may not exist, let's come up with a way to handle this case
 			//
-			ReturnValue = 0;
+			ReturnValue =  0;
 
 		}
 		return ReturnValue;
+	}
+	public	long ReadNumberEntry(String Section, String key)
+	{
+		return Str2Num(iP.get(Section, key));
 	}
 
 	String ReadString(String Section, String key)
@@ -95,10 +89,9 @@ public class DataStore
 		Inherit = iP.get(ROMHeader, "Inherit");
 		if (passedTraits = false && Inherit != "")
 		{
-			// Genes passed, let's snip the traits.
-			passedTraits = true;
-			ReadData(ROMHeader);// Grab inherited values
-
+					//Genes passed, let's snip the traits. 
+					passedTraits=true;
+			ReadData(Inherit);//Grab inherited values
 		}
 		EngineVersion = ReadNumberEntry(ROMHeader, "Engine");
 		Name = iP.get(ROMHeader, "Name");
@@ -149,19 +142,37 @@ public class DataStore
 		NumBanks = (int) ReadNumberEntry(ROMHeader, "NumBanks");
 		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
 		MapBankSize = new int[NumBanks];
-
-		for (int i = 0; i < mBS.length; i++)
+	
+				int i=0;
+		for(i = 0; i < mBS.length; i++)
 		{
 			MapBankSize[i] = Integer.parseInt(mBS[i]);
 		}
-		// Name=ip.getString(ROMHeader, "Name");
-		// Read the data for MEH
-		WorldMapGFX = (int) ReadNumberEntry(ROMHeader, "WorldMapGFXPointer");
-		WorldMapPal = (int) ReadNumberEntry(ROMHeader, "WorldMapPalPointer");
-		WorldMapTileMap = (int) ReadNumberEntry(ROMHeader, "WorldMapTileMap");
-		WorldMapSlot = (int) ReadNumberEntry(ROMHeader, "WorldMapSlot");
-		mehSettingShowSprites = (int) ReadNumberEntry("MEH",
-				"mehSettingShowSprites");
+		//Name=ip.getString(ROMHeader, "Name");
+		//Read the data for MEH
+		String[] awmgfx=(ReadString(ROMHeader, "WorldMapGFX") ).split(",");
+		String[] wmdp=ReadString(ROMHeader, "WorldMapPal").split(",");
+		String[] wmptm=ReadString(ROMHeader, "WorldMapTileMap").split(",");
+		String[] wmpds=ReadString(ROMHeader, "WorldMapSlot").split(",");
+		String[] ps=ReadString(ROMHeader,"WorldMapPalSize").split(",");
+		WorldMapCount=(int) ReadNumberEntry(ROMHeader, "WorldMapCount");
+		//Grab  them all
+
+		WorldMapGFX=new int[WorldMapCount];
+		WorldMapPal=new int[WorldMapCount];
+		WorldMapTileMap=new int[WorldMapCount];
+		WorldMapSlot=new int[WorldMapCount];
+		WorldMapPalSize=new int[WorldMapCount];
+		for(i=0;i<WorldMapCount;i++){
+			//Sometimes weird things happen
+
+			WorldMapGFX[i] = (int) Str2Num(awmgfx[i]);
+			WorldMapPal[i] = (int) Str2Num(wmdp[i]);
+			WorldMapTileMap[i] = (int) Str2Num(wmptm[i]);;
+			WorldMapSlot[i] = (int) Str2Num(wmpds[i]);
+			WorldMapPalSize[i]= (int) Str2Num(ps[i]);
+		}
+		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
 		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
 		mehSettingCallScriptEditor = ReadString("MEH",
 				"mehSettingCallScriptEditor");
@@ -169,17 +180,17 @@ public class DataStore
 	}
 
 	public static void WriteNumberEntry(String Section, String key, int val)// Writes
-																			// can
-																			// happen
-																			// at
-																			// any
-																			// time...currently....
-																			// move
-																			// to
-																			// mapsave
-																			// function
-																			// for
-																			// later
+	// can
+	// happen
+	// at
+	// any
+	// time...currently....
+	// move
+	// to
+	// mapsave
+	// function
+	// for
+	// later
 	{
 
 		String nkey = iP.get(Section, key);
@@ -225,64 +236,66 @@ public class DataStore
 		}
 
 	}
+	public static   long EngineVersion;
+	public static   String Inherit;
+	public static	String Name;
+	public static	long Language; 
+	public static	long Cries   ;
+	public static	long MapHeaders;  
+	public static	long Maps    ; 
+	public static	long MapLabels; 
+	public static	long MonsterNames;
+	public static	long MonsterBaseStats;
+	public static	long MonsterDexData;
+	public static	long TrainerClasses;
+	public static	long TrainerData;
+	public static	long TrainerPics;
+	public static	long TrainerPals;
+	public static	long TrainerPicCount;
+	public static	long TrainerBackPics;
+	public static	long TrainerBackPals;
+	public static	long TrainerBackPicCount;
+	public static	long ItemNames; 
+	public static	long MonsterPics;
+	public static	long MonsterPals;
+	public static	long MonsterShinyPals;
+	public static	long MonsterPicCount;
+	public static	long MonsterBackPics;
+	public static	long HomeLevel;     
+	public static	long SpriteBase;     
+	public static	long SpriteColors;  
+	public static	long SpriteNormalSet;
+	public static	long SpriteSmallSet;
+	public static	long SpriteLargeSet;
+	public static   long NumSprites;
+	public static	long WildPokemon;
+	public static	long FontGFX ; 
+	public static	long FontWidths;
+	public static	long AttackNameList;
+	public static	long AttackTable;
+	public static	long StartPosBoy;
+	public static	long StartPosGirl;
+	public static   int	 MainTSPalCount;
+	public static	int  MainTSSize;
+	public static	int  LocalTSSize;
+	public static	int  MainTSBlocks;
+	public static	int  LocalTSBlocks;
+	public static	int  MainTSHeight;
+	public static	int  LocalTSHeight;
+	public static 	int  NumBanks;
+	public static	int[] MapBankSize;
+	public static	int[] WorldMapGFX;
+	public static	int[] WorldMapPal;
+	public static	int[] WorldMapSlot;
+	public static	int[] WorldMapTileMap;
+	public static   int WorldMapCount;
+	public static   int[] WorldMapPalSize;
 
-	public static long EngineVersion;
-	public static String Inherit;
-	public static String Name;
-	public static long Language;
-	public static long Cries;
-	public static long MapHeaders;
-	public static long Maps;
-	public static long MapLabels;
-	public static long MonsterNames;
-	public static long MonsterBaseStats;
-	public static long MonsterDexData;
-	public static long TrainerClasses;
-	public static long TrainerData;
-	public static long TrainerPics;
-	public static long TrainerPals;
-	public static long TrainerPicCount;
-	public static long TrainerBackPics;
-	public static long TrainerBackPals;
-	public static long TrainerBackPicCount;
-	public static long ItemNames;
-	public static long MonsterPics;
-	public static long MonsterPals;
-	public static long MonsterShinyPals;
-	public static long MonsterPicCount;
-	public static long MonsterBackPics;
-	public static long HomeLevel;
-	public static long SpriteBase;
-	public static long SpriteColors;
-	public static long SpriteNormalSet;
-	public static long SpriteSmallSet;
-	public static long SpriteLargeSet;
-	public static long NumSprites;
-	public static long WildPokemon;
-	public static long FontGFX;
-	public static long FontWidths;
-	public static long AttackNameList;
-	public static long AttackTable;
-	public static long StartPosBoy;
-	public static long StartPosGirl;
-	public static int MainTSPalCount;
-	public static int MainTSSize;
-	public static int LocalTSSize;
-	public static int MainTSBlocks;
-	public static int LocalTSBlocks;
-	public static int MainTSHeight;
-	public static int LocalTSHeight;
-	public static int NumBanks;
-	public static int[] MapBankSize;
-	public static int WorldMapGFX;
-	public static int WorldMapPal;
-	public static int WorldMapSlot;
-	public static int WorldMapTileMap;
+	public static   int mehUsePlugins;
+	public static   int mehSettingShowSprites;
+	public static   String mehSettingCallScriptEditor;
 
-	public static int mehUsePlugins;
-	public static int mehSettingShowSprites;
-	public static String mehSettingCallScriptEditor;
 
-	public static boolean bDataStoreInited;// Not stored in INI :p
+	public static   boolean bDataStoreInited;//Not stored in INI :p
 
 }
