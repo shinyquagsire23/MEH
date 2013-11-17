@@ -576,8 +576,8 @@ public class MainGUI extends JFrame
 			{
 				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
 					((JSplitPane)e.getSource()).setDividerLocation(350);
-				else if(((JSplitPane)e.getSource()).getDividerLocation() < 200)
-					((JSplitPane)e.getSource()).setDividerLocation(200);
+				else if(((JSplitPane)e.getSource()).getDividerLocation() < 25)
+					((JSplitPane)e.getSource()).setDividerLocation(25);
 
 				if(paneSize == 0)
 				{
@@ -594,8 +594,8 @@ public class MainGUI extends JFrame
 			{
 				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
 					((JSplitPane)e.getSource()).setDividerLocation(350);
-				else if(((JSplitPane)e.getSource()).getDividerLocation() < 200)
-					((JSplitPane)e.getSource()).setDividerLocation(200);
+				else if(((JSplitPane)e.getSource()).getDividerLocation() < 25)
+					((JSplitPane)e.getSource()).setDividerLocation(25);
 				else
 					((JSplitPane)e.getSource()).setDividerLocation(paneSize);
 
