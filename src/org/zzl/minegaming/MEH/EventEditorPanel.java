@@ -148,7 +148,13 @@ public class EventEditorPanel extends JPanel
 						MainGUI.panel_5.add(new SignPanel(Map.mapSignManager, IndexSign));
 						break;
 					case 2:
-						MainGUI.panel_5.add(new ExitPanel(Map.mapExitManager, IndexExit));
+						if(e.getClickCount() > 1)
+						{
+							//Load map number
+							MainGUI.loadMap((int)(map.mapExitManager.mapExits[IndexExit].bBank & 0xFF), (int)(map.mapExitManager.mapExits[IndexExit].bMap & 0xFF));
+						}
+						else
+							MainGUI.panel_5.add(new ExitPanel(Map.mapExitManager, IndexExit));
 						break;
 					case 3:
 						
