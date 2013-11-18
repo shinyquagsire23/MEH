@@ -353,7 +353,7 @@ public class EventEditorPanel extends JPanel
 	    	   
 	    		Image imgNPCs=Map.overworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
 	    		 int dstX=(n.bX*16);
-	    		 int dstY=(n.bY*16)-16;
+	    		 int dstY=(n.bY*16);
 	    		gcBuff.drawImage(imgNPCs, dstX , dstY, dstX+ 64,  dstY + 64, 0, 0, 64, 64, this);
     		}else{
     			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
