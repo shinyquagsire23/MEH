@@ -7,10 +7,10 @@ import org.zzl.minegaming.MEH.DataStore;
 
 public class OverworldSpritesManager extends Thread implements Runnable
 {
-	public OverworldSprites[] Sprites = new OverworldSprites[256];
-	private GBARom rom;
+	public static OverworldSprites[] Sprites = new OverworldSprites[256];
+	private static GBARom rom;
 
-	public Image GetImage(int index)
+	public static Image GetImage(int index)
 	{
 		if(Sprites[index] != null)
 			return Sprites[index].imgBuffer;
@@ -18,12 +18,20 @@ public class OverworldSpritesManager extends Thread implements Runnable
 			return loadSprite(index).imgBuffer;
 	}
 
+	public static OverworldSprites GetSprite(int index)
+	{
+		if(Sprites[index] != null)
+			return Sprites[index];
+		else
+			return loadSprite(index);
+	}
+	
 	public OverworldSpritesManager(GBARom rom, SpritesNPC[] NPCs)
 	{
 		this.rom = rom;
 	}
 	
-	public OverworldSprites loadSprite(int num)
+	public static OverworldSprites loadSprite(int num)
 	{
 		int ptr = (int) rom.getPointer((int) DataStore.SpriteBase + (num * 4));
 		Sprites[num] = new OverworldSprites(rom, ptr);

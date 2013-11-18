@@ -17,6 +17,7 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 import org.zzl.minegaming.MEH.MapElements.OverworldSprites;
+import org.zzl.minegaming.MEH.MapElements.OverworldSpritesManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesExit;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
 import org.zzl.minegaming.MEH.MapElements.SpritesSigns;
@@ -353,7 +354,7 @@ public class EventEditorPanel extends JPanel
 	    	   
 	    		Image imgNPCs=Map.overworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
 	    		 int dstX=(n.bX*16);
-	    		 int dstY=(n.bY*16);
+	    		 int dstY=(n.bY*16) - (OverworldSpritesManager.GetSprite((int)(n.bSpriteSet & 0xFF)).mSpriteSize > 0 ? 16 : 0);
 	    		gcBuff.drawImage(imgNPCs, dstX , dstY, dstX+ 64,  dstY + 64, 0, 0, 64, 64, this);
     		}else{
     			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
