@@ -10,6 +10,10 @@ MEH is a Generation III Map Editor for Pokemon Fire Red, Leaf Green, Ruby, Sapph
 * **Shiny Quagsire** and **interdpth** - for being #2awesome4advancecrap
 * **Bela** - Graphics
 
+**Bug Reporting**
+
+To report a bug, just create an account and create an issue in the issues tab on the right (if you're using the new interface). 
+
 
 Have any requests? Fill out the form [here](https://docs.google.com/forms/d/15ik5MuS65L8KgBzhHoe1GgkKKw58H_Ca0qoLd_u0U0o/viewform) to help us know what you want!
 
