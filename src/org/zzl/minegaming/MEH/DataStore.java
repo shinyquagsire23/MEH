@@ -32,10 +32,10 @@ public class DataStore
 			if (nkey.indexOf("0x") != -1)
 			{
 				FinalString = nkey.substring(2);
-				ReturnValue = Long.parseLong(FinalString);
+				ReturnValue = Long.parseLong(FinalString, 16);
 			}
 			else
-				ReturnValue = Long.parseLong(FinalString, 16);
+				ReturnValue = Long.parseLong(FinalString);
 		}catch(Exception e){
 			//There's a chance the key may not exist, let's come up with a way to handle this case
 			//
@@ -65,11 +65,6 @@ public class DataStore
 				nkey = nkey.substring(0, CommentIndex);// Get rid of the comment
 			}
 			FinalString = nkey;
-			if (nkey.indexOf("0x") != -1)
-			{
-				FinalString = nkey.substring(2);
-
-			}
 			ReturnValue = FinalString;
 		}
 		catch (Exception e)
