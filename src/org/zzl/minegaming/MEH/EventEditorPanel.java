@@ -17,6 +17,7 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 import org.zzl.minegaming.MEH.MapElements.OverworldSprites;
+import org.zzl.minegaming.MEH.MapElements.OverworldSpritesManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesExit;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
 import org.zzl.minegaming.MEH.MapElements.SpritesSigns;
@@ -136,6 +137,7 @@ public class EventEditorPanel extends JPanel
 				if(e.getButton() == MouseEvent.BUTTON1)
 				{
 			
+					MainGUI.panel_5.removeAll();
 				//If there's two events on tile, we'll handle that later with some kind of picker 
 					switch(selectedEvent){
 					case 0:
@@ -147,7 +149,13 @@ public class EventEditorPanel extends JPanel
 						MainGUI.panel_5.add(new SignPanel(Map.mapSignManager, IndexSign));
 						break;
 					case 2:
-						MainGUI.panel_5.add(new ExitPanel(Map.mapExitManager, IndexExit));
+						if(e.getClickCount() > 1)
+						{
+							//Load map number
+							MainGUI.loadMap((int)(map.mapExitManager.mapExits[IndexExit].bBank & 0xFF), (int)(map.mapExitManager.mapExits[IndexExit].bMap & 0xFF));
+						}
+						else
+							MainGUI.panel_5.add(new ExitPanel(Map.mapExitManager, IndexExit));
 						break;
 					case 3:
 						
@@ -344,9 +352,9 @@ public class EventEditorPanel extends JPanel
     		SpritesNPC n=Map.mapNPCManager.mapNPCs[i];
     		if(DataStore.mehSettingShowSprites==1){
 	    	   
-	    		Image imgNPCs=Map.overworldSpritesManager.GetImage(i);
+	    		Image imgNPCs=Map.overworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
 	    		 int dstX=(n.bX*16);
-	    		 int dstY=(n.bY*16)-16;
+	    		 int dstY=(n.bY*16) - (OverworldSpritesManager.GetSprite((int)(n.bSpriteSet & 0xFF)).mSpriteSize > 0 ? 16 : 0);
 	    		gcBuff.drawImage(imgNPCs, dstX , dstY, dstX+ 64,  dstY + 64, 0, 0, 64, 64, this);
     		}else{
     			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
@@ -386,10 +394,10 @@ public class EventEditorPanel extends JPanel
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			if(Redraw){
+			//if(Redraw){
 				DrawMap();
 				Redraw=false;
-			}
+			//}
 			g.drawImage(imgBuffer, 0, 0, this);
            
 			

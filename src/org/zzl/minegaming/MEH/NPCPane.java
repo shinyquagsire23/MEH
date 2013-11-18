@@ -33,6 +33,7 @@ import javax.swing.JButton;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.BoxLayout;
 
 public class NPCPane extends JPanel{
 
@@ -95,7 +96,7 @@ public class NPCPane extends JPanel{
 	NPCPane(SpritesNPCManager mgr, int NPCIndex){
 		myIndex=NPCIndex;
 		setBorder(new TitledBorder(null, "NPC", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		
 		

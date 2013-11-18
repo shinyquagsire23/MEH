@@ -85,28 +85,28 @@ public class MainGUI extends JFrame
 
 	public static JLabel lblInfo;
 	public JTree mapBanks;
-	public Map loadedMap;
+	public static Map loadedMap;
 
-	public BorderMap borderMap;
-	private int selectedBank = 0;
-	private int selectedMap = 0;
-	private int currentBank = 0;
-	private int currentMap = 0;
+	public static BorderMap borderMap;
+	private static int selectedBank = 0;
+	private static int selectedMap = 0;
+	private static int currentBank = 0;
+	private static int currentMap = 0;
 	private JTabbedPane editorTabs;
 	private JSplitPane splitPane;
-	public JLabel lblWidth;
-	public JLabel lblBorderTilesPointer;
-	public JLabel lblBorderWidth;
-	public JLabel lblLocalTilesetPointer;
-	public JLabel lblMapTilesPointer;
-	public JLabel lblHeight;
-	public JLabel lblBorderHeight;
-	public JLabel lblGlobalTilesetPointer;
+	public static JLabel lblWidth;
+	public static JLabel lblBorderTilesPointer;
+	public static JLabel lblBorderWidth;
+	public static JLabel lblLocalTilesetPointer;
+	public static JLabel lblMapTilesPointer;
+	public static JLabel lblHeight;
+	public static JLabel lblBorderHeight;
+	public static JLabel lblGlobalTilesetPointer;
 	private JPanel panel_1;
 	JPanel panelTilesContainer;
 	JPanel wildPokemonPanel;
-	public BorderEditorPanel borderTileEditor;
-	public EventEditorPanel eventEditorPanel;
+	public static BorderEditorPanel borderTileEditor;
+	public static EventEditorPanel eventEditorPanel;
 	public static TileEditorPanel tileEditorPanel;
 	public static JLabel lblTileVal;
 	public DataStore dataStore;
@@ -123,7 +123,7 @@ public class MainGUI extends JFrame
 	//Map Creation
 	JPanel panelMapTilesContainer;
 	JPanel splitterMapTiles;
-	public MapEditorPanel mapEditorPanel;
+	public static MapEditorPanel mapEditorPanel;
 	public JScrollPane mapScrollPane;
 	void CreateBorderArea(){
 		JPanel panelBorderTilesContainer = new JPanel();
@@ -183,7 +183,9 @@ public class MainGUI extends JFrame
 		panel_5 = new JPanel();
 		panel_5.setPreferredSize(new Dimension(220, 10));
 		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
-		eventsPanel.add(panel_5, BorderLayout.EAST);
+		JScrollPane selectedEventScroll = new JScrollPane(panel_5, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		eventsPanel.add(selectedEventScroll, BorderLayout.EAST);
 		panel_5.setLayout(new BorderLayout(0, 0));
 		eventEditorPanel = new EventEditorPanel();
 		eventEditorPanel.setLayout(null);
@@ -726,7 +728,7 @@ public class MainGUI extends JFrame
 		});
 	}
 
-	public void reloadMimeLabels()
+	public static void reloadMimeLabels()
 	{
 		lblWidth.setText("Width: " + loadedMap.getMapData().mapWidth);
 		lblHeight.setText("Height: " + loadedMap.getMapData().mapHeight);
@@ -738,7 +740,14 @@ public class MainGUI extends JFrame
 		lblLocalTilesetPointer.setText("Local  Tileset  Pointer: " + BitConverter.toHexString(loadedMap.getMapData().localTileSetPtr));
 	}
     
-	public void loadMap()
+	public static void loadMap(int bank, int map)
+	{
+		selectedMap = map;
+		selectedBank = bank;
+		loadMap();
+	}
+	
+	private static void loadMap()
 	{
 		lblInfo.setText("Loading map...");
 		new Thread()

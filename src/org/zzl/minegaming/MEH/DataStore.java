@@ -11,134 +11,134 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 import ini4j.Ini;
 import ini4j.spi.IniBuilder;
 
+public class DataStore
+{
 
-public class DataStore {
-	
-	//Everything we parse from the Ini
+	// Everything we parse from the Ini
 	public static Ini iP;
 	private static Boolean passedTraits;
 	//private Parser p;//For when we have YAML reading as well
 	public long Str2Num(String nkey){
-		  int CommentIndex=-1;
-		    long ReturnValue=0;
-		    String FinalString="";
-		    try{
-		    	CommentIndex=nkey.indexOf(";");
-			    if(CommentIndex!=-1){
-				
-			    	nkey=nkey.substring(0, CommentIndex);//Get rid of the comment
-			    }
-			    FinalString=nkey;
-			    if(nkey.indexOf("0x") !=-1 ){
-			    FinalString=nkey.substring(2);
-			    
-			    }
-			    	 ReturnValue=Long.parseLong(FinalString, 16);
-			}catch(Exception e){
-			 //There's a chance the key may not exist, let's come up with a way to handle this case
-				//
-				ReturnValue =  0;
-			
+		int CommentIndex=-1;
+		long ReturnValue=0;
+		String FinalString="";
+		try{
+			CommentIndex=nkey.indexOf(";");
+			if(CommentIndex!=-1){
+
+				nkey=nkey.substring(0, CommentIndex);//Get rid of the comment
 			}
-			return ReturnValue;
-	}
- public	long ReadNumberEntry(String Section, String key)
-	{
-	
-		
-		
-	  
-		return Str2Num(iP.get(Section, key));
-	}
-	
-	String ReadString(String Section, String key)
-	{
-		String nkey=iP.get(Section, key);
-		
-	    int CommentIndex=-1;
-	    String ReturnValue="";
-	    String FinalString="";
-	    try{
-	    	CommentIndex=nkey.indexOf(";");
-		    if(CommentIndex!=-1){
-			
-		    	nkey=nkey.substring(0, CommentIndex);//Get rid of the comment
-		    }
-		    FinalString=nkey;
-		    if(nkey.indexOf("0x") !=-1 ){
-		    FinalString=nkey.substring(2);
-		    
-		    }
-		    	 ReturnValue=FinalString;
+			FinalString=nkey;
+			if (nkey.indexOf("0x") != -1)
+			{
+				FinalString = nkey.substring(2);
+				ReturnValue = Long.parseLong(FinalString, 16);
+			}
+			else
+				ReturnValue = Long.parseLong(FinalString);
 		}catch(Exception e){
-		 //There's a chance the key may not exist, let's come up with a way to handle this case
+			//There's a chance the key may not exist, let's come up with a way to handle this case
 			//
-			ReturnValue = "";
-		
+			ReturnValue =  0;
+
 		}
 		return ReturnValue;
 	}
-	
-	
-	void ReadData(String ROMHeader){
-	    //Read all the entries.
-		Inherit = iP.get(ROMHeader, "Inherit");
-		if(passedTraits = false && Inherit!="")
+	public	long ReadNumberEntry(String Section, String key)
+	{
+		return Str2Num(iP.get(Section, key));
+	}
+
+	String ReadString(String Section, String key)
+	{
+		String nkey = iP.get(Section, key);
+
+		int CommentIndex = -1;
+		String ReturnValue = "";
+		String FinalString = "";
+		try
 		{
-		    //Genes passed, let's snip the traits. 
-		    passedTraits=true;
+			CommentIndex = nkey.indexOf(";");
+			if (CommentIndex != -1)
+			{
+
+				nkey = nkey.substring(0, CommentIndex);// Get rid of the comment
+			}
+			FinalString = nkey;
+			ReturnValue = FinalString;
+		}
+		catch (Exception e)
+		{
+			// There's a chance the key may not exist, let's come up with a way
+			// to handle this case
+			//
+			ReturnValue = "";
+
+		}
+		return ReturnValue;
+	}
+
+	void ReadData(String ROMHeader)
+	{
+		// Read all the entries.
+		Inherit = iP.get(ROMHeader, "Inherit");
+		if (passedTraits = false && Inherit != "")
+		{
+					//Genes passed, let's snip the traits. 
+					passedTraits=true;
 			ReadData(Inherit);//Grab inherited values
-		    
 		}
 		EngineVersion = ReadNumberEntry(ROMHeader, "Engine");
-		Name=iP.get(ROMHeader, "Name");
-		Language = ReadNumberEntry(ROMHeader, "Language" ); 
-		Cries= ReadNumberEntry(ROMHeader, "Cries" );
-		MapHeaders= ReadNumberEntry(ROMHeader, "MapHeaders" );  
-		Maps= ReadNumberEntry(ROMHeader, "Maps" ); 
-		MapLabels= ReadNumberEntry(ROMHeader, "MapLabels" ); 
-		MapLabels=ROMManager.getActiveROM().getPointerAsInt((int)MapLabels);
-		MonsterNames= ReadNumberEntry(ROMHeader, "MonsterNames" );
-		MonsterBaseStats= ReadNumberEntry(ROMHeader, "MonsterBaseStats" );
-		MonsterDexData= ReadNumberEntry(ROMHeader, "MonsterDexData" );
-		TrainerClasses= ReadNumberEntry(ROMHeader, "TrainerClasses" );
-		TrainerData= ReadNumberEntry(ROMHeader, "TrainerData" );
-		TrainerPics= ReadNumberEntry(ROMHeader, "TrainerPics" );
-		TrainerPals= ReadNumberEntry(ROMHeader, "TrainerPals" );
-		TrainerPicCount= ReadNumberEntry(ROMHeader, "TrainerPicCount" );
-		TrainerBackPics= ReadNumberEntry(ROMHeader, "TrainerBackPics" );
-		TrainerBackPals= ReadNumberEntry(ROMHeader, "TrainerBackPals" );
-		TrainerBackPicCount= ReadNumberEntry(ROMHeader, "TrainerBackPicCount" );
-		ItemNames= ReadNumberEntry(ROMHeader, "ItemNames" ); 
-		MonsterPics= ReadNumberEntry(ROMHeader, "MonsterPics" );
-		MonsterPals= ReadNumberEntry(ROMHeader, "MonsterPals" );
-		MonsterShinyPals= ReadNumberEntry(ROMHeader, "MonsterShinyPals" );
-		MonsterPicCount= ReadNumberEntry(ROMHeader, "MonsterPicCount" );
-		MonsterBackPics= ReadNumberEntry(ROMHeader, "MonsterBackPics" );
-		HomeLevel= ReadNumberEntry(ROMHeader, "HomeLevel" );     
-		SpriteBase= ReadNumberEntry(ROMHeader, "SpriteBase" );     
-		SpriteColors= ReadNumberEntry(ROMHeader, "SpriteColors" );  
-		SpriteNormalSet= ReadNumberEntry(ROMHeader, "SpriteNormalSet" );
-		SpriteSmallSet= ReadNumberEntry(ROMHeader, "SpriteSmallSet" );
-		SpriteLargeSet= ReadNumberEntry(ROMHeader, "SpriteLargeSet" );
-		WildPokemon= ReadNumberEntry(ROMHeader, "WildPokemon" );
-		FontGFX= ReadNumberEntry(ROMHeader, "FontGFX" ); 
-		FontWidths= ReadNumberEntry(ROMHeader, "FontWidths" );
-		AttackNameList= ReadNumberEntry(ROMHeader, "AttackNameList" );
-		AttackTable= ReadNumberEntry(ROMHeader, "AttackTable" );
-		StartPosBoy= ReadNumberEntry(ROMHeader, "StartPosBoy" );
-		StartPosGirl= ReadNumberEntry(ROMHeader, "StartPosGirl" );
-		MainTSPalCount= (int) ReadNumberEntry(ROMHeader, "MainTSPalCount");
-		MainTSSize= (int) ReadNumberEntry(ROMHeader, "MainTSSize");
-		LocalTSSize= (int) ReadNumberEntry(ROMHeader, "LocalTSSize");
-		MainTSBlocks= (int) ReadNumberEntry(ROMHeader, "MainTSBlocks");
-		LocalTSBlocks= (int) ReadNumberEntry(ROMHeader, "LocalTSBlocks");
-		MainTSHeight= (int) ReadNumberEntry(ROMHeader, "MainTSHeight");
-		LocalTSHeight= (int) ReadNumberEntry(ROMHeader, "LocalTSHeight");
-		NumBanks= (int) ReadNumberEntry(ROMHeader, "NumBanks");
+		Name = iP.get(ROMHeader, "Name");
+		Language = ReadNumberEntry(ROMHeader, "Language");
+		Cries = ReadNumberEntry(ROMHeader, "Cries");
+		MapHeaders = ReadNumberEntry(ROMHeader, "MapHeaders");
+		Maps = ReadNumberEntry(ROMHeader, "Maps");
+		MapLabels = ReadNumberEntry(ROMHeader, "MapLabels");
+		MapLabels = ROMManager.getActiveROM().getPointerAsInt((int) MapLabels);
+		MonsterNames = ReadNumberEntry(ROMHeader, "MonsterNames");
+		MonsterBaseStats = ReadNumberEntry(ROMHeader, "MonsterBaseStats");
+		MonsterDexData = ReadNumberEntry(ROMHeader, "MonsterDexData");
+		TrainerClasses = ReadNumberEntry(ROMHeader, "TrainerClasses");
+		TrainerData = ReadNumberEntry(ROMHeader, "TrainerData");
+		TrainerPics = ReadNumberEntry(ROMHeader, "TrainerPics");
+		TrainerPals = ReadNumberEntry(ROMHeader, "TrainerPals");
+		TrainerPicCount = ReadNumberEntry(ROMHeader, "TrainerPicCount");
+		TrainerBackPics = ReadNumberEntry(ROMHeader, "TrainerBackPics");
+		TrainerBackPals = ReadNumberEntry(ROMHeader, "TrainerBackPals");
+		TrainerBackPicCount = ReadNumberEntry(ROMHeader, "TrainerBackPicCount");
+		ItemNames = ReadNumberEntry(ROMHeader, "ItemNames");
+		MonsterPics = ReadNumberEntry(ROMHeader, "MonsterPics");
+		MonsterPals = ReadNumberEntry(ROMHeader, "MonsterPals");
+		MonsterShinyPals = ReadNumberEntry(ROMHeader, "MonsterShinyPals");
+		MonsterPicCount = ReadNumberEntry(ROMHeader, "MonsterPicCount");
+		MonsterBackPics = ReadNumberEntry(ROMHeader, "MonsterBackPics");
+		HomeLevel = ReadNumberEntry(ROMHeader, "HomeLevel");
+		SpriteBase = ReadNumberEntry(ROMHeader, "SpriteBase");
+		SpriteColors = ReadNumberEntry(ROMHeader, "SpriteColors");
+		SpriteNormalSet = ReadNumberEntry(ROMHeader, "SpriteNormalSet");
+		SpriteSmallSet = ReadNumberEntry(ROMHeader, "SpriteSmallSet");
+		SpriteLargeSet = ReadNumberEntry(ROMHeader, "SpriteLargeSet");
+		NumSprites = ReadNumberEntry(ROMHeader, "NumSprites");
+		WildPokemon = ReadNumberEntry(ROMHeader, "WildPokemon");
+		FontGFX = ReadNumberEntry(ROMHeader, "FontGFX");
+		FontWidths = ReadNumberEntry(ROMHeader, "FontWidths");
+		AttackNameList = ReadNumberEntry(ROMHeader, "AttackNameList");
+		AttackTable = ReadNumberEntry(ROMHeader, "AttackTable");
+		StartPosBoy = ReadNumberEntry(ROMHeader, "StartPosBoy");
+		StartPosGirl = ReadNumberEntry(ROMHeader, "StartPosGirl");
+		MainTSPalCount = (int) ReadNumberEntry(ROMHeader, "MainTSPalCount");
+		MainTSSize = (int) ReadNumberEntry(ROMHeader, "MainTSSize");
+		LocalTSSize = (int) ReadNumberEntry(ROMHeader, "LocalTSSize");
+		MainTSBlocks = (int) ReadNumberEntry(ROMHeader, "MainTSBlocks");
+		LocalTSBlocks = (int) ReadNumberEntry(ROMHeader, "LocalTSBlocks");
+		MainTSHeight = (int) ReadNumberEntry(ROMHeader, "MainTSHeight");
+		LocalTSHeight = (int) ReadNumberEntry(ROMHeader, "LocalTSHeight");
+		NumBanks = (int) ReadNumberEntry(ROMHeader, "NumBanks");
 		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
 		MapBankSize = new int[NumBanks];
-		int i=0;
+	
+				int i=0;
 		for(i = 0; i < mBS.length; i++)
 		{
 			MapBankSize[i] = Integer.parseInt(mBS[i]);
@@ -158,57 +158,78 @@ public class DataStore {
 		WorldMapTileMap=new int[WorldMapCount];
 		WorldMapSlot=new int[WorldMapCount];
 		WorldMapPalSize=new int[WorldMapCount];
-	    for(i=0;i<WorldMapCount;i++){
-	    	//Sometimes weird things happen
-	    	
-	    	WorldMapGFX[i] = (int) Str2Num(awmgfx[i]);
+		for(i=0;i<WorldMapCount;i++){
+			//Sometimes weird things happen
+
+			WorldMapGFX[i] = (int) Str2Num(awmgfx[i]);
 			WorldMapPal[i] = (int) Str2Num(wmdp[i]);
 			WorldMapTileMap[i] = (int) Str2Num(wmptm[i]);;
 			WorldMapSlot[i] = (int) Str2Num(wmpds[i]);
 			WorldMapPalSize[i]= (int) Str2Num(ps[i]);
-	    }
+		}
 		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
 		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
-		mehSettingCallScriptEditor = ReadString("MEH","mehSettingCallScriptEditor"); 
-		
+		mehSettingCallScriptEditor = ReadString("MEH",
+				"mehSettingCallScriptEditor");
+
 	}
-	
-	public static void WriteNumberEntry(String Section, String key, int val)//Writes can happen at any time...currently.... move to mapsave function for later
+
+	public static void WriteNumberEntry(String Section, String key, int val)// Writes
+	// can
+	// happen
+	// at
+	// any
+	// time...currently....
+	// move
+	// to
+	// mapsave
+	// function
+	// for
+	// later
 	{
-	   
-		String nkey=iP.get(Section, key);
-		
-	    int CommentIndex=-1;
-	    long ReturnValue=0;
-	    String FinalString="";
-	    try{
-	    	FinalString=Integer.toString(val);
-	    	 iP.put(Section, key, FinalString);
-		}catch(Exception e){
-		 //There's a chance the key may not exist, let's come up with a way to handle this case
+
+		String nkey = iP.get(Section, key);
+
+		int CommentIndex = -1;
+		long ReturnValue = 0;
+		String FinalString = "";
+		try
+		{
+			FinalString = Integer.toString(val);
+			iP.put(Section, key, FinalString);
+		}
+		catch (Exception e)
+		{
+			// There's a chance the key may not exist, let's come up with a way
+			// to handle this case
 			//
-			ReturnValue =  0;
-		
+			ReturnValue = 0;
+
 		}
-		
+
 	}
-	public DataStore(String FilePath, String ROMHeader){
-		try {
-			iP=new Ini(new File(FilePath));
-			bDataStoreInited=true;
-			passedTraits=false; 
-			Inherit="";
+
+	public DataStore(String FilePath, String ROMHeader)
+	{
+		try
+		{
+			iP = new Ini(new File(FilePath));
+			bDataStoreInited = true;
+			passedTraits = false;
+			Inherit = "";
 			ReadData(ROMHeader);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		}
+		catch (FileNotFoundException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	public static   long EngineVersion;
 	public static   String Inherit;
@@ -241,6 +262,7 @@ public class DataStore {
 	public static	long SpriteNormalSet;
 	public static	long SpriteSmallSet;
 	public static	long SpriteLargeSet;
+	public static   long NumSprites;
 	public static	long WildPokemon;
 	public static	long FontGFX ; 
 	public static	long FontWidths;
@@ -263,12 +285,12 @@ public class DataStore {
 	public static	int[] WorldMapTileMap;
 	public static   int WorldMapCount;
 	public static   int[] WorldMapPalSize;
-	
+
 	public static   int mehUsePlugins;
 	public static   int mehSettingShowSprites;
 	public static   String mehSettingCallScriptEditor;
-	
-	
+
+
 	public static   boolean bDataStoreInited;//Not stored in INI :p
-	
+
 }

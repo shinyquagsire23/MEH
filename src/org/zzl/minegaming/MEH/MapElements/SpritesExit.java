@@ -10,7 +10,8 @@ public class SpritesExit implements ISaveable {
 	public byte b4;
 	public byte b5;
 	public byte b6;
-	public int hLevel;
+	public byte bMap;
+	public byte bBank;
 	private int pData;
 	private GBARom rom;
 	public  SpritesExit(GBARom rom){
@@ -26,7 +27,8 @@ public class SpritesExit implements ISaveable {
 		b4=rom.readByte();
 		b5=rom.readByte();
 		b6=rom.readByte();
-		hLevel=rom.readWord();
+		bMap=rom.readByte();
+		bBank=rom.readByte();
 		pData = offset;
 	}
 	@Override
@@ -39,6 +41,7 @@ public class SpritesExit implements ISaveable {
 		rom.writeByte(b4);
 		rom.writeByte(b5);
 		rom.writeByte(b6);
-		rom.writeWord(hLevel);
+		rom.writeByte(bMap);
+		rom.writeByte(bBank);
 	}
 }
