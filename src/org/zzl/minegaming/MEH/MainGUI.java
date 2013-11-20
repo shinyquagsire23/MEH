@@ -456,9 +456,13 @@ public class MainGUI extends JFrame
 		editorTabs.addTab("Permissions", null, pnPermission, null);
 		
 		pnPermission.setLayout(null);
-		pnPermission.setBorder(UIManager.getBorder("SplitPane.border"));
+
 		ptp= new PermissionTilesPanel();
+		ptp.setBounds(512, 0, 256, 454);
 		pnPermission.add(ptp);
+		
+		ptp.setLayout(null);
+		
 
 		
 		 
@@ -472,7 +476,7 @@ public class MainGUI extends JFrame
 		editorTabs.addTab("Mime", null, mimePanel, null);
 		mimePanel.setLayout(null);
 		panel_1 = new JPanel();
-		panel_1.setBounds(0, 0, 796, 454);
+		panel_1.setBounds(700, 0, 796, 454);
 		mimePanel.add(panel_1);
 		panel_1.setBorder(UIManager.getBorder("SplitPane.border"));
 		panel_1.setLayout(null);
