@@ -50,6 +50,6 @@ public class Triggers implements ISaveable {
 		  rom.writeWord(hFlagCheck);
 		  rom.writeWord(hFlagValue);
 		  rom.writeWord(h6);
-		  rom.writePointer((long)pScript + (pScript == 0 ? 0 : 0x08000000));
+		  rom.writePointer(pScript + (pScript == 0 ? 0 : 0x08000000));
 	  }
 }

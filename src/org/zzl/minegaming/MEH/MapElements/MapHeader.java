@@ -58,7 +58,8 @@ public class MapHeader implements ISaveable {
 		  hdrSize=rom.internalOffset-bOffset-0x8000000;
 	  }
 
-	 public void save()
+	 @Override
+	public void save()
 	 {
 		  rom.Seek(bOffset);
   		  rom.writePointer((int)pMap);

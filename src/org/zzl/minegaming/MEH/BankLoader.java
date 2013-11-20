@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
@@ -30,7 +29,7 @@ public class BankLoader extends Thread implements Runnable
 		try
 		{
 			mapNamesPtr = rom.getPointerAsInt((int)DataStore.MapLabels);
-			maps = (ArrayList<Long>[])new ArrayList[DataStore.NumBanks];
+			maps = new ArrayList[DataStore.NumBanks];
 			bankPointers = new ArrayList<Long>();
 			banksLoaded = false;
 		}
@@ -42,7 +41,7 @@ public class BankLoader extends Thread implements Runnable
 
 	public BankLoader(int tableOffset, GBARom rom, JLabel label, JTree tree)
 	{
-		this.rom = rom;
+		BankLoader.rom = rom;
 		tblOffs = (int) ROMManager.currentROM.getPointer(tableOffset);
 	
 		lbl = label;
@@ -70,7 +69,7 @@ public class BankLoader extends Thread implements Runnable
 		int mapNum = 0;
 		for(long l : bankPointers)
 		{
-			ArrayList<byte[]> preMapList = rom.loadArrayOfStructuredData((int)(BitConverter.shortenPointer(l)), DataStore.MapBankSize[mapNum], 4);
+			ArrayList<byte[]> preMapList = rom.loadArrayOfStructuredData((BitConverter.shortenPointer(l)), DataStore.MapBankSize[mapNum], 4);
 			ArrayList<Long> mapList = new ArrayList<Long>();
 			int miniMapNum = 0;
 			for(byte[] b : preMapList)

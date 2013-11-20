@@ -10,10 +10,6 @@ import org.zzl.minegaming.MEH.MapElements.SpritesSignManager;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
-import net.miginfocom.swing.MigLayout;
 import java.awt.FlowLayout;
 
 public class SignPanel extends JPanel {
@@ -42,6 +38,7 @@ public class SignPanel extends JPanel {
 		
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				Save(Map.mapSignManager);
 			}

@@ -28,7 +28,7 @@ public class OverworldSpritesManager extends Thread implements Runnable
 	
 	public OverworldSpritesManager(GBARom rom, SpritesNPC[] NPCs)
 	{
-		this.rom = rom;
+		OverworldSpritesManager.rom = rom;
 	}
 	
 	public static OverworldSprites loadSprite(int num)
