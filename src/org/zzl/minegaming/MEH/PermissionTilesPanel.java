@@ -92,14 +92,14 @@ public class PermissionTilesPanel extends JPanel
 				else{
 					srcX=x;
 					srcY=y;
-					baseSelectedTile = y;
+					PermissionTilesPanel.baseSelectedTile = y;
 
 					String k = "Current Permission: ";
 					k += String.format("0x%8s",
 							Integer.toHexString(baseSelectedTile))
 							.replace(' ', '0');
 					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(PermissionTilesPanel.baseSelectedTile));
-					repaint();
+					
 				}
 
 			}
@@ -155,12 +155,12 @@ public class PermissionTilesPanel extends JPanel
 		{
 
 			gcBuff.setColor(Color.black);
-			gcBuff.drawRect(0, i*16, 16, 16);
+			gcBuff.drawRect(0, i*16 + 16, 16, 16);
 			gcBuff.setColor(PermissionEditorPanel.PermissionColors[i]);
 			
-		    gcBuff.fillRect(0, i*16, 16, 16);
+		    gcBuff.fillRect(0, i*16 + 16, 16, 16);
 		    gcBuff.setColor(Color.RED);
-		    gcBuff.drawString(Integer.toHexString(i), 1, i*16);
+		    gcBuff.drawString(Integer.toHexString(i), 1, i*16 + 16);
 		}
 	}
 	@Override

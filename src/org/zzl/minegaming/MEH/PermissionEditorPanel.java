@@ -85,8 +85,9 @@ public class PermissionEditorPanel extends JPanel
 				
 				if(e.getButton() == MouseEvent.BUTTON1)
 				{
-			
-				
+			      MainGUI.mapEditorPanel.map.getMapTileData().getTile(x, y).SetMeta(PermissionTilesPanel.baseSelectedTile);
+				  PermissionEditorPanel.Redraw=true;
+				  repaint();
 				}
 				else if(e.getButton()==3)
 				{
