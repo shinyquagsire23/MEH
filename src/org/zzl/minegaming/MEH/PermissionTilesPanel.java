@@ -86,6 +86,10 @@ public class PermissionTilesPanel extends JPanel
 
 				x = (e.getX() / 16);
 				y = (e.getY() / 16);
+
+				if(x>MainGUI.mapEditorPanel.map.getMapData().mapWidth || y>MainGUI.mapEditorPanel.map.getMapData().mapHeight){
+					return;
+				}
 				if (e.getClickCount() == 2 && e.getButton()==3){
 					SetRect();//Reset tile rectangle
 				}
