@@ -31,24 +31,37 @@ public class SignPanel extends JPanel {
 	public SignPanel(SpritesSignManager mgr, int index) {
 		myIndex=index;
 		setBorder(new TitledBorder(null, "Sign", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		setLayout(null);
 		
-		JLabel lblScriptPointer = new JLabel("Script Pointer");
+		JLabel lblScriptPointer = new JLabel("<html>Script Pointer:   <B style=\"color: green\">$</B><html>");
+		lblScriptPointer.setBounds(12, 27, 127, 15);
 		add(lblScriptPointer);
 		
 		textField = new JTextField();
+		textField.setBounds(128, 23, 83, 26);
 		add(textField);
 		textField.setColumns(10);
 		
 		JButton btnSave = new JButton("Save");
+		btnSave.setBounds(12, 119, 68, 25);
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Save(Map.mapSignManager);
 			}
 		});
 		add(btnSave);
+		
+		JButton btnOpenScript = new JButton("Open Script");
+		btnOpenScript.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				MainGUI.openScript(Integer.parseInt(textField.getText(), 16));
+			}
+		});
+		btnOpenScript.setBounds(56, 54, 142, 25);
+		add(btnOpenScript);
 		Load(mgr, index);
 
 	}
-
 }

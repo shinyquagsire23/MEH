@@ -1,9 +1,11 @@
 package org.zzl.minegaming.MEH;
 
 import javax.imageio.ImageIO;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
@@ -28,6 +30,9 @@ import java.awt.Component;
 import javax.swing.Box;
 
 import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.SystemColor;
 
 import javax.swing.ImageIcon;
@@ -36,6 +41,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Date;
 import java.awt.event.WindowAdapter;
@@ -848,5 +855,42 @@ public class MainGUI extends JFrame
 	{
 		PluginManager.fireROMSave();
 		ROMManager.getActiveROM().commitChangesToROMFile();
+	}
+	
+	public static void openScript(int scriptOffset)
+	{
+		if(DataStore.mehSettingCallScriptEditor == null || DataStore.mehSettingCallScriptEditor.isEmpty())
+		{
+			int reply = JOptionPane.showConfirmDialog(null, "It appears that you have no script editor registered with MEH. Would you like to search for one?", "You need teh Script Editorz!!!", JOptionPane.YES_NO_OPTION);
+			if(reply == JOptionPane.YES_OPTION)
+			{
+				FileDialog fd = new FileDialog(new Frame(), "Load a ROM...", FileDialog.LOAD);
+				fd.setFilenameFilter(new FilenameFilter()
+				{
+				    public boolean accept(File dir, String name)
+				    {
+				      return ((System.getProperty("os.name").toLowerCase().contains("win") ? name.toLowerCase().endsWith(".exe") : name.toLowerCase().endsWith(".*")) || name.toLowerCase().endsWith(".jar"));
+				    }
+				 });
+				//fd.setDirectory(GlobalVars.LastDir);
+				fd.show();
+				String location = fd.getDirectory() + fd.getFile();
+				if(location.isEmpty())
+					return;
+				
+				DataStore.mehSettingCallScriptEditor = location;
+			}
+		}
+		
+		try
+		{
+			Runtime r = Runtime.getRuntime();
+			r.exec((DataStore.mehSettingCallScriptEditor.toLowerCase().endsWith(".jar") ? "java -jar" : "") + DataStore.mehSettingCallScriptEditor + " \"" + ROMManager.currentROM.input_filepath.replace("\"", "") + "\" 0x" + String.format("%x", scriptOffset));
+		}
+		catch (IOException e)
+		{
+			JOptionPane.showMessageDialog(null, "It seems that your script editor has gone missing. Look around for it and try it again. I'm sure it'll work eventually.");
+			e.printStackTrace();
+		}
 	}
 }

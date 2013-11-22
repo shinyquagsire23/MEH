@@ -48,7 +48,11 @@ public class DataStore
 	{
 		return Str2Num(iP.get(Section, key));
 	}
-
+	public void WriteString(String section, String key, String value)
+	{
+		iP.put(section, key, value);
+	}
+	
 	String ReadString(String Section, String key)
 	{
 		String nkey = iP.get(Section, key);
