@@ -31,6 +31,7 @@ public class SpritesSignManager implements ISaveable {
 		}
 	}
 
+	@Override
 	public void save()
 	{
 		for(SpritesSigns s : mapSigns)

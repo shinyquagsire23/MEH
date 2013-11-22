@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -37,7 +38,7 @@ public class MapEditorPanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
-	private Map map;
+	public Map map;
 	static Rectangle mouseTracker;
 
 	public static boolean renderPalette = false;
@@ -65,8 +66,8 @@ public class MapEditorPanel extends JPanel
 				System.out.println(e.getButton());
 
 
-				int b1 = MouseEvent.BUTTON1_DOWN_MASK;
-				int b2 = MouseEvent.BUTTON2_DOWN_MASK;
+				int b1 = InputEvent.BUTTON1_DOWN_MASK;
+				int b2 = InputEvent.BUTTON2_DOWN_MASK;
 				if ((e.getModifiersEx() & (b1 | b2)) == b1) 
 				{
 					for(int DrawX=0;DrawX<bufferWidth;DrawX++){
@@ -263,7 +264,7 @@ public class MapEditorPanel extends JPanel
 				}
 			}
 
-
+			PermissionEditorPanel.Redraw=true;
 			EventEditorPanel.Redraw=true;
 			this.repaint();
 		}
@@ -283,16 +284,16 @@ public class MapEditorPanel extends JPanel
 	void DrawNPCs(){
 
 		int i=0;
-		for(i=0;i<map.mapNPCManager.mapNPCs.length;i++){
-			SpritesNPC n=map.mapNPCManager.mapNPCs[i];
+		for(i=0;i<Map.mapNPCManager.mapNPCs.length;i++){
+			SpritesNPC n=Map.mapNPCManager.mapNPCs[i];
 			DrawText("N", n.bX*16 , n.bY*16);
 		}
 	}
 	void DrawTriggers(){
 
 		int i=0;
-		for(i=0;i<map.mapTriggerManager.mapTriggers.length;i++){
-			Triggers n=map.mapTriggerManager.mapTriggers[i];
+		for(i=0;i<Map.mapTriggerManager.mapTriggers.length;i++){
+			Triggers n=Map.mapTriggerManager.mapTriggers[i];
 
 			DrawText("T", n.bX*16 , n.bY*16);
 		}
@@ -300,8 +301,8 @@ public class MapEditorPanel extends JPanel
 	void DrawSigns(){
 
 		int i=0;
-		for(i=0;i<map.mapSignManager.mapSigns.length;i++){
-			SpritesSigns n=map.mapSignManager.mapSigns[i];
+		for(i=0;i<Map.mapSignManager.mapSigns.length;i++){
+			SpritesSigns n=Map.mapSignManager.mapSigns[i];
 
 			DrawText("S", n.bX*16 , n.bY*16);
 		}
@@ -309,7 +310,7 @@ public class MapEditorPanel extends JPanel
 	void DrawExits(){
 
 		int i=0;
-		SpritesExit[] tmp=map.mapExitManager.mapExits;
+		SpritesExit[] tmp=Map.mapExitManager.mapExits;
 		for(i=0;i<tmp.length;i++){
 			SpritesExit n=tmp[i];
 			DrawText("E", n.bX*16 , n.bY*16);
@@ -371,8 +372,9 @@ public class MapEditorPanel extends JPanel
 				mouseTracker.x-=Math.abs( mouseTracker.width);
 			if( mouseTracker.height <0)
 				mouseTracker.y-=Math.abs( mouseTracker.height);
+			try{
 			g.drawRect((int) (((mouseTracker.x / 16) % map.getMapData().mapWidth) * 16),(mouseTracker.y / 16) * 16,selectBox.width-1,selectBox.height-1);
-
+			}catch(Exception e){}
 		}
 		try
 		{

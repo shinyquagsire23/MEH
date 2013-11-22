@@ -1,36 +1,17 @@
 	package org.zzl.minegaming.MEH;
 
-	import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.LayoutManager;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-
+	import java.awt.Rectangle;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 	import org.zzl.minegaming.GBAUtils.BitConverter;
-import org.zzl.minegaming.MEH.MapElements.SpritesExit;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPCManager;
-import org.zzl.minegaming.MEH.MapElements.SpritesSigns;
-import org.zzl.minegaming.MEH.MapElements.Triggers;
-
 import javax.swing.JButton;
-import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
@@ -75,7 +56,7 @@ public class NPCPane extends JPanel{
 		chkIsTrainer.setSelected(t.bIsTrainer==1);
 		txtTrainerLOS.setText(Byte.toString(t.bTrainerLOS));
 		txtScript.setText(String.format("%X", ((int)t.pScript)));
-		txtiFlag.setText(BitConverter.toHexString((int)t.iFlag));
+		txtiFlag.setText(BitConverter.toHexString(t.iFlag));
 	}
 	void Save(SpritesNPCManager mgr){
 		SpritesNPC t = mgr.mapNPCs[myIndex];
@@ -171,6 +152,7 @@ public class NPCPane extends JPanel{
 		
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Save(Map.mapNPCManager);
 			}

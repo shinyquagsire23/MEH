@@ -13,7 +13,7 @@ public class WildDataCache extends Thread implements Runnable
 	
 	public WildDataCache(GBARom rom)
 	{
-		this.rom = rom;
+		WildDataCache.rom = rom;
 	}
 	
 	public static void gatherData()
@@ -26,7 +26,7 @@ public class WildDataCache extends Thread implements Runnable
 				break;
 			
 			WildData d = new WildData(rom,h);
-			dataCache.put(new MapID((int)(h.bBank & 0xFF),(int)(h.bMap & 0xFF)),d);
+			dataCache.put(new MapID(h.bBank & 0xFF,h.bMap & 0xFF),d);
 			pData += (4 * 5);
 		}
 	}
@@ -36,6 +36,7 @@ public class WildDataCache extends Thread implements Runnable
 		return dataCache.get(new MapID(bank,map));
 	}
 	
+	@Override
 	public void run()
 	{
 		gatherData();

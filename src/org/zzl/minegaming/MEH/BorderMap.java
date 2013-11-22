@@ -29,6 +29,7 @@ public class BorderMap implements ISaveable
 		return mapTileData;
 	}
 	
+	@Override
 	public void save()
 	{
 		mapData.save();

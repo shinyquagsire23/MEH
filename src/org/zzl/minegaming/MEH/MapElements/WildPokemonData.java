@@ -25,6 +25,7 @@ public class WildPokemonData implements ISaveable
 		}
 	}
 	
+	@Override
 	public void save()
 	{
 		rom.Seek((int)pData);

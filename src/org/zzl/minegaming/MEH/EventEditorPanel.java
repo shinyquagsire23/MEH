@@ -7,16 +7,12 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import org.zzl.minegaming.GBAUtils.BitConverter;
-import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-import org.zzl.minegaming.MEH.MapElements.OverworldSprites;
 import org.zzl.minegaming.MEH.MapElements.OverworldSpritesManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesExit;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
@@ -152,7 +148,7 @@ public class EventEditorPanel extends JPanel
 						if(e.getClickCount() > 1)
 						{
 							//Load map number
-							MainGUI.loadMap((int)(map.mapExitManager.mapExits[IndexExit].bBank & 0xFF), (int)(map.mapExitManager.mapExits[IndexExit].bMap & 0xFF));
+							MainGUI.loadMap(Map.mapExitManager.mapExits[IndexExit].bBank & 0xFF, Map.mapExitManager.mapExits[IndexExit].bMap & 0xFF);
 						}
 						else
 							MainGUI.panel_5.add(new ExitPanel(Map.mapExitManager, IndexExit));
@@ -352,9 +348,9 @@ public class EventEditorPanel extends JPanel
     		SpritesNPC n=Map.mapNPCManager.mapNPCs[i];
     		if(DataStore.mehSettingShowSprites==1){
 	    	   
-	    		Image imgNPCs=Map.overworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
+	    		Image imgNPCs=OverworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
 	    		 int dstX=(n.bX*16);
-	    		 int dstY=(n.bY*16) - (OverworldSpritesManager.GetSprite((int)(n.bSpriteSet & 0xFF)).mSpriteSize > 0 ? 16 : 0);
+	    		 int dstY=(n.bY*16) - (OverworldSpritesManager.GetSprite(n.bSpriteSet & 0xFF).mSpriteSize > 0 ? 16 : 0);
 	    		gcBuff.drawImage(imgNPCs, dstX , dstY, dstX+ 64,  dstY + 64, 0, 0, 64, 64, this);
     		}else{
     			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
@@ -394,10 +390,10 @@ public class EventEditorPanel extends JPanel
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			//if(Redraw){
+			if(EventEditorPanel.Redraw){
 				DrawMap();
-				Redraw=false;
-			//}
+				EventEditorPanel.Redraw=false;
+			}
 			g.drawImage(imgBuffer, 0, 0, this);
            
 			

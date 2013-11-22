@@ -1,11 +1,9 @@
 package org.zzl.minegaming.MEH;
 
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
 
-import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.MEH.MapElements.SpritesExitManager;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -50,6 +48,7 @@ public class ExitPanel extends JPanel {
 		
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				Save(Map.mapExitManager);
 			}

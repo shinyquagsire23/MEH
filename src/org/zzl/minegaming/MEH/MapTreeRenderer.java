@@ -23,6 +23,7 @@ public class MapTreeRenderer extends DefaultTreeCellRenderer
 		mapIcon = new ImageIcon(MainGUI.class.getResource("/resources/map.png"));
 	}
 
+	@Override
 	public Component getTreeCellRendererComponent(JTree tree, Object value,
 			boolean selected, boolean expanded, boolean leaf, int row,
 			boolean hasFocus)
@@ -31,7 +32,7 @@ public class MapTreeRenderer extends DefaultTreeCellRenderer
 		super.getTreeCellRendererComponent(tree, value, selected, expanded,
 				leaf, row, hasFocus);
 
-		JLabel label = (JLabel) this;
+		JLabel label = this;
 
 		try
 		{
