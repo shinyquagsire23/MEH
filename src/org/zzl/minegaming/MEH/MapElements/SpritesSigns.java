@@ -33,7 +33,8 @@ public class SpritesSigns implements ISaveable {
 			 pScript=rom.getPointer();
 		 }
 
-	  public void save()
+	  @Override
+	public void save()
 	  {
 		   rom.Seek(pData);
 		   rom.writeByte(bX);
@@ -44,6 +45,6 @@ public class SpritesSigns implements ISaveable {
 		   rom.writeByte(b6);
 		   rom.writeByte(b7);
 		   rom.writeByte(b8);
-		   rom.writePointer((long)pScript + (pScript == 0 ? 0 : 0x08000000));
+		   rom.writePointer(pScript + (pScript == 0 ? 0 : 0x08000000));
 	  }
 }

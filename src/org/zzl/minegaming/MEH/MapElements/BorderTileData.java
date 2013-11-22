@@ -13,7 +13,7 @@ public class BorderTileData
 		dataLoc = offset;
 		this.mData = mData;
 		this.rom = rom;
-		mapTiles = new MapTile[(int)mData.borderWidth][(int) mData.borderHeight];
+		mapTiles = new MapTile[mData.borderWidth][mData.borderHeight];
 		for(int x = 0; x < mData.borderWidth; x++)
 		{
 			for(int y = 0; y < mData.borderHeight; y++)
@@ -29,7 +29,7 @@ public class BorderTileData
 			return mapTiles[x][y];
 		else
 		{
-			int index = (int) ((y*mData.borderWidth) + x);
+			int index = (y*mData.borderWidth) + x;
 			int raw = rom.readWord(dataLoc + index*2);
 			MapTile m = new MapTile((raw & 0x3FF),(raw&0xFC00) >> 10);
 			mapTiles[x][y] = m;

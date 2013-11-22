@@ -18,6 +18,7 @@ public class WildPokemon implements ISaveable
 		wNum = rom.readWord();
 	}
 	
+	@Override
 	public void save()
 	{
 		rom.writeByte(bMinLV);

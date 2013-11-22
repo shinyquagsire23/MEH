@@ -1,16 +1,10 @@
 package org.zzl.minegaming.MEH;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
@@ -65,7 +59,7 @@ public class BorderEditorPanel extends JPanel
 				int x = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
 				int y = ((e.getY() - 20) / 16);
 				System.out.println(x + " " + y);
-				if(e.getButton() == e.BUTTON1)
+				if(e.getButton() == MouseEvent.BUTTON1)
 				{
 					int tile = TileEditorPanel.baseSelectedTile;
 					try
@@ -140,7 +134,7 @@ public class BorderEditorPanel extends JPanel
 				for(int x = 0; x < map.getMapData().borderWidth; x++)
 				{
 					
-						g.drawImage((Image)blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), (this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + x*16, 20+y*16, null); 
+						g.drawImage(blockRenderer.renderBlock(map.getMapTileData().getTile(x, y).getID()), (this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + x*16, 20+y*16, null); 
 				}
 			}
 		}

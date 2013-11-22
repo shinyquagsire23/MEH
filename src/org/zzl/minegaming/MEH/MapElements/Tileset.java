@@ -1,13 +1,8 @@
 package org.zzl.minegaming.MEH.MapElements;
 
-import java.awt.Component;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
@@ -16,7 +11,6 @@ import org.zzl.minegaming.GBAUtils.GBAImageType;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.Palette;
-import org.zzl.minegaming.GBAUtils.ROMManager;
 import org.zzl.minegaming.MEH.DataStore;
 
 public class Tileset
@@ -62,8 +56,8 @@ public class Tileset
 			}
 		}
 		numBlocks = 1024; //(tilesetHeader.isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
-		renderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13];
-		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[13-DataStore.MainTSPalCount];
+		renderedTiles = new HashMap[tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13];
+		customRenderedTiles = new HashMap[13-DataStore.MainTSPalCount];
 		
 		for(int i = 0; i < (tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13); i++)
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
@@ -213,7 +207,7 @@ public class Tileset
 	}
 	public void resetCustomTiles()
 	{
-		customRenderedTiles = (HashMap<Integer,BufferedImage>[])new HashMap[DataStore.MainTSPalCount];
+		customRenderedTiles = new HashMap[DataStore.MainTSPalCount];
 		for(int i = 0; i < DataStore.MainTSPalCount; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 	}

@@ -39,6 +39,7 @@ public class SpritesNPCManager implements ISaveable {
 		}
 	}
 
+	@Override
 	public void save()
 	{
 		for(SpritesNPC n : mapNPCs)

@@ -1,24 +1,15 @@
 package org.zzl.minegaming.MEH.MapElements;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.RenderedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBAImage;
 import org.zzl.minegaming.GBAUtils.GBAImageType;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.Palette;
 import org.zzl.minegaming.MEH.DataStore;
-import org.zzl.minegaming.MEH.MapEditorPanel;
 
 
 public class OverworldSprites {
@@ -209,7 +200,7 @@ public class OverworldSprites {
 		 ptrAnim= rom.getPointer(); //Pointer to unknown data. Determines sprite mobility: just one sprite, can only turn (gym leaders) or fully mobile.
 		 ptrGraphic= rom.getPointer(); //Pointer to pointer to graphics <- not a typo ;)
 		 LoadCode= rom.getPointer();
-	 trueGraphicsPointer=(long)rom.getPointer((int) ptrGraphic);//Grab the real one
+	 trueGraphicsPointer=rom.getPointer((int) ptrGraphic);//Grab the real one
 	 if(OverworldSprites.myPal==null){
 		 GrabPal(rom);
 	 }

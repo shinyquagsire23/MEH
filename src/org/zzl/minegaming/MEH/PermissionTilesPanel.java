@@ -16,18 +16,20 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
-public class TileEditorPanel extends JPanel
+import org.zzl.minegaming.MEH.PermissionEditorPanel;
+public class PermissionTilesPanel extends JPanel
 {
-	private static final long serialVersionUID = -877213633894324075L;
+	
 	public static int baseSelectedTile;	// Called it base in case of multiple tile
 	// selection in the future.
 	public static int editorWidth = 8; //Editor width in 16x16 tiles
-	private Tileset globalTiles;
-	private Tileset localTiles;
+    
 	private boolean isMouseDown = true;
 
 	static Rectangle mouseTracker;
+	void DrawTiles(){
+		
+	}
 	public void SetRect(int width, int heigh){
 
 		if(heigh>16) heigh=16;
@@ -42,7 +44,7 @@ public class TileEditorPanel extends JPanel
 	int srcX;
 	int srcY;
 
-	public TileEditorPanel()
+	public PermissionTilesPanel()
 	{
 		mouseTracker=new Rectangle(0,0,16,16);
 
@@ -90,19 +92,14 @@ public class TileEditorPanel extends JPanel
 				else{
 					srcX=x;
 					srcY=y;
-					baseSelectedTile = x + (y * editorWidth);
-					MapEditorPanel.selectBuffer = new MapTile[1][1];
-					MapEditorPanel.selectBuffer[0][0] = new MapTile(baseSelectedTile,0xC); //TODO implement movement perms
-					MapEditorPanel.bufferWidth = 1;
-					MapEditorPanel.bufferHeight = 1;
-					MapEditorPanel.selectBox.width = 16;
-					MapEditorPanel.selectBox.height = 16;
-					String k = "Current Tile: ";
+					PermissionTilesPanel.baseSelectedTile = y;
+
+					String k = "Current Permission: ";
 					k += String.format("0x%8s",
 							Integer.toHexString(baseSelectedTile))
 							.replace(' ', '0');
-					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
-					repaint();
+					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(PermissionTilesPanel.baseSelectedTile));
+					
 				}
 
 			}
@@ -135,13 +132,7 @@ public class TileEditorPanel extends JPanel
 				{
 					MapEditorPanel.calculateSelectBox(e);
 
-					//Fill the tile buffer
-					MapEditorPanel.selectBuffer = new MapTile[MapEditorPanel.selectBox.width / 16][MapEditorPanel.selectBox.height / 16];
-					MapEditorPanel.bufferWidth = MapEditorPanel.selectBox.width / 16;
-					MapEditorPanel.bufferHeight = MapEditorPanel.selectBox.height / 16;
-					for(int x = 0; x < MapEditorPanel.bufferWidth; x++)
-						for(int y = 0; y < MapEditorPanel.bufferHeight; y++)
-							MapEditorPanel.selectBuffer[x][y] = new MapTile(baseSelectedTile = x + (y * editorWidth), 0xC); //TODO implement movement perms
+					
 				}
 			}
 
@@ -149,60 +140,37 @@ public class TileEditorPanel extends JPanel
 
 	}
 
-	public void setGlobalTileset(Tileset global)
-	{
-		globalTiles = global;
-		//blockRenderer.setGlobalTileset(global);
-	}
 
-	public void setLocalTileset(Tileset local)
-	{
-		localTiles = local;
-		//blockRenderer.setLocalTileset(local);
-	}
 	public static Graphics gcBuff;
 	static Image imgBuffer = null;
-	public void DrawTileset()
-	{
-		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSBlocks / editorWidth)*(DataStore.LocalTSBlocks / editorWidth) *16);
-		if(DataStore.EngineVersion == 0)
-			d.height = 3048;
+	
+	
+	public static void DrawPermissionTiles(){
+		Dimension d = new Dimension(16,0x3F*16);//#hexswag
+
 		imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
-		setSize(d);
+		
 		gcBuff=imgBuffer.getGraphics();
-		for(int i = 0; i < DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024); i++) //TODO readd ini support here
+		for(int i = 0; i < PermissionEditorPanel.PermissionColors.length; i++) //TODO readd ini support here
 		{
 
-			int x = (i % editorWidth) * 16;
-			int y = (i / editorWidth) * 16;
-
-			try{
-				gcBuff.drawImage(MapEditorPanel.blockRenderer.renderBlock(i,true), x, y, this);
-			}
-			catch(Exception e){
-				e.printStackTrace();
-			}
-
+			gcBuff.setColor(Color.black);
+			gcBuff.drawRect(0, i*16 + 16, 16, 16);
+			gcBuff.setColor(PermissionEditorPanel.PermissionColors[i]);
+			
+		    gcBuff.fillRect(0, i*16 + 16, 16, 16);
+		    gcBuff.setColor(Color.RED);
+		    gcBuff.drawString(Integer.toHexString(i), 1, i*16 + 16);
 		}
 	}
 	@Override
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-		if (globalTiles != null)
-		{
+		
 			g.drawImage(imgBuffer, 0, 0, this);
-			g.setColor(Color.red);
-			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
-			
-			g.setColor(Color.GREEN);
-			if( mouseTracker.width <0)
-				mouseTracker.x-=Math.abs( mouseTracker.width);
-			if( mouseTracker.height <0)
-				mouseTracker.y-=Math.abs( mouseTracker.height);
-			g.drawRect(((mouseTracker.x / 16) % editorWidth) * 16,(mouseTracker.y / 16) * 16,MapEditorPanel.selectBox.width-1,MapEditorPanel.selectBox.height-1);
-
-		}
+	
+		
 		try
 		{
 			//best error image.
@@ -215,9 +183,5 @@ public class TileEditorPanel extends JPanel
 		}
 	}
 
-	public void reset()
-	{
-		globalTiles = null;
-		localTiles = null;
-	}
+	
 }

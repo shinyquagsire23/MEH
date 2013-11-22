@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
@@ -23,8 +21,8 @@ public class TriggerPanel extends JPanel {
     void Load(TriggerManager mgr, int index){
     	Triggers t=mgr.mapTriggers[index];
     	txtScriptAddr.setText(BitConverter.toHexString((int)t.pScript));
-    	txtFlagValue.setText(BitConverter.toHexString((int)t.hFlagValue));
-    	txtFlagCheck.setText(BitConverter.toHexString((int)t.hFlagCheck));
+    	txtFlagValue.setText(BitConverter.toHexString(t.hFlagValue));
+    	txtFlagCheck.setText(BitConverter.toHexString(t.hFlagCheck));
     }
     
     public void Save(TriggerManager mgr){
@@ -62,6 +60,7 @@ public class TriggerPanel extends JPanel {
 		
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 			Save(Map.mapTriggerManager);
 			}

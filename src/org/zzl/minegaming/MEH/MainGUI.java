@@ -8,6 +8,8 @@ import javax.swing.JMenu;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 
 import java.awt.BorderLayout;
 
@@ -55,7 +57,6 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ImagePanel;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-import org.zzl.minegaming.MEH.MapElements.OverworldSprites;
 import org.zzl.minegaming.MEH.MapElements.TilesetCache;
 import org.zzl.minegaming.MEH.MapElements.WildDataCache;
 
@@ -79,7 +80,6 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.BoxLayout;
 import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.event.MenuKeyListener;
@@ -131,6 +131,7 @@ public class MainGUI extends JFrame
 	JPanel panelMapTilesContainer;
 	JPanel splitterMapTiles;
 	public static MapEditorPanel mapEditorPanel;
+	public PermissionTilesPanel ptp;
 	public JScrollPane mapScrollPane;
 	void CreateBorderArea(){
 		JPanel panelBorderTilesContainer = new JPanel();
@@ -161,12 +162,12 @@ public class MainGUI extends JFrame
 			public void mouseMoved(MouseEvent e) {
 			}
 		});
-		tileEditorPanel.setPreferredSize(new Dimension((tileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/tileEditorPanel.editorWidth)*16));
+		tileEditorPanel.setPreferredSize(new Dimension((TileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/TileEditorPanel.editorWidth)*16));
 		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
 		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 
-		tilesetScrollPane = new JScrollPane(tileEditorPanel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		tilesetScrollPane = new JScrollPane(tileEditorPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panelMapTilesContainer.add(tilesetScrollPane, BorderLayout.WEST);
 		tilesetScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		tilesetScrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -190,16 +191,16 @@ public class MainGUI extends JFrame
 		panel_5 = new JPanel();
 		panel_5.setPreferredSize(new Dimension(220, 10));
 		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
-		JScrollPane selectedEventScroll = new JScrollPane(panel_5, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane selectedEventScroll = new JScrollPane(panel_5, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		eventsPanel.add(selectedEventScroll, BorderLayout.EAST);
 		panel_5.setLayout(new BorderLayout(0, 0));
 		eventEditorPanel = new EventEditorPanel();
 		eventEditorPanel.setLayout(null);
 		eventEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 		
-		JScrollPane eventScrollPane = new JScrollPane(eventEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane eventScrollPane = new JScrollPane(eventEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		eventsPanel.add(eventScrollPane, BorderLayout.CENTER);
 		eventScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		eventScrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -225,8 +226,8 @@ public class MainGUI extends JFrame
 		mapEditorPanel.setLayout(null);
 		mapEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 
-		mapScrollPane = new JScrollPane(mapEditorPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		mapScrollPane = new JScrollPane(mapEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		editorPanel.add(mapScrollPane, BorderLayout.CENTER);
 		mapScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		mapScrollPane.getVerticalScrollBar().setUnitIncrement(16);
@@ -250,6 +251,7 @@ public class MainGUI extends JFrame
 		mnOpen = new JMenuItem("Open...");
 		mnOpen.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				openROM();
@@ -262,6 +264,7 @@ public class MainGUI extends JFrame
 		mnSave.enable(false);
 		mnSave.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -276,6 +279,7 @@ public class MainGUI extends JFrame
 		mnFile.add(mnSaveMap);
 		mnSaveMap.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -306,10 +310,13 @@ public class MainGUI extends JFrame
 			}
 		});
 		chckbxmntmDrawSprites.addMenuKeyListener(new MenuKeyListener() {
+			@Override
 			public void menuKeyPressed(MenuKeyEvent arg0) {
 			}
+			@Override
 			public void menuKeyReleased(MenuKeyEvent arg0) {
 			}
+			@Override
 			public void menuKeyTyped(MenuKeyEvent arg0) {
 			}
 		});
@@ -344,6 +351,7 @@ public class MainGUI extends JFrame
 
 		btnOpenROM.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				openROM();
@@ -356,6 +364,7 @@ public class MainGUI extends JFrame
 		btnSaveROM.setToolTipText("Write changes to ROM file");
 		btnSaveROM.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -389,6 +398,7 @@ public class MainGUI extends JFrame
 		JButton btnNewMap = new JButton("");
 		btnNewMap.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				MapEditorPanel.renderPalette = !MapEditorPanel.renderPalette;
@@ -400,6 +410,7 @@ public class MainGUI extends JFrame
 		btnSaveMap.setToolTipText("Save Map to VROM");
 		btnSaveMap.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -432,6 +443,7 @@ public class MainGUI extends JFrame
 		JButton btnImportMap = new JButton("");
 		btnImportMap.addActionListener(new ActionListener() 
 		{
+			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
 				MapEditorPanel.renderTileset = !MapEditorPanel.renderTileset;
@@ -447,6 +459,20 @@ public class MainGUI extends JFrame
 	
 	void CreateWildPokemonPanel(){
 		
+		pnPermission = new PermissionEditorPanel ();
+		editorTabs.addTab("Permissions", null, pnPermission, null);
+		
+		pnPermission.setLayout(null);
+
+		ptp= new PermissionTilesPanel();
+		ptp.setBounds(512, 0, 256, 454);
+		pnPermission.add(ptp);
+		
+		ptp.setLayout(null);
+		
+
+		
+		 
 		wildPokemonPanel = new JPanel();
 		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
 	}
@@ -457,7 +483,7 @@ public class MainGUI extends JFrame
 		editorTabs.addTab("Mime", null, mimePanel, null);
 		mimePanel.setLayout(null);
 		panel_1 = new JPanel();
-		panel_1.setBounds(0, 0, 796, 454);
+		panel_1.setBounds(700, 0, 796, 454);
 		mimePanel.add(panel_1);
 		panel_1.setBorder(UIManager.getBorder("SplitPane.border"));
 		panel_1.setLayout(null);
@@ -501,7 +527,7 @@ public class MainGUI extends JFrame
 	void CreateTabbedPanels(){
 		getContentPane().add(splitPane, BorderLayout.CENTER);
 
-	    editorTabs = new JTabbedPane(JTabbedPane.TOP);
+	    editorTabs = new JTabbedPane(SwingConstants.TOP);
 		splitPane.setRightComponent(editorTabs);
         CreateMapPanel();
         CreateBorderArea();
@@ -530,6 +556,7 @@ public class MainGUI extends JFrame
 	private JCheckBoxMenuItem chckbxmntmUsePlugins;
 	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
 	private JCheckBoxMenuItem chckbxmntmScriptEditor;
+	private PermissionEditorPanel pnPermission;
 	void CreateSplitPane2(){
 		splitPane2 = new JSplitPane();
 		splitPane2.setResizeWeight(0.2);
@@ -679,6 +706,7 @@ public class MainGUI extends JFrame
 			}
 		});
 		mapBanks.addTreeSelectionListener(new TreeSelectionListener() {
+			@Override
 			public void valueChanged(TreeSelectionEvent e) 
 			{
 				try
@@ -696,7 +724,7 @@ public class MainGUI extends JFrame
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
-				if(e.getButton() == e.BUTTON1)
+				if(e.getButton() == MouseEvent.BUTTON1)
 				{
 					if(e.getClickCount() == 2)
 					{
@@ -712,18 +740,20 @@ public class MainGUI extends JFrame
 				));
 		mapBanks.setCellRenderer(new MapTreeRenderer());
 
-		JScrollPane mapPane = new JScrollPane(mapBanks,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane mapPane = new JScrollPane(mapBanks,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		mapPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		panel_3.add(mapPane);
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
 				}
 			}
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
@@ -802,7 +832,7 @@ public class MainGUI extends JFrame
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				borderTileEditor.setMap(borderMap);
 				borderTileEditor.repaint();
-
+				PermissionTilesPanel.DrawPermissionTiles();
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
 				MainGUI.lblInfo.setText("Done! Finished in " + (double)(time / 1000) + " seconds!");

@@ -1,13 +1,10 @@
 package org.zzl.minegaming.MEH;
 
 import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
-
 import org.zzl.minegaming.MEH.MapElements.Tileset;
 
 public class BlockRenderer extends Component
