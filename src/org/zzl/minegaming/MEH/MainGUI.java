@@ -459,17 +459,22 @@ public class MainGUI extends JFrame
 	
 	void CreateWildPokemonPanel(){
 		
-		pnPermission = new PermissionEditorPanel ();
-		editorTabs.addTab("Permissions", null, pnPermission, null);
-		
+		JPanel panelPerms = new JPanel();
+		panelPerms.setLayout(new BorderLayout(0, 0));
+		pnPermission = new PermissionEditorPanel();
+		JScrollPane permScrollPane = new JScrollPane(pnPermission, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		permScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		permScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		permScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		panelPerms.add(permScrollPane, BorderLayout.CENTER);	
 		pnPermission.setLayout(null);
-
 		ptp= new PermissionTilesPanel();
+		ptp.setPreferredSize(new Dimension(40, 10));
 		ptp.setBounds(512, 0, 256, 454);
-		pnPermission.add(ptp);
-		
+		panelPerms.add(ptp, BorderLayout.EAST);
 		ptp.setLayout(null);
-		
+		editorTabs.addTab("Permissions", null, panelPerms, null);
 
 		
 		 
@@ -556,7 +561,7 @@ public class MainGUI extends JFrame
 	private JCheckBoxMenuItem chckbxmntmUsePlugins;
 	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
 	private JCheckBoxMenuItem chckbxmntmScriptEditor;
-	private PermissionEditorPanel pnPermission;
+	private static PermissionEditorPanel pnPermission;
 	void CreateSplitPane2(){
 		splitPane2 = new JSplitPane();
 		splitPane2.setResizeWeight(0.2);
@@ -822,6 +827,7 @@ public class MainGUI extends JFrame
 				tileEditorPanel.DrawTileset();
 				tileEditorPanel.repaint();
 				
+				
 				mapEditorPanel.setMap(loadedMap);
 				mapEditorPanel.DrawMap();
 				mapEditorPanel.repaint();
@@ -832,6 +838,8 @@ public class MainGUI extends JFrame
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				borderTileEditor.setMap(borderMap);
 				borderTileEditor.repaint();
+				pnPermission.DrawMap();
+				pnPermission.repaint();
 				PermissionTilesPanel.DrawPermissionTiles();
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();

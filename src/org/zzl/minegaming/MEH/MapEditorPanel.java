@@ -316,6 +316,12 @@ public class MapEditorPanel extends JPanel
 			DrawText("E", n.bX*16 , n.bY*16);
 		}
 	}
+	
+	public static Image getMapImage()
+	{
+		return imgBuffer;
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g)
 	{

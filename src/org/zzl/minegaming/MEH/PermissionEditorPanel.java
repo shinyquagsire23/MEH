@@ -1,14 +1,16 @@
 package org.zzl.minegaming.MEH;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import javax.swing.JPanel;
+import java.awt.image.BufferedImage;
 
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 public class PermissionEditorPanel extends JPanel
@@ -150,7 +152,7 @@ public class PermissionEditorPanel extends JPanel
 
 	
 	static void DrawPermissions(){
-		for (int y = 0; y < MainGUI.mapEditorPanel.map.getMapData().mapHeight; y++)
+		for (int y = 0; y <= MainGUI.mapEditorPanel.map.getMapData().mapHeight; y++)
 		{
 			for (int x = 0; x < MainGUI.mapEditorPanel.map.getMapData().mapWidth; x++)
 			{
@@ -163,7 +165,7 @@ public class PermissionEditorPanel extends JPanel
 				
 			    gcBuff.fillRect(x*16, y*16, 16, 16);
 			    gcBuff.setColor(Color.RED);
-			    gcBuff.drawString(Integer.toHexString(TileID), x*16 + 1, y*16);
+			    gcBuff.drawString(Integer.toHexString(TileID), x*16 + 1, y*16 + 16);
 			}
 		}
 		
@@ -173,14 +175,14 @@ public class PermissionEditorPanel extends JPanel
 		try
 		{
  
-			imgBuffer = createImage((int) MainGUI.mapEditorPanel.map.getMapData().mapWidth * 16,
-					(int) MainGUI.mapEditorPanel.map.getMapData().mapHeight * 16);
+			imgBuffer = new BufferedImage((int) MainGUI.mapEditorPanel.map.getMapData().mapWidth * 16,
+					(int) MainGUI.mapEditorPanel.map.getMapData().mapHeight * 16,BufferedImage.TYPE_INT_ARGB);
 			gcBuff = imgBuffer.getGraphics();
 		
 			gcBuff.drawImage(MapEditorPanel.imgBuffer, 0, 0, this);
 			DrawPermissions();
-			
-			
+			this.setSize(MainGUI.mapEditorPanel.getSize());
+			this.setPreferredSize(MainGUI.mapEditorPanel.getSize());
 		}
 		catch (Exception e)
 		{
@@ -199,7 +201,8 @@ public class PermissionEditorPanel extends JPanel
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-	
+		this.setSize(MainGUI.mapEditorPanel.getSize());
+		this.setPreferredSize(MainGUI.mapEditorPanel.getSize());
 		 if(PermissionEditorPanel.Redraw){
 			 DrawMap();
 			 PermissionEditorPanel.Redraw=false;
