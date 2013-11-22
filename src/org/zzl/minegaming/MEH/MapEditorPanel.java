@@ -40,14 +40,14 @@ public class MapEditorPanel extends JPanel
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 	public Map map;
 	static Rectangle mouseTracker;
-
+	public static boolean Redraw = true;
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
 	public static MapTile[][] selectBuffer;
 	public static int bufferWidth = 1;
 	public static int bufferHeight = 1;
 	public static Rectangle selectBox;
-
+ 
 	public MapEditorPanel()
 	{
 		mouseTracker=new Rectangle(0,0,16,16);
@@ -266,6 +266,7 @@ public class MapEditorPanel extends JPanel
 
 			PermissionEditorPanel.Redraw=true;
 			EventEditorPanel.Redraw=true;
+		
 			this.repaint();
 		}
 		catch (Exception e)
@@ -326,6 +327,10 @@ public class MapEditorPanel extends JPanel
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		if(MapEditorPanel.Redraw==true){
+			DrawMap();
+			MapEditorPanel.Redraw=false;
+		}
 		if (globalTiles != null)
 		{
 			g.drawImage(imgBuffer, 0, 0, this);

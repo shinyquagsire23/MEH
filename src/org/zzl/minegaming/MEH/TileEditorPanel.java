@@ -26,7 +26,7 @@ public class TileEditorPanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
-
+    private static boolean Redraw = true;
 	static Rectangle mouseTracker;
 	public void SetRect(int width, int heigh){
 
@@ -191,6 +191,10 @@ public class TileEditorPanel extends JPanel
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
+			if(TileEditorPanel.Redraw==true){
+				DrawTileset();
+				TileEditorPanel.Redraw=false;
+			}
 			g.drawImage(imgBuffer, 0, 0, this);
 			g.setColor(Color.red);
 			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
