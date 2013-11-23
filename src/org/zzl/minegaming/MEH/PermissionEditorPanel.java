@@ -204,8 +204,8 @@ public class PermissionEditorPanel extends JPanel
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		this.setSize(MainGUI.mapEditorPanel.getSize());
-		this.setPreferredSize(MainGUI.mapEditorPanel.getSize());
+	
+		super.paintComponent(g);
 		 if(PermissionEditorPanel.Redraw){
 			 DrawMap();
 			 PermissionEditorPanel.Redraw=false;
