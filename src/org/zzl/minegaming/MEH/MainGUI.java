@@ -109,9 +109,12 @@ public class MainGUI extends JFrame
 	public static JLabel lblHeight;
 	public static JLabel lblBorderHeight;
 	public static JLabel lblGlobalTilesetPointer;
+	
 	private JPanel panel_1;
 	JPanel panelTilesContainer;
 	JPanel wildPokemonPanel;
+	JPanel panelPermissions;
+	private JPanel panelPermissions_1;
 	public static BorderEditorPanel borderTileEditor;
 	public static EventEditorPanel eventEditorPanel;
 	public static TileEditorPanel tileEditorPanel;
@@ -130,8 +133,9 @@ public class MainGUI extends JFrame
 	//Map Creation
 	JPanel panelMapTilesContainer;
 	JPanel splitterMapTiles;
+	static PermissionEditorPane permissionEditorPanel;
 	public static MapEditorPanel mapEditorPanel;
-	public PermissionTilesPanel ptp;
+	
 	public JScrollPane mapScrollPane;
 	void CreateBorderArea(){
 		JPanel panelBorderTilesContainer = new JPanel();
@@ -459,24 +463,7 @@ public class MainGUI extends JFrame
 	
 	void CreateWildPokemonPanel(){
 		
-		JPanel panelPerms = new JPanel();
-		panelPerms.setLayout(new BorderLayout(0, 0));
-		pnPermission = new PermissionEditorPanel();
-		JScrollPane permScrollPane = new JScrollPane(pnPermission, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		permScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		permScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		permScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
-		panelPerms.add(permScrollPane, BorderLayout.CENTER);	
-		pnPermission.setLayout(null);
-		ptp= new PermissionTilesPanel();
-		ptp.setPreferredSize(new Dimension(40, 10));
-		ptp.setBounds(512, 0, 256, 454);
-		panelPerms.add(ptp, BorderLayout.EAST);
-		ptp.setLayout(null);
-		editorTabs.addTab("Permissions", null, panelPerms, null);
 
-		
 		 
 		wildPokemonPanel = new JPanel();
 		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
@@ -551,9 +538,10 @@ public class MainGUI extends JFrame
 
 	
 	}
-	JSplitPane splitPane2;
+	
 	int paneSize2;
 	public static JPanel panel_5;
+	public static JPanel panel_6;
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
 	private JMenuItem mntmNewMenuItem_1;
@@ -561,52 +549,9 @@ public class MainGUI extends JFrame
 	private JCheckBoxMenuItem chckbxmntmUsePlugins;
 	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
 	private JCheckBoxMenuItem chckbxmntmScriptEditor;
-	private static PermissionEditorPanel pnPermission;
-	void CreateSplitPane2(){
-		splitPane2 = new JSplitPane();
-		splitPane2.setResizeWeight(0.2);
-		splitPane2.setDividerSize(1);
-		splitPane2.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, 
-				new PropertyChangeListener() {
-			@Override
-			public void propertyChange(PropertyChangeEvent e)
-			{
-				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
-					((JSplitPane)e.getSource()).setDividerLocation(350);
-				else if(((JSplitPane)e.getSource()).getDividerLocation() < 200)
-					((JSplitPane)e.getSource()).setDividerLocation(200);
+	private JScrollPane scrollPane;
 
-				if(paneSize2 == 0)
-				{
-					paneSize2 = 250;
-					((JSplitPane)e.getSource()).setDividerLocation(paneSize);
-				}
-				else
-					paneSize2 = ((JSplitPane)e.getSource()).getDividerLocation();
-			}
-		});
-		splitPane2.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) 
-			{
-				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
-					((JSplitPane)e.getSource()).setDividerLocation(350);
-				else if(((JSplitPane)e.getSource()).getDividerLocation() < 200)
-					((JSplitPane)e.getSource()).setDividerLocation(200);
-				else
-					((JSplitPane)e.getSource()).setDividerLocation(paneSize2);
-
-				if(paneSize2 == 0)
-				{
-					paneSize2 = 250;
-					((JSplitPane)e.getSource()).setDividerLocation(paneSize2);
-				}
-				else
-					paneSize2 = ((JSplitPane)e.getSource()).getDividerLocation();
-			}
-		});
-		splitPane2.setDividerLocation(0.2);
-	}
+	
 	void CreateSplitPane(){
 		splitPane = new JSplitPane();
 		splitPane.setResizeWeight(0.2);
@@ -662,6 +607,59 @@ public class MainGUI extends JFrame
 		lblInfo = new JLabel("No ROM Loaded!");
 		panel_2.add(lblInfo);
 	}
+	public void CreatePermissions(){
+
+		JPanel splitm = new JPanel();
+		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		splitm.setPreferredSize(new Dimension(4, 10));
+		splitm.setMaximumSize(new Dimension(4, 320));
+        JPanel pmtc = new JPanel();
+		
+        pmtc.setLayout(new BorderLayout(0, 0));
+    	panelPermissions = new JPanel();
+		panelPermissions.setLayout(null);
+		panelPermissions.setBorder(UIManager.getBorder("SplitPane.border"));
+        //Left
+        panel_6 = new JPanel();
+		panel_6.setPreferredSize(new Dimension(512, 400));
+		panel_6.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
+		JScrollPane selectedScroll2 = new JScrollPane(panel_6, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		panelPermissions_1.add(selectedScroll2, BorderLayout.WEST);
+		panel_6.setLayout(new BorderLayout(0, 0));
+
+		permissionEditorPanel = new PermissionEditorPane();
+
+		permissionEditorPanel.setLayout(null);
+		permissionEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
+	        panel_6.add(permissionEditorPanel);
+	        permissionEditorPanel.setPreferredSize(new Dimension(512, 512));
+        
+        //Right
+        
+		panel_5 = new JPanel();
+		panel_5.setPreferredSize(new Dimension(256, 256));
+		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
+		JScrollPane selectedScroll = new JScrollPane(panel_5, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		panelPermissions_1.add(selectedScroll, BorderLayout.EAST);
+		panel_5.setLayout(new BorderLayout(0, 0));
+	
+		PermissionTilePanel panelPermissionTiles=new PermissionTilePanel();
+		panelPermissionTiles.setLayout(null);
+		panelPermissionTiles.setBorder(UIManager.getBorder("SplitPane.border"));
+        panel_5.add(panelPermissionTiles);
+        panelPermissionTiles.setPreferredSize(new Dimension(256, 512));
+        
+        panelPermissionTiles.DrawTileset();
+        
+        
+
+        
+        
+        
+	}
+	
 	public MainGUI()
 	{
 		setPreferredSize(new Dimension(800, 800));
@@ -697,7 +695,15 @@ public class MainGUI extends JFrame
 		mimePic.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		mimePic.setBounds(545, 71, 164, 164);
 		panel_1.add(mimePic);
-
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 0, 2, 133);
+		mimePanel.add(scrollPane);
+		
+		panelPermissions_1 = new JPanel();
+		editorTabs.addTab("Permissions", null, panelPermissions_1, null);
+		panelPermissions_1.setLayout(new BorderLayout(0, 0));
+		CreatePermissions();
 		JPanel panel_3 = new JPanel();
 		splitPane.setLeftComponent(panel_3);
 		panel_3.setLayout(new BorderLayout(0, 0));
@@ -805,13 +811,6 @@ public class MainGUI extends JFrame
 				loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
 				currentBank = selectedBank;
 				currentMap = selectedMap;
-			
-				borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
-				reloadMimeLabels();
-				mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-				mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
-				eventEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
-				eventEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
 				TilesetCache.get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
 				for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
@@ -822,6 +821,13 @@ public class MainGUI extends JFrame
 				TilesetCache.get(loadedMap.getMapData().localTileSetPtr).startTileThreads();
 				TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).startTileThreads();
 				
+				borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
+				reloadMimeLabels();
+				mapEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+				mapEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+				eventEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
+				eventEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
+
 				tileEditorPanel.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));
 				tileEditorPanel.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				tileEditorPanel.DrawTileset();
@@ -838,9 +844,9 @@ public class MainGUI extends JFrame
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				borderTileEditor.setMap(borderMap);
 				borderTileEditor.repaint();
-				pnPermission.DrawMap();
-				pnPermission.repaint();
-				PermissionTilesPanel.DrawPermissionTiles();
+
+				permissionEditorPanel.DrawMap();
+				mapEditorPanel.repaint();
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
 				MainGUI.lblInfo.setText("Done! Finished in " + (double)(time / 1000) + " seconds!");
@@ -902,7 +908,7 @@ public class MainGUI extends JFrame
 			int reply = JOptionPane.showConfirmDialog(null, "It appears that you have no script editor registered with MEH. Would you like to search for one?", "You need teh Script Editorz!!!", JOptionPane.YES_NO_OPTION);
 			if(reply == JOptionPane.YES_OPTION)
 			{
-				FileDialog fd = new FileDialog(new Frame(), "Load a ROM...", FileDialog.LOAD);
+				FileDialog fd = new FileDialog(new Frame(), "Choose your script editor...", FileDialog.LOAD);
 				fd.setFilenameFilter(new FilenameFilter()
 				{
 				    public boolean accept(File dir, String name)
