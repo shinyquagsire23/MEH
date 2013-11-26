@@ -14,6 +14,27 @@ public class DataStore
 	public static Ini iP;
 	private static Boolean passedTraits;
 	//private Parser p;//For when we have YAML reading as well
+	public float Str2Float(String nkey){
+		int CommentIndex=-1;
+		float ReturnValue=0;
+		String FinalString="";
+		try{
+			CommentIndex=nkey.indexOf(";");
+			if(CommentIndex!=-1){
+
+				nkey=nkey.substring(0, CommentIndex);//Get rid of the comment
+			}
+			FinalString=nkey;
+	
+				ReturnValue = Float.parseFloat(FinalString);
+		}catch(Exception e){
+			//There's a chance the key may not exist, let's come up with a way to handle this case
+			//
+			ReturnValue =  0;
+
+		}
+		return ReturnValue;
+	}
 	public long Str2Num(String nkey){
 		int CommentIndex=-1;
 		long ReturnValue=0;
@@ -39,6 +60,10 @@ public class DataStore
 
 		}
 		return ReturnValue;
+	}
+	public	float ReadFloatEntry(String Section, String key)
+	{
+		return Str2Float(iP.get(Section, key));
 	}
 	public	long ReadNumberEntry(String Section, String key)
 	{
@@ -171,7 +196,9 @@ public class DataStore
 		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
 		mehSettingCallScriptEditor = ReadString("MEH",
 				"mehSettingCallScriptEditor");
-
+		mehPermissionTranslucency= ReadFloatEntry("MEH", "mehPermissionTranslucency");
+		
+ 
 	}
 
 	public static void WriteNumberEntry(String Section, String key, int val)// Writes
@@ -285,7 +312,7 @@ public class DataStore
 	public static	int[] WorldMapTileMap;
 	public static   int WorldMapCount;
 	public static   int[] WorldMapPalSize;
-
+    public static   float mehPermissionTranslucency;
 	public static   int mehUsePlugins;
 	public static   int mehSettingShowSprites;
 	public static   String mehSettingCallScriptEditor;
