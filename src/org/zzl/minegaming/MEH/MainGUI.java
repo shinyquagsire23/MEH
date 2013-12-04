@@ -611,11 +611,9 @@ public class MainGUI extends JFrame
         pmtc.setLayout(new BorderLayout(0, 0));
     	panelPermissions = new JPanel();
 		panelPermissions.setLayout(null);
-		panelPermissions.setBorder(UIManager.getBorder("SplitPane.border"));
         //Left
         panel_6 = new JPanel();
 		panel_6.setPreferredSize(new Dimension(512, 400));
-		panel_6.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
 		JScrollPane selectedScroll2 = new JScrollPane(panel_6, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		panelPermissions_1.add(selectedScroll2, BorderLayout.WEST);
@@ -624,7 +622,6 @@ public class MainGUI extends JFrame
 		permissionEditorPanel = new PermissionEditorPane();
 
 		permissionEditorPanel.setLayout(null);
-		permissionEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 	        panel_6.add(permissionEditorPanel);
 	        permissionEditorPanel.setPreferredSize(new Dimension(512, 512));
         
@@ -632,7 +629,6 @@ public class MainGUI extends JFrame
         
 		panel_5 = new JPanel();
 		panel_5.setPreferredSize(new Dimension(256, 256));
-		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
 		JScrollPane selectedScroll = new JScrollPane(panel_5, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		panelPermissions_1.add(selectedScroll, BorderLayout.EAST);
@@ -640,7 +636,6 @@ public class MainGUI extends JFrame
 	
 		PermissionTilePanel panelPermissionTiles=new PermissionTilePanel();
 		panelPermissionTiles.setLayout(null);
-		panelPermissionTiles.setBorder(UIManager.getBorder("SplitPane.border"));
         panel_5.add(panelPermissionTiles);
         panelPermissionTiles.setPreferredSize(new Dimension(256, 512));
         
