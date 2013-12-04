@@ -163,9 +163,7 @@ public class MainGUI extends JFrame
 			}
 		});
 		tileEditorPanel.setPreferredSize(new Dimension((TileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/TileEditorPanel.editorWidth)*16));
-		//panelMapTilesContainer.add(tileEditorPanel, BorderLayout.WEST);
 		tileEditorPanel.setLayout(null);
-		tileEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 
 		tilesetScrollPane = new JScrollPane(tileEditorPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panelMapTilesContainer.add(tilesetScrollPane, BorderLayout.WEST);
@@ -190,14 +188,12 @@ public class MainGUI extends JFrame
 		
 		panel_5 = new JPanel();
 		panel_5.setPreferredSize(new Dimension(220, 10));
-		panel_5.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
 		JScrollPane selectedEventScroll = new JScrollPane(panel_5, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		eventsPanel.add(selectedEventScroll, BorderLayout.EAST);
 		panel_5.setLayout(new BorderLayout(0, 0));
 		eventEditorPanel = new EventEditorPanel();
 		eventEditorPanel.setLayout(null);
-		eventEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 		
 		JScrollPane eventScrollPane = new JScrollPane(eventEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -224,7 +220,6 @@ public class MainGUI extends JFrame
 		
 		mapEditorPanel = new MapEditorPanel();
 		mapEditorPanel.setLayout(null);
-		mapEditorPanel.setBorder(UIManager.getBorder("SplitPane.border"));
 
 		mapScrollPane = new JScrollPane(mapEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -235,7 +230,6 @@ public class MainGUI extends JFrame
 		
 		panelTilesContainer = new JPanel();
 		editorPanel.add(panelTilesContainer, BorderLayout.EAST);
-		panelTilesContainer.setBorder(UIManager.getBorder("SplitPaneDivider.border"));
 		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16 + 16, 10));
 		panelTilesContainer.setLayout(new BorderLayout(0, 0));
 
@@ -490,7 +484,6 @@ public class MainGUI extends JFrame
 		panel_1 = new JPanel();
 		panel_1.setBounds(700, 0, 796, 454);
 		mimePanel.add(panel_1);
-		panel_1.setBorder(UIManager.getBorder("SplitPane.border"));
 		panel_1.setLayout(null);
 
 		JLabel lblWelcome = new JLabel("<html><center>Welcome to the map mime!\n<br>\nHere we will mime out your map so you can like see it, but without actually physically seeing it and stuff.</center></html>");
