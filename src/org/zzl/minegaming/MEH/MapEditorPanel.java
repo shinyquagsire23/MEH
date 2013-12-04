@@ -156,7 +156,8 @@ public class MapEditorPanel extends JPanel
 							if(currentMode == EditMode.TILES)
 							{
 								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
-								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
+								if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
+									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
 								drawTile(x+DrawX,y+DrawY);
 							}
 							else if(currentMode == EditMode.MOVEMENT)
@@ -511,5 +512,10 @@ public class MapEditorPanel extends JPanel
 	public static void setMode(EditMode tiles)
 	{
 		currentMode = tiles;
+	}
+
+	public static EditMode getMode()
+	{
+		return currentMode;
 	}
 }

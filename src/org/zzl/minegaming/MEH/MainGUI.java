@@ -521,6 +521,7 @@ public class MainGUI extends JFrame
 				
 				MapEditorPanel.Redraw = true;
 				mapEditorPanel.repaint();
+				borderTileEditor.repaint();
 			}
 		});
 		tabbedPane.setBorder(null);
