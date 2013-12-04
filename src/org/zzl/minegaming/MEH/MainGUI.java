@@ -84,6 +84,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.event.MenuKeyListener;
 import javax.swing.event.MenuKeyEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class MainGUI extends JFrame
 {
@@ -114,7 +116,6 @@ public class MainGUI extends JFrame
 	JPanel panelTilesContainer;
 	JPanel wildPokemonPanel;
 	JPanel panelPermissions;
-	private JPanel panelPermissions_1;
 	public static BorderEditorPanel borderTileEditor;
 	public static EventEditorPanel eventEditorPanel;
 	public static TileEditorPanel tileEditorPanel;
@@ -133,7 +134,6 @@ public class MainGUI extends JFrame
 	//Map Creation
 	JPanel panelMapTilesContainer;
 	JPanel splitterMapTiles;
-	static PermissionEditorPane permissionEditorPanel;
 	public static MapEditorPanel mapEditorPanel;
 	
 	public JScrollPane mapScrollPane;
@@ -160,20 +160,6 @@ public class MainGUI extends JFrame
 	}
 	JScrollPane tilesetScrollPane;
 	void CreateTilesetArea(){
-		tileEditorPanel = new TileEditorPanel();
-		tileEditorPanel.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-			}
-		});
-		tileEditorPanel.setPreferredSize(new Dimension((TileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/TileEditorPanel.editorWidth)*16));
-		tileEditorPanel.setLayout(null);
-
-		tilesetScrollPane = new JScrollPane(tileEditorPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		panelMapTilesContainer.add(tilesetScrollPane, BorderLayout.WEST);
-		tilesetScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		tilesetScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		tilesetScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 	}
 	
 	JPanel eventsPanel;
@@ -234,7 +220,7 @@ public class MainGUI extends JFrame
 		
 		panelTilesContainer = new JPanel();
 		editorPanel.add(panelTilesContainer, BorderLayout.EAST);
-		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16 + 16, 10));
+		panelTilesContainer.setPreferredSize(new Dimension((TileEditorPanel.editorWidth+1)*16 + 13, 10));
 		panelTilesContainer.setLayout(new BorderLayout(0, 0));
 
 	}
@@ -518,8 +504,54 @@ public class MainGUI extends JFrame
         CreateBorderArea();
 
 
-		panelTilesContainer.add(panelMapTilesContainer, BorderLayout.CENTER);
+		panelTilesContainer.add(panelMapTilesContainer, BorderLayout.NORTH);
+		
 		panelTilesContainer.add(splitterMapTiles, BorderLayout.WEST);
+		
+		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				System.out.println("" + tabbedPane.getSelectedIndex());
+				if(tabbedPane.getSelectedIndex() == 0)
+					MapEditorPanel.setMode(EditMode.TILES);
+				else
+					MapEditorPanel.setMode(EditMode.MOVEMENT);
+				
+				MapEditorPanel.Redraw = true;
+				mapEditorPanel.repaint();
+			}
+		});
+		tabbedPane.setBorder(null);
+		panelTilesContainer.add(tabbedPane, BorderLayout.CENTER);
+		tileEditorPanel = new TileEditorPanel();
+		tileEditorPanel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+			}
+		});
+		
+		tileEditorPanel.setPreferredSize(new Dimension((TileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/TileEditorPanel.editorWidth)*16));
+		tileEditorPanel.setSize(tileEditorPanel.getPreferredSize());
+		tileEditorPanel.setLayout(null);
+		
+		tilesetScrollPane = new JScrollPane(tileEditorPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		tilesetScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		tilesetScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		tilesetScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		tabbedPane.addTab("Tiles", null, tilesetScrollPane, null);
+		
+		permissionTilePanel = new PermissionTilePanel();
+		permissionTilePanel.setLayout(null);
+		permissionTilePanel.setPreferredSize(new Dimension(64, 256));
+		permissionTilePanel.setSize(new Dimension(64, 256));		
+		movementScrollPane = new JScrollPane(permissionTilePanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		movementScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		movementScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+		movementScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
+		tabbedPane.addTab("Movement", null, movementScrollPane, null);
+		
 		CreateToolbar();
 		CreateTilesetArea();
 		
@@ -534,7 +566,6 @@ public class MainGUI extends JFrame
 	
 	int paneSize2;
 	public static JPanel panel_5;
-	public static JPanel panel_6;
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
 	private JMenuItem mntmNewMenuItem_1;
@@ -543,6 +574,9 @@ public class MainGUI extends JFrame
 	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
 	private JCheckBoxMenuItem chckbxmntmScriptEditor;
 	private JScrollPane scrollPane;
+	private PermissionTilePanel permissionTilePanel;
+	private JScrollPane movementScrollPane;
+	private JPanel panel_7;
 
 	
 	void CreateSplitPane(){
@@ -611,35 +645,6 @@ public class MainGUI extends JFrame
         pmtc.setLayout(new BorderLayout(0, 0));
     	panelPermissions = new JPanel();
 		panelPermissions.setLayout(null);
-        //Left
-        panel_6 = new JPanel();
-		panel_6.setPreferredSize(new Dimension(512, 400));
-		JScrollPane selectedScroll2 = new JScrollPane(panel_6, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		panelPermissions_1.add(selectedScroll2, BorderLayout.WEST);
-		panel_6.setLayout(new BorderLayout(0, 0));
-
-		permissionEditorPanel = new PermissionEditorPane();
-
-		permissionEditorPanel.setLayout(null);
-	        panel_6.add(permissionEditorPanel);
-	        permissionEditorPanel.setPreferredSize(new Dimension(512, 512));
-        
-        //Right
-        
-		panel_5 = new JPanel();
-		panel_5.setPreferredSize(new Dimension(256, 256));
-		JScrollPane selectedScroll = new JScrollPane(panel_5, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		panelPermissions_1.add(selectedScroll, BorderLayout.EAST);
-		panel_5.setLayout(new BorderLayout(0, 0));
-	
-		PermissionTilePanel panelPermissionTiles=new PermissionTilePanel();
-		panelPermissionTiles.setLayout(null);
-        panel_5.add(panelPermissionTiles);
-        panelPermissionTiles.setPreferredSize(new Dimension(256, 512));
-        
-        panelPermissionTiles.DrawTileset();
         
         
 
@@ -687,10 +692,6 @@ public class MainGUI extends JFrame
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 0, 2, 133);
 		mimePanel.add(scrollPane);
-		
-		panelPermissions_1 = new JPanel();
-		editorTabs.addTab("Permissions", null, panelPermissions_1, null);
-		panelPermissions_1.setLayout(new BorderLayout(0, 0));
 		CreatePermissions();
 		JPanel panel_3 = new JPanel();
 		splitPane.setLeftComponent(panel_3);
@@ -833,7 +834,6 @@ public class MainGUI extends JFrame
 				borderTileEditor.setMap(borderMap);
 				borderTileEditor.repaint();
 
-				permissionEditorPanel.DrawMap();
 				mapEditorPanel.repaint();
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();

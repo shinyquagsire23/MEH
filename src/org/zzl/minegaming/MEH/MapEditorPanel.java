@@ -1,8 +1,10 @@
 package org.zzl.minegaming.MEH;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
@@ -47,39 +49,63 @@ public class MapEditorPanel extends JPanel
 	public static int bufferWidth = 1;
 	public static int bufferHeight = 1;
 	public static Rectangle selectBox;
+	private static EditMode currentMode = EditMode.TILES;
  
 	public MapEditorPanel()
 	{
 		mouseTracker=new Rectangle(0,0,16,16);
 		selectBox = new Rectangle(0,0,16,16);
+		selectBuffer = new MapTile[1][1];
+		selectBuffer[0][0] = new MapTile(0,0xC);
+		
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
 			@Override
 			public void mouseDragged(MouseEvent e)
 			{
+				if (e.getModifiersEx() == 1024) 
+				{
+					mouseTracker.x=e.getX() - (bufferWidth * 8);
+					mouseTracker.y=e.getY() - (bufferHeight * 8);
+				}
 				int x = (mouseTracker.x / 16);
 				int y = (mouseTracker.y / 16);
-				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight){
+				if(x>map.getMapData().mapWidth || y>map.getMapData().mapHeight)
+				{
 					return;
 				}
-				System.out.println(e.getButton());
+				System.out.println(x + " " + y);
 
 
 				int b1 = InputEvent.BUTTON1_DOWN_MASK;
 				int b2 = InputEvent.BUTTON2_DOWN_MASK;
-				if ((e.getModifiersEx() & (b1 | b2)) == b1) 
+				if (e.getModifiersEx() == 1024) 
 				{
-					for(int DrawX=0;DrawX<bufferWidth;DrawX++){
-						for(int DrawY=0;DrawY<bufferHeight;DrawY++){
-							map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
+					for(int DrawX=0;DrawX<bufferWidth;DrawX++)
+					{
+						for(int DrawY=0;DrawY<bufferHeight;DrawY++)
+						{
+							//Tiles multi-select will grab both the tiles and the meta, 
+							//while movement editing will only select metas.
+							if(currentMode == EditMode.TILES)
+							{
+								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
+								if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
+									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
+								drawTile(x+DrawX,y+DrawY);
+							}
+							else if(currentMode == EditMode.MOVEMENT)
+							{
+								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
+								drawTile(x+DrawX,y+DrawY);
+							}
 						}
 					}
 
 
 					map.isEdited = true;
-					DrawMap();
-					repaint();
+					MainGUI.mapEditorPanel.repaint();
 				}
 				else
 				{
@@ -91,8 +117,14 @@ public class MapEditorPanel extends JPanel
 			@Override
 			public void mouseMoved(MouseEvent e)
 			{
+				if(map == null)
+					return;
 				mouseTracker.x=e.getX() - (bufferWidth * 8);
 				mouseTracker.y=e.getY() - (bufferHeight * 8);
+				if(mouseTracker.x > map.getMapData().mapWidth * 16)
+					mouseTracker.x = (int)(map.getMapData().mapWidth * 16) - (bufferWidth * 8);
+				if(mouseTracker.y > map.getMapData().mapHeight * 16)
+					mouseTracker.y = (int)(map.getMapData().mapHeight * 16) - (bufferHeight * 8);
 				repaint();
 			}
 
@@ -117,23 +149,44 @@ public class MapEditorPanel extends JPanel
 				if(e.getButton() == 1)
 				{
 					for(int DrawX=0;DrawX<bufferWidth;DrawX++){
-						for(int DrawY=0;DrawY<bufferHeight;DrawY++){
-							map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
+						for(int DrawY=0;DrawY<bufferHeight;DrawY++)
+						{
+							//Tiles multi-select will grab both the tiles and the meta, 
+							//while movement editing will only select metas.
+							if(currentMode == EditMode.TILES)
+							{
+								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
+								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
+								drawTile(x+DrawX,y+DrawY);
+							}
+							else if(currentMode == EditMode.MOVEMENT)
+							{
+								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
+								drawTile(x+DrawX,y+DrawY);
+							}
 						}
 					}
 
 
 					map.isEdited = true;
-					// myParent.mapEditorPanel.setMap(myParent.loadedMap);
-					DrawMap();
+					//DrawMap();
 
 
 					repaint();
 				}
 				else if(e.getButton() == 3)
 				{
-					TileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
-					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+					if(currentMode == EditMode.TILES)
+					{
+						TileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
+						MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+					}
+					else if(currentMode == EditMode.MOVEMENT)
+					{
+						PermissionTilePanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getMeta();
+						MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+					}
+					
 					MainGUI.repaintTileEditorPanel();
 				}
 			}
@@ -243,12 +296,12 @@ public class MapEditorPanel extends JPanel
 
 	public static Graphics gcBuff;
 	static  Image imgBuffer = null;
+	static Image permImgBuffer = null;
 
 	public void DrawMap()
 	{
 		try
-		{
-
+		{		
 			imgBuffer = createImage((int) map.getMapData().mapWidth * 16,
 					(int) map.getMapData().mapHeight * 16);
 			gcBuff = imgBuffer.getGraphics();
@@ -257,10 +310,7 @@ public class MapEditorPanel extends JPanel
 			{
 				for (int x = 0; x < map.getMapData().mapWidth; x++)
 				{
-					int TileID=(map.getMapTileData().getTile(x, y).getID());
-					int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
-					int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
-					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
+					drawTile(x,y,EditMode.TILES);
 				}
 			}
 
@@ -272,12 +322,59 @@ public class MapEditorPanel extends JPanel
 		catch (Exception e)
 		{
 
-			int a = 1;
-			a = 1;
-
 		}
 
 	}
+	
+	public void DrawMovementPerms()
+	{
+		try
+		{
+			permImgBuffer = createImage((int) map.getMapData().mapWidth * 16,
+					(int) map.getMapData().mapHeight * 16);
+			for (int y = 0; y < map.getMapData().mapHeight; y++)
+			{
+				for (int x = 0; x < map.getMapData().mapWidth; x++)
+				{
+					drawTile(x,y,EditMode.MOVEMENT);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+
+		}
+	}
+	
+	void drawTile(int x, int y)
+	{
+		drawTile(x,y,currentMode);
+	}
+	
+	void drawTile(int x, int y, EditMode m)
+	{
+		
+		if(m == EditMode.TILES)
+		{
+			gcBuff = imgBuffer.getGraphics();
+			int TileID=(map.getMapTileData().getTile(x, y).getID());
+			int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
+			int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
+			gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, this);
+		}
+		else if(m == EditMode.MOVEMENT)
+		{
+			gcBuff = permImgBuffer.getGraphics();
+			int TileMeta=(MainGUI.mapEditorPanel.map.getMapTileData().getTile(x, y).getMeta());
+			
+			//Clear the rectangle since transparency can draw ontop of itself
+			((Graphics2D)gcBuff).setBackground(new Color(255,255,255,0));
+			((Graphics2D)gcBuff).clearRect(x * 16, y * 16, 16, 16);
+			((Graphics2D)gcBuff).drawImage(((BufferedImage)(PermissionTilePanel.imgPermissions)).getSubimage(TileMeta*16, 0, 16, 16), x * 16, y * 16, this);
+		}
+		gcBuff.finalize();
+	}
+	
 	void DrawText(String Text, int x, int y){
 		gcBuff.drawRect(x , y, 16, 16);
 		gcBuff.drawString(Text,x,y+16);
@@ -329,12 +426,23 @@ public class MapEditorPanel extends JPanel
 	
 		if(MapEditorPanel.Redraw==true){
 			DrawMap();
+			DrawMovementPerms();
 			MapEditorPanel.Redraw=false;
 		}
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			g.drawImage(imgBuffer, 0, 0, this);
+			if(currentMode != EditMode.TILES)
+			{
+				Graphics2D g2 = (Graphics2D)g;
+				g2.drawImage(imgBuffer, 0, 0, this);
+				
+				AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, DataStore.mehPermissionTranslucency);
+				g2.setComposite(ac);
+				g2.drawImage(permImgBuffer, 0, 0, this);
+			}
+			else
+				g.drawImage(imgBuffer, 0, 0, this);
 
 			if(renderPalette)
 			{
@@ -397,5 +505,11 @@ public class MapEditorPanel extends JPanel
 		globalTiles = null;
 		localTiles = null;
 		map = null;
+	}
+
+	
+	public static void setMode(EditMode tiles)
+	{
+		currentMode = tiles;
 	}
 }

@@ -25,7 +25,7 @@ public class PermissionTilePanel extends JPanel
 	private static final long serialVersionUID = -877213633894324075L;
 	public static int baseSelectedTile;	// Called it base in case of multiple tile
 	// selection in the future.
-	public static int editorWidth = 8; //Editor width in 16x16 tiles
+	public static int editorWidth = 4; //Editor width in 16x16 tiles
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
@@ -56,6 +56,7 @@ public class PermissionTilePanel extends JPanel
 			//auto generate image on fail.
 			e1.printStackTrace();
 		}
+
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
@@ -76,7 +77,10 @@ public class PermissionTilePanel extends JPanel
 			{
 				mouseTracker.x=e.getX();
 				mouseTracker.y=e.getY();
-
+				if(mouseTracker.x > editorWidth * 16)
+					mouseTracker.x = (int)((editorWidth - 1) * 16);
+				if(mouseTracker.y > 16 * 16)
+					mouseTracker.y = (int)(16 * 15);
 				repaint();
 
 			}
@@ -100,7 +104,19 @@ public class PermissionTilePanel extends JPanel
 				else{
 					srcX=x;
 					srcY=y;
-				
+					baseSelectedTile = x + (y * editorWidth);
+					MapEditorPanel.selectBuffer = new MapTile[1][1];
+					MapEditorPanel.selectBuffer[0][0] = new MapTile(TileEditorPanel.baseSelectedTile,PermissionTilePanel.baseSelectedTile); //TODO implement movement perms
+					MapEditorPanel.bufferWidth = 1;
+					MapEditorPanel.bufferHeight = 1;
+					MapEditorPanel.selectBox.width = 16;
+					MapEditorPanel.selectBox.height = 16;
+					String k = "Current Tile: ";
+					k += String.format("0x%8s",
+							Integer.toHexString(baseSelectedTile))
+							.replace(' ', '0');
+					MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(PermissionTilePanel.baseSelectedTile));
+					repaint();
 				}
 
 			}
@@ -110,7 +126,7 @@ public class PermissionTilePanel extends JPanel
 			{
 				if(e.getButton() == 3)
 				{
-				
+					MapEditorPanel.selectBox = new Rectangle(e.getX(),e.getY(),0,0);
 				}
 			}
 
@@ -131,10 +147,20 @@ public class PermissionTilePanel extends JPanel
 			{
 				if(e.getButton() == 3)
 				{
+					MapEditorPanel.calculateSelectBox(e);
+
+					//Fill the tile buffer
+					MapEditorPanel.selectBuffer = new MapTile[MapEditorPanel.selectBox.width / 16][MapEditorPanel.selectBox.height / 16];
+					MapEditorPanel.bufferWidth = MapEditorPanel.selectBox.width / 16;
+					MapEditorPanel.bufferHeight = MapEditorPanel.selectBox.height / 16;
+					for(int x = 0; x < MapEditorPanel.bufferWidth; x++)
+						for(int y = 0; y < MapEditorPanel.bufferHeight; y++)
+							MapEditorPanel.selectBuffer[x][y] = new MapTile(baseSelectedTile = x + (y * editorWidth), 0xC); //TODO implement movement perms
 				}
 			}
 
 		});
+
 
 	}
 
@@ -175,9 +201,15 @@ public class PermissionTilePanel extends JPanel
 			}
 			g.drawImage(imgBuffer, 0, 0, this);
 			
+			g.setColor(Color.red);
+			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
 			
-	
-		
+			g.setColor(Color.GREEN);
+			if( mouseTracker.width <0)
+				mouseTracker.x-=Math.abs( mouseTracker.width);
+			if( mouseTracker.height <0)
+				mouseTracker.y-=Math.abs( mouseTracker.height);
+			g.drawRect(((mouseTracker.x / 16) % editorWidth) * 16,(mouseTracker.y / 16) * 16,MapEditorPanel.selectBox.width-1,MapEditorPanel.selectBox.height-1);
 		try
 		{
 			//best error image.

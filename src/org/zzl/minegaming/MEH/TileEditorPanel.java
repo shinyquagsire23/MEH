@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
@@ -17,6 +18,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
+//TODO Make this a base class for *any* tileset, ie movement perms
 public class TileEditorPanel extends JPanel
 {
 	private static final long serialVersionUID = -877213633894324075L;
@@ -92,7 +94,7 @@ public class TileEditorPanel extends JPanel
 					srcY=y;
 					baseSelectedTile = x + (y * editorWidth);
 					MapEditorPanel.selectBuffer = new MapTile[1][1];
-					MapEditorPanel.selectBuffer[0][0] = new MapTile(baseSelectedTile,0xC); //TODO implement movement perms
+					MapEditorPanel.selectBuffer[0][0] = new MapTile(baseSelectedTile,-1); //TODO Default movement perms
 					MapEditorPanel.bufferWidth = 1;
 					MapEditorPanel.bufferHeight = 1;
 					MapEditorPanel.selectBox.width = 16;
