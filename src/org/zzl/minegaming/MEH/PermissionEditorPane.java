@@ -241,7 +241,7 @@ public class PermissionEditorPane extends JPanel
 				for (int x = 0; x < MainGUI.mapEditorPanel.map.getMapData().mapWidth; x++)
 				{
 					int TileID=(MainGUI.mapEditorPanel.map.getMapTileData().getTile(x, y).getMeta());
-					AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.50);
+					AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, DataStore.mehPermissionTranslucency);
 					gcBuff.setComposite(ac);
 					
 					gcBuff.drawImage(((BufferedImage)(PermissionTilePanel.imgPermissions)).getSubimage(TileID*16, 0, 16, 16), x * 16, y * 16, this);
