@@ -1,5 +1,11 @@
 package org.zzl.minegaming.MEH;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
@@ -64,5 +70,37 @@ public class Map implements ISaveable
 		mapExitManager.save();
 		mapData.save();
 		mapTileData.save();
+	}
+
+	public static Image renderMap(Map map)
+	{
+		BufferedImage imgBuffer = new BufferedImage(8,8, BufferedImage.TYPE_INT_ARGB);
+		try
+		{		
+			imgBuffer = new BufferedImage((int) map.getMapData().mapWidth * 16,
+					(int) map.getMapData().mapHeight * 16, BufferedImage.TYPE_INT_ARGB);
+			Graphics gcBuff = imgBuffer.getGraphics();
+
+			for (int y = 0; y < map.getMapData().mapHeight; y++)
+			{
+				for (int x = 0; x < map.getMapData().mapWidth; x++)
+				{
+					gcBuff = imgBuffer.getGraphics();
+					int TileID=(map.getMapTileData().getTile(x, y).getID());
+					int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
+					int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
+					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, null);
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Error rendering map.");
+			e.printStackTrace();
+			imgBuffer.getGraphics().setColor(Color.RED);
+			imgBuffer.getGraphics().fillRect(0, 0, 8, 8);
+		}
+		
+		return imgBuffer;
 	}
 }

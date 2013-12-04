@@ -301,30 +301,7 @@ public class MapEditorPanel extends JPanel
 
 	public void DrawMap()
 	{
-		try
-		{		
-			imgBuffer = createImage((int) map.getMapData().mapWidth * 16,
-					(int) map.getMapData().mapHeight * 16);
-			gcBuff = imgBuffer.getGraphics();
-
-			for (int y = 0; y < map.getMapData().mapHeight; y++)
-			{
-				for (int x = 0; x < map.getMapData().mapWidth; x++)
-				{
-					drawTile(x,y,EditMode.TILES);
-				}
-			}
-
-			
-			EventEditorPanel.Redraw=true;
-		
-			this.repaint();
-		}
-		catch (Exception e)
-		{
-
-		}
-
+		imgBuffer = Map.renderMap(map);
 	}
 	
 	public void DrawMovementPerms()
