@@ -398,15 +398,14 @@ public class MapEditorPanel extends JPanel
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-	
-		if(MapEditorPanel.Redraw==true){
-			DrawMap();
-			DrawMovementPerms();
-			MapEditorPanel.Redraw=false;
-		}
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
+			if(MapEditorPanel.Redraw==true){
+				DrawMap();
+				DrawMovementPerms();
+				MapEditorPanel.Redraw=false;
+			}
 			if(currentMode != EditMode.TILES)
 			{
 				Graphics2D g2 = (Graphics2D)g;

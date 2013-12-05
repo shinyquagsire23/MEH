@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ROMManager;
+import org.zzl.minegaming.MEH.DataStore;
+import org.zzl.minegaming.MEH.Map;
 
 public class TilesetCache
 {
@@ -37,5 +39,19 @@ public class TilesetCache
 	public static void clearCache()
 	{
 		cache = new HashMap<Integer, Tileset>();
+	}
+
+	
+	public static void switchTileset(Map loadedMap)
+	{
+		get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
+		get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
+		for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
+			get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = get(loadedMap.getMapData().localTileSetPtr).getROMPalette()[i];
+		get(loadedMap.getMapData().localTileSetPtr).setPalette(get(loadedMap.getMapData().globalTileSetPtr).getPalette());
+		get(loadedMap.getMapData().localTileSetPtr).renderPalettedTiles();
+		get(loadedMap.getMapData().globalTileSetPtr).renderPalettedTiles();
+		get(loadedMap.getMapData().localTileSetPtr).startTileThreads();
+		get(loadedMap.getMapData().globalTileSetPtr).startTileThreads();
 	}
 }

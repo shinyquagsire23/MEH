@@ -22,7 +22,7 @@ public class MapHeader implements ISaveable {
 	  private GBARom rom;
 	  int hdrSize;//This is internal and does not go into the ROM
 	 public MapHeader(GBARom rom, int offset){
-		  bOffset=offset-0x8000000;
+		  bOffset=offset&0x1FFFFFF;
 		  this.rom = rom;
 		/*  pMap = rom.getPointer(bOffset);bOffset+=4;
 		  pSprites =rom.getPointer(bOffset);bOffset+=4;

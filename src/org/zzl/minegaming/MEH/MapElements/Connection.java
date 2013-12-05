@@ -20,7 +20,7 @@ public class Connection
 	public void load()
 	{
 		lType = rom.getPointer(true);
-		lOffset = rom.getPointer(true);
+		lOffset = rom.getSignedLong(true);
 		bBank = rom.readByte();
 		bMap = rom.readByte();
 		wFiller = rom.readWord();
@@ -30,7 +30,7 @@ public class Connection
 	{
 		rom.Seek(dataLoc);
 		rom.writePointer(lType);
-		rom.writePointer(lOffset);
+		rom.writePointer(lOffset & 0xFFFFFFFF);
 		rom.writeByte(bBank);
 		rom.writeByte(bMap);
 		rom.writeWord(wFiller);

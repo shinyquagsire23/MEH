@@ -20,6 +20,7 @@ import org.zzl.minegaming.MEH.MapElements.Sprites;
 import org.zzl.minegaming.MEH.MapElements.SpritesExitManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPCManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesSignManager;
+import org.zzl.minegaming.MEH.MapElements.TilesetCache;
 import org.zzl.minegaming.MEH.MapElements.TriggerManager;
 
 
@@ -90,6 +91,7 @@ public class Map implements ISaveable
 	
 	public static Image renderMap(Map map)
 	{
+		TilesetCache.switchTileset(map);
 		BufferedImage imgBuffer = new BufferedImage(8,8, BufferedImage.TYPE_INT_ARGB);
 		try
 		{		
@@ -116,7 +118,7 @@ public class Map implements ISaveable
 			imgBuffer.getGraphics().setColor(Color.RED);
 			imgBuffer.getGraphics().fillRect(0, 0, 8, 8);
 		}
-		
+
 		return imgBuffer;
 	}
 }

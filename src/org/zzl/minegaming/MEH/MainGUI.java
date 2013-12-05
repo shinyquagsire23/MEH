@@ -119,6 +119,7 @@ public class MainGUI extends JFrame
 	public static BorderEditorPanel borderTileEditor;
 	public static EventEditorPanel eventEditorPanel;
 	public static TileEditorPanel tileEditorPanel;
+	public static ConnectionsEditorPanel connectionsEditorPanel;
 	public static JLabel lblTileVal;
 	public DataStore dataStore;
 	private JPanel editorPanel;
@@ -578,6 +579,9 @@ public class MainGUI extends JFrame
 	private PermissionTilePanel permissionTilePanel;
 	private JScrollPane movementScrollPane;
 	private JPanel panel_7;
+	private JPanel connectionsTabPanel;
+	private JPanel connectinonsInfoPanel;
+	private JScrollPane connectionsEditorScroll;
 
 	
 	void CreateSplitPane(){
@@ -693,6 +697,23 @@ public class MainGUI extends JFrame
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(0, 0, 2, 133);
 		mimePanel.add(scrollPane);
+		
+		connectionsTabPanel = new JPanel();
+		editorTabs.addTab("Connections", null, connectionsTabPanel, null);
+		connectionsTabPanel.setLayout(new BorderLayout(0, 0));
+		
+		connectinonsInfoPanel = new JPanel();
+		connectinonsInfoPanel.setPreferredSize(new Dimension(10, 24));
+		connectionsTabPanel.add(connectinonsInfoPanel, BorderLayout.NORTH);
+		
+		
+		connectionsEditorPanel = new ConnectionsEditorPanel();
+		connectionsEditorScroll = new JScrollPane(connectionsEditorPanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		connectionsEditorScroll.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		connectionsEditorScroll.getVerticalScrollBar().setUnitIncrement(16);
+		connectionsEditorScroll.getHorizontalScrollBar().setUnitIncrement(16);
+		connectionsTabPanel.add(connectionsEditorScroll, BorderLayout.CENTER);
+		
 		CreatePermissions();
 		JPanel panel_3 = new JPanel();
 		splitPane.setLeftComponent(panel_3);
@@ -801,15 +822,7 @@ public class MainGUI extends JFrame
 				loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
 				currentBank = selectedBank;
 				currentMap = selectedMap;
-				TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
-				TilesetCache.get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
-				for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
-					TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = TilesetCache.get(loadedMap.getMapData().localTileSetPtr).getROMPalette()[i];
-				TilesetCache.get(loadedMap.getMapData().localTileSetPtr).setPalette(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).getPalette());
-				TilesetCache.get(loadedMap.getMapData().localTileSetPtr).renderPalettedTiles();
-				TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).renderPalettedTiles();
-				TilesetCache.get(loadedMap.getMapData().localTileSetPtr).startTileThreads();
-				TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).startTileThreads();
+				TilesetCache.switchTileset(loadedMap);
 				
 				borderMap = new BorderMap(ROMManager.getActiveROM(), loadedMap);
 				reloadMimeLabels();
@@ -834,6 +847,8 @@ public class MainGUI extends JFrame
 				borderTileEditor.setLocalTileset(TilesetCache.get(loadedMap.getMapData().localTileSetPtr));
 				borderTileEditor.setMap(borderMap);
 				borderTileEditor.repaint();
+				connectionsEditorPanel.loadConnections(loadedMap);
+				connectionsEditorPanel.repaint();
 
 				mapEditorPanel.repaint();
 				Date eD = new Date();
