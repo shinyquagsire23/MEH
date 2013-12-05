@@ -77,10 +77,7 @@ public class MapEditorPanel extends JPanel
 				}
 				System.out.println(x + " " + y);
 
-
-				int b1 = InputEvent.BUTTON1_DOWN_MASK;
-				int b2 = InputEvent.BUTTON2_DOWN_MASK;
-				if (e.getModifiersEx() == 1024) 
+				if (e.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) 
 				{
 					for(int DrawX=0;DrawX<bufferWidth;DrawX++)
 					{

@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
+import org.zzl.minegaming.GBAUtils.ROMManager;
+import org.zzl.minegaming.MEH.MapElements.ConnectionData;
 import org.zzl.minegaming.MEH.MapElements.MapData;
 import org.zzl.minegaming.MEH.MapElements.MapHeader;
 import org.zzl.minegaming.MEH.MapElements.MapTileData;
@@ -26,7 +28,9 @@ public class Map implements ISaveable
 	private MapData mapData;
 	private MapTileData mapTileData;
 	public MapHeader mapHeader; 
+	public ConnectionData mapConnections;
 	public Sprites mapSprites;
+	
 	public static SpritesNPCManager mapNPCManager;
 	public static SpritesSignManager mapSignManager;
 	public static SpritesExitManager mapExitManager;
@@ -34,9 +38,16 @@ public class Map implements ISaveable
 	public static OverworldSpritesManager overworldSpritesManager;
 	public OverworldSprites[] eventSprites;
 	public boolean isEdited;
+	
+	public Map(GBARom rom, int bank, int map)
+	{
+		this(rom,(int)(BitConverter.shortenPointer(BankLoader.maps[bank].get(map))));
+	}
+	
 	public Map(GBARom rom, int dataOffset)
 	{
 		mapHeader = new MapHeader(rom, dataOffset);
+		mapConnections = new ConnectionData(rom, BitConverter.shortenPointer(mapHeader.pConnect));
 		mapSprites = new Sprites(rom, (int) mapHeader.pSprites);
 		mapNPCManager=new SpritesNPCManager(rom, (int) mapSprites.pNPC, mapSprites.bNumNPC);
 		mapSignManager = new SpritesSignManager(rom,(int) mapSprites.pSigns, mapSprites.bNumSigns);
@@ -72,6 +83,11 @@ public class Map implements ISaveable
 		mapTileData.save();
 	}
 
+	public static Image renderMap(int bank, int map)
+	{
+		return renderMap(new Map(ROMManager.currentROM,bank,map));
+	}
+	
 	public static Image renderMap(Map map)
 	{
 		BufferedImage imgBuffer = new BufferedImage(8,8, BufferedImage.TYPE_INT_ARGB);
