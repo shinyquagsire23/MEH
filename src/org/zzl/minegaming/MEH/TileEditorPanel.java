@@ -166,13 +166,31 @@ public class TileEditorPanel extends JPanel
 	static Image imgBuffer = null;
 	public void DrawTileset()
 	{
+		RerenderTiles(0, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024), true);
+	}
+	
+	public void RerenderSecondary()
+	{
+		RerenderTiles(DataStore.MainTSBlocks);
+	}
+	
+	public void RerenderTiles(int startBlock)
+	{
+		RerenderTiles(startBlock, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024), false);
+	}
+	
+	public void RerenderTiles(int startBlock, int endBlock, boolean completeRender)
+	{
 		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSBlocks / editorWidth)*(DataStore.LocalTSBlocks / editorWidth) *16);
-		if(DataStore.EngineVersion == 0)
-			d.height = 3048;
-		imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
+		if(completeRender)
+		{
+			if(DataStore.EngineVersion == 0)
+				d.height = 3048;
+			imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
+		}
 		setSize(d);
 		gcBuff=imgBuffer.getGraphics();
-		for(int i = 0; i < DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024); i++) //TODO readd ini support here
+		for(int i = startBlock; i < endBlock; i++)
 		{
 
 			int x = (i % editorWidth) * 16;

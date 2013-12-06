@@ -37,6 +37,7 @@ public class Map implements ISaveable
 	public static SpritesExitManager mapExitManager;
 	public static TriggerManager mapTriggerManager;
 	public static OverworldSpritesManager overworldSpritesManager;
+	public int dataOffset = 0;
 	public OverworldSprites[] eventSprites;
 	public boolean isEdited;
 	
@@ -47,6 +48,7 @@ public class Map implements ISaveable
 	
 	public Map(GBARom rom, int dataOffset)
 	{
+		this.dataOffset = dataOffset;
 		mapHeader = new MapHeader(rom, dataOffset);
 		mapConnections = new ConnectionData(rom, BitConverter.shortenPointer(mapHeader.pConnect));
 		mapSprites = new Sprites(rom, (int) mapHeader.pSprites);
@@ -75,6 +77,7 @@ public class Map implements ISaveable
 	public void save()
 	{
 		mapHeader.save();
+		mapConnections.save();
 		mapSprites.save();
 		mapNPCManager.save();
 		mapSignManager.save();
@@ -92,6 +95,7 @@ public class Map implements ISaveable
 	public static Image renderMap(Map map)
 	{
 		TilesetCache.switchTileset(map);
+		MainGUI.tileEditorPanel.RerenderSecondary();
 		BufferedImage imgBuffer = new BufferedImage(8,8, BufferedImage.TYPE_INT_ARGB);
 		try
 		{		

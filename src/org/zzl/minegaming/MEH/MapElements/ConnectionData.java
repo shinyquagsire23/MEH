@@ -31,4 +31,17 @@ public class ConnectionData
 			aConnections[i] = new Connection(rom,rom.internalOffset);
 		}
 	}
+	
+	public void save()
+	{
+		rom.Seek(dataLoc);
+		rom.writePointer(pNumConnections);
+		rom.writePointer(pData);
+		
+		rom.Seek(BitConverter.shortenPointer(pData));
+		for(int i = 0; i < pNumConnections; i++)
+		{
+			aConnections[i].save();
+		}
+	}
 }

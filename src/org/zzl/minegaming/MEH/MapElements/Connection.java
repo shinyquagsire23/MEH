@@ -30,7 +30,8 @@ public class Connection
 	{
 		rom.Seek(dataLoc);
 		rom.writePointer(lType);
-		rom.writePointer(lOffset & 0xFFFFFFFF);
+		rom.writeSignedPointer(lOffset);
+		int i = 0;
 		rom.writeByte(bBank);
 		rom.writeByte(bMap);
 		rom.writeWord(wFiller);

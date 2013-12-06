@@ -402,7 +402,11 @@ public class MapEditorPanel extends JPanel
 		if (globalTiles != null)
 		{
 			if(MapEditorPanel.Redraw==true){
-				DrawMap();
+				try
+				{
+					DrawMap();
+				}
+				catch(Exception e){}
 				DrawMovementPerms();
 				MapEditorPanel.Redraw=false;
 			}

@@ -31,6 +31,7 @@ import java.awt.Component;
 
 import javax.swing.Box;
 
+import java.awt.Adjustable;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FileDialog;
@@ -79,6 +80,8 @@ import javax.swing.border.LineBorder;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
@@ -253,6 +256,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
+				connectionsEditorPanel.save(); //Save surrounding maps
 				PluginManager.fireMapSave(currentBank, currentMap);
 				saveROM();
 			}
@@ -268,6 +272,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
+				connectionsEditorPanel.save(); //Save surrounding maps
 				PluginManager.fireMapSave(currentBank, currentMap);
 			}
 		});
@@ -353,6 +358,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
+				connectionsEditorPanel.save(); //Save surrounding maps
 				PluginManager.fireMapSave(currentBank, currentMap);
 				saveROM();
 			}
@@ -399,6 +405,7 @@ public class MainGUI extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
+				connectionsEditorPanel.save(); //Save surrounding maps
 				PluginManager.fireMapSave(currentBank, currentMap);
 			}
 		});
@@ -528,11 +535,6 @@ public class MainGUI extends JFrame
 		tabbedPane.setBorder(null);
 		panelTilesContainer.add(tabbedPane, BorderLayout.CENTER);
 		tileEditorPanel = new TileEditorPanel();
-		tileEditorPanel.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseMoved(MouseEvent e) {
-			}
-		});
 		
 		tileEditorPanel.setPreferredSize(new Dimension((TileEditorPanel.editorWidth)*16+16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300)/TileEditorPanel.editorWidth)*16));
 		tileEditorPanel.setSize(tileEditorPanel.getPreferredSize());
@@ -712,6 +714,29 @@ public class MainGUI extends JFrame
 		connectionsEditorScroll.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		connectionsEditorScroll.getVerticalScrollBar().setUnitIncrement(16);
 		connectionsEditorScroll.getHorizontalScrollBar().setUnitIncrement(16);
+		connectionsEditorScroll.addMouseWheelListener(new MouseWheelListener() 
+		{
+			public void mouseWheelMoved(MouseWheelEvent e) 
+			{
+				if(e.isControlDown() || e.isAltDown())
+				{
+					connectionsEditorPanel.scale += (double)(e.getWheelRotation() / 5d);
+					if(connectionsEditorPanel.scale < 0.3)
+						connectionsEditorPanel.scale = 0.3;
+					else if(connectionsEditorPanel.scale > 10)
+						connectionsEditorPanel.scale = 10;
+					connectionsEditorPanel.RescaleImages(false);
+					connectionsEditorPanel.repaint();
+				}
+				else
+				{
+					// Vertical scrolling
+	                Adjustable adj = connectionsEditorScroll.getVerticalScrollBar();
+	                int scroll = e.getUnitsToScroll() * adj.getBlockIncrement();
+	                adj.setValue(adj.getValue() + scroll);
+				}
+			}
+		});
 		connectionsTabPanel.add(connectionsEditorScroll, BorderLayout.CENTER);
 		
 		CreatePermissions();
