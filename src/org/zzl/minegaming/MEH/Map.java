@@ -20,6 +20,7 @@ import org.zzl.minegaming.MEH.MapElements.Sprites;
 import org.zzl.minegaming.MEH.MapElements.SpritesExitManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPCManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesSignManager;
+import org.zzl.minegaming.MEH.MapElements.Tileset;
 import org.zzl.minegaming.MEH.MapElements.TilesetCache;
 import org.zzl.minegaming.MEH.MapElements.TriggerManager;
 
@@ -95,8 +96,12 @@ public class Map implements ISaveable
 	public static Image renderMap(Map map)
 	{
 		TilesetCache.switchTileset(map);
-		MainGUI.tileEditorPanel.RerenderSecondary();
+		MapEditorPanel.blockRenderer.setGlobalTileset(TilesetCache.get(map.getMapData().globalTileSetPtr));
+		MapEditorPanel.blockRenderer.setLocalTileset(TilesetCache.get(map.getMapData().localTileSetPtr));
+		
+		
 		BufferedImage imgBuffer = new BufferedImage(8,8, BufferedImage.TYPE_INT_ARGB);
+		Image tiles = MainGUI.tileEditorPanel.RerenderSecondary(MainGUI.tileEditorPanel.imgBuffer);
 		try
 		{		
 			imgBuffer = new BufferedImage((int) map.getMapData().mapWidth * 16,
@@ -111,7 +116,7 @@ public class Map implements ISaveable
 					int TileID=(map.getMapTileData().getTile(x, y).getID());
 					int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
 					int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
-					gcBuff.drawImage(((BufferedImage)(TileEditorPanel.imgBuffer)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, null);
+					gcBuff.drawImage(((BufferedImage)(tiles)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, null);
 				}
 			}
 		}

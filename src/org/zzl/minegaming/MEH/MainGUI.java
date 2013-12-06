@@ -864,6 +864,7 @@ public class MainGUI extends JFrame
 				
 				mapEditorPanel.setMap(loadedMap);
 				mapEditorPanel.DrawMap();
+				mapEditorPanel.DrawMovementPerms();
 				mapEditorPanel.repaint();
 				eventEditorPanel.setMap(loadedMap);
 				eventEditorPanel.DrawMap();

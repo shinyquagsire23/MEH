@@ -25,8 +25,8 @@ public class TileEditorPanel extends JPanel
 	public static int baseSelectedTile;	// Called it base in case of multiple tile
 	// selection in the future.
 	public static int editorWidth = 8; //Editor width in 16x16 tiles
-	private Tileset globalTiles;
-	private Tileset localTiles;
+	public Tileset globalTiles;
+	public Tileset localTiles;
 	private boolean isMouseDown = true;
     private static boolean Redraw = true;
 	static Rectangle mouseTracker;
@@ -166,30 +166,30 @@ public class TileEditorPanel extends JPanel
 	static Image imgBuffer = null;
 	public void DrawTileset()
 	{
-		RerenderTiles(0, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024), true);
+		imgBuffer = RerenderTiles(imgBuffer, 0, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024), true);
 	}
 	
-	public void RerenderSecondary()
+	public Image RerenderSecondary(Image i)
 	{
-		RerenderTiles(DataStore.MainTSBlocks);
+		return RerenderTiles(i, DataStore.MainTSBlocks);
 	}
 	
-	public void RerenderTiles(int startBlock)
+	public Image RerenderTiles(Image i, int startBlock)
 	{
-		RerenderTiles(startBlock, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024), false);
+		return RerenderTiles(i, startBlock, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024), false);
 	}
 	
-	public void RerenderTiles(int startBlock, int endBlock, boolean completeRender)
+	public Image RerenderTiles(Image b, int startBlock, int endBlock, boolean completeRender)
 	{
 		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSBlocks / editorWidth)*(DataStore.LocalTSBlocks / editorWidth) *16);
 		if(completeRender)
 		{
 			if(DataStore.EngineVersion == 0)
 				d.height = 3048;
-			imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
+			b = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
 		}
 		setSize(d);
-		gcBuff=imgBuffer.getGraphics();
+		gcBuff=b.getGraphics();
 		for(int i = startBlock; i < endBlock; i++)
 		{
 
@@ -204,6 +204,7 @@ public class TileEditorPanel extends JPanel
 			}
 
 		}
+		return b;
 	}
 	@Override
 	protected void paintComponent(Graphics g)

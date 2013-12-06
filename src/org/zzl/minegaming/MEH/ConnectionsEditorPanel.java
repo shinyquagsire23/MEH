@@ -67,7 +67,7 @@ public class ConnectionsEditorPanel extends JPanel
 	private double leftOfs;
 	private double rightOfs;
 	
-	private long lW =0, lH = 0, rW = 0, rH = 0, uW = 0, uH = 0, dW = 0, dH = 0;
+	private long lW =0, lH = 0, rW = 0, rH = 0, uW = 0, uH = 0, dW = 0, dH = 0, xAdj = 0, wAdj = 0, yAdj = 0, hAdj = 0;
 	private int filter = Image.SCALE_SMOOTH;
 	public double scale = 1;
 	
@@ -157,6 +157,8 @@ public class ConnectionsEditorPanel extends JPanel
 		
 		for(Connection c : map.mapConnections.aConnections)
 		{
+			if(c == null)
+				continue;
 			if(c.lType == 0x1)
 			{
 				down = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
@@ -269,7 +271,14 @@ public class ConnectionsEditorPanel extends JPanel
 		
 		if(resize)
 		{
-			setPreferredSize(new Dimension((int)(((lW + (center.getMapData().mapWidth * 16) + rW)) / scale), ((int)(((uH + (center.getMapData().mapHeight * 16) + dH)) / scale))));
+			xAdj = (int) (up.getMapData().mapWidth > center.getMapData().mapWidth ? up.getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
+			long xAdj2 = (int) (down.getMapData().mapWidth > center.getMapData().mapWidth ? down.getMapData().mapWidth - center.getMapData().mapWidth + downCon.lOffset : 0);
+			
+			xAdj = Math.max(xAdj,xAdj2) * 16;
+			
+			int wAdj = (int) (up.getMapData().mapWidth > center.getMapData().mapWidth ? up.getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
+			int wAdj2 = (int) (up.getMapData().mapWidth > center.getMapData().mapWidth ? up.getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
+			setPreferredSize(new Dimension((int)(((lW + (center.getMapData().mapWidth * 16) + rW + xAdj)) / scale), ((int)(((uH + (center.getMapData().mapHeight * 16) + dH)) / scale))));
 			setSize(this.getPreferredSize());
 			
 			//TODO scale around a point
@@ -293,27 +302,27 @@ public class ConnectionsEditorPanel extends JPanel
 		
 		try
 		{
-			upRect = new Rectangle((int)((lW + (upCon.lOffset * 16)) / scale),0,(int)(uW / scale),(int)(uH / scale));
+			upRect = new Rectangle((int)((lW + (upCon.lOffset * 16) + xAdj) / scale),0,(int)(uW / scale),(int)(uH / scale));
 		}
 		catch(Exception e){}
 		try
 		{
-			centerRect = new Rectangle((int)(lW / scale), (int)(uH / scale),(int)((center.getMapData().mapWidth * 16) / scale),(int)((center.getMapData().mapHeight * 16) / scale));
+			centerRect = new Rectangle((int)((lW / scale) + xAdj), (int)(uH / scale),(int)((center.getMapData().mapWidth * 16) / scale),(int)((center.getMapData().mapHeight * 16) / scale));
 		}
 		catch(Exception e){}
 		try
 		{
-			leftRect = new Rectangle(0,((int)((uH + (leftCon.lOffset * 16)) / scale)),(int)(lW / scale),(int)(lH / scale));
+			leftRect = new Rectangle(0,((int)((uH + (leftCon.lOffset * 16) + xAdj) / scale)),(int)(lW / scale),(int)(lH / scale));
 		}
 		catch(Exception e){}
 		try
 		{
-			rightRect = new Rectangle((int)((lW + ((int)center.getMapData().mapWidth * 16)) / scale), (int)((uH + (int)(rightCon.lOffset * 16)) / scale),(int)(rW / scale),(int)(rH / scale));
+			rightRect = new Rectangle((int)((lW + ((int)center.getMapData().mapWidth * 16) + xAdj) / scale), (int)((uH + (int)(rightCon.lOffset * 16)) / scale),(int)(rW / scale),(int)(rH / scale));
 		}
 		catch(Exception e){}
 		try
 		{
-			downRect = new Rectangle((int)((lW + (int)(downCon.lOffset * 16)) / scale), (int)((uH + ((int)center.getMapData().mapHeight * 16)) / scale),(int)(dW / scale),(int)(dH / scale));
+			downRect = new Rectangle((int)((lW + (int)(downCon.lOffset * 16) + xAdj) / scale), (int)((uH + ((int)center.getMapData().mapHeight * 16)) / scale),(int)(dW / scale),(int)(dH / scale));
 		}
 		catch(Exception e){}
 		lastScale = scale;
@@ -384,6 +393,8 @@ public class ConnectionsEditorPanel extends JPanel
 		leftRect = new Rectangle(-1,-1,1,1);
 		rightRect = new Rectangle(-1,-1,1,1);
 		centerRect = new Rectangle(-1,-1,1,1);
+		
+		lW =0; lH = 0; rW = 0; rH = 0; uW = 0; uH = 0; dW = 0; dH = 0;
 	}
 	
 	protected void paintComponent(Graphics g)
