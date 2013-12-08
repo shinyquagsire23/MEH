@@ -29,7 +29,7 @@ public class PermissionTilePanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
-	private boolean legacyPerms = true;
+	private PermissionTileMode permMode = PermissionTileMode.LEGACY_HYBRID;
     private static boolean Redraw = true;
 	static Rectangle mouseTracker;
 	public static Image imgPermissions;
@@ -49,15 +49,8 @@ public class PermissionTilePanel extends JPanel
 
 	public PermissionTilePanel()
 	{
-		setPermissionMode(legacyPerms);
+		setPermissionMode(permMode);
 		mouseTracker=new Rectangle(0,0,16,16);
-		try {
-			imgPermissions=ImageIO.read(MainGUI.class.getResourceAsStream(legacyPerms ? "/resources/permissionslinear.png" : "/resources/permissions.png"));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			//auto generate image on fail.
-			e1.printStackTrace();
-		}
 
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
@@ -193,12 +186,33 @@ public class PermissionTilePanel extends JPanel
 		
 	}
 	
-	public void setPermissionMode(boolean legacy)
+	public void setPermissionMode(PermissionTileMode permMode)
 	{
-		if(legacy)
-			editorWidth = 1;
-		else
-			editorWidth = 4;
+		String imagePath = "/resources/permissions.png";
+		switch(permMode)
+		{
+			case LEGACY:
+				editorWidth = 1;
+				imagePath = "/resources/permissionslinear.png";
+				break;
+			case LEGACY_HYBRID:
+				editorWidth = 4;
+				imagePath = "/resources/permissionslinear.png";
+				break;
+			case A_MAP:
+				editorWidth = 1;
+				imagePath = "/resources/permissionslinear.png"; //TODO Get Bela to do this one!
+			default:
+				editorWidth = 4;
+		}
+		try 
+		{
+			imgPermissions=ImageIO.read(MainGUI.class.getResourceAsStream(imagePath));
+		} 
+		catch (IOException e1) 
+		{
+			System.out.println("Failed to load permissions image!\nPath: imagePath");
+		}
 		
 		setPreferredSize(new Dimension(editorWidth * 16,(64 / editorWidth) * 16));
 		setSize(new Dimension(editorWidth * 16,(64 / editorWidth) * 16));	
