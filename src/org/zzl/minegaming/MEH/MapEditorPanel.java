@@ -298,7 +298,7 @@ public class MapEditorPanel extends JPanel
 
 	public void DrawMap()
 	{
-		imgBuffer = Map.renderMap(map);
+		imgBuffer = Map.renderMap(map, true);
 	}
 	
 	public void DrawMovementPerms()

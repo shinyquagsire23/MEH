@@ -90,10 +90,10 @@ public class Map implements ISaveable
 
 	public static Image renderMap(int bank, int map)
 	{
-		return renderMap(new Map(ROMManager.currentROM,bank,map));
+		return renderMap(new Map(ROMManager.currentROM,bank,map), true);
 	}
 	
-	public static Image renderMap(Map map)
+	public static Image renderMap(Map map, boolean full)
 	{
 		TilesetCache.switchTileset(map);
 		MapEditorPanel.blockRenderer.setGlobalTileset(TilesetCache.get(map.getMapData().globalTileSetPtr));
