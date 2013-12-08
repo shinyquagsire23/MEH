@@ -547,9 +547,7 @@ public class MainGUI extends JFrame
 		tabbedPane.addTab("Tiles", null, tilesetScrollPane, null);
 		
 		permissionTilePanel = new PermissionTilePanel();
-		permissionTilePanel.setLayout(null);
-		permissionTilePanel.setPreferredSize(new Dimension(64, 256));
-		permissionTilePanel.setSize(new Dimension(64, 256));		
+		permissionTilePanel.setLayout(null);	
 		movementScrollPane = new JScrollPane(permissionTilePanel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		movementScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		movementScrollPane.getVerticalScrollBar().setUnitIncrement(16);

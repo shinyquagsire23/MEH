@@ -25,10 +25,11 @@ public class PermissionTilePanel extends JPanel
 	private static final long serialVersionUID = -877213633894324075L;
 	public static int baseSelectedTile;	// Called it base in case of multiple tile
 	// selection in the future.
-	public static int editorWidth = 4; //Editor width in 16x16 tiles
+	private static int editorWidth = 4; //Editor width in 16x16 tiles
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
+	private boolean legacyPerms = true;
     private static boolean Redraw = true;
 	static Rectangle mouseTracker;
 	public static Image imgPermissions;
@@ -48,9 +49,10 @@ public class PermissionTilePanel extends JPanel
 
 	public PermissionTilePanel()
 	{
+		setPermissionMode(legacyPerms);
 		mouseTracker=new Rectangle(0,0,16,16);
 		try {
-			imgPermissions=ImageIO.read(MainGUI.class.getResourceAsStream("/resources/permissions.png"));
+			imgPermissions=ImageIO.read(MainGUI.class.getResourceAsStream(legacyPerms ? "/resources/permissionslinear.png" : "/resources/permissions.png"));
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			//auto generate image on fail.
@@ -169,7 +171,7 @@ public class PermissionTilePanel extends JPanel
 	static Image imgBuffer = null;
 	public void DrawTileset()
 	{
-		Dimension d = new Dimension(256,512);//4 tiles per level, 16 levels total 
+		Dimension d = new Dimension(editorWidth * 16,(64 / editorWidth) * 16);//4 tiles per level, 16 levels total 
 
 		imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
 		setSize(d);
@@ -178,10 +180,10 @@ public class PermissionTilePanel extends JPanel
 		int y=0;
 		int i=0;
 					
-		for(y=0;y<16;y++){
-			for(x=0;x<4;x++){
+		for(y=0;y<64 / editorWidth;y++){
+			for(x=0;x<editorWidth;x++){
 				
-				gcBuff.drawImage(((BufferedImage)(PermissionTilePanel.imgPermissions)).getSubimage((x+(y*4)) * 16, 0, 16, 16), x * 16, y * 16, this);
+				gcBuff.drawImage(((BufferedImage)(PermissionTilePanel.imgPermissions)).getSubimage((x+(y*editorWidth)) * 16, 0, 16, 16), x * 16, y * 16, this);
 			      
 				
 			}
@@ -190,6 +192,18 @@ public class PermissionTilePanel extends JPanel
 
 		
 	}
+	
+	public void setPermissionMode(boolean legacy)
+	{
+		if(legacy)
+			editorWidth = 1;
+		else
+			editorWidth = 4;
+		
+		setPreferredSize(new Dimension(editorWidth * 16,(64 / editorWidth) * 16));
+		setSize(new Dimension(editorWidth * 16,(64 / editorWidth) * 16));	
+	}
+	
 	@Override
 	protected void paintComponent(Graphics g)
 	{
