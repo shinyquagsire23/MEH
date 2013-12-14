@@ -29,10 +29,10 @@ public class ConnectionsEditorPanel extends JPanel
 
 	//Map data
 	private Map center;
-	private Map up;
-	private Map down;
-	private Map left;
-	private Map right;
+	private Map[] up;
+	private Map[] down;
+	private Map[] left;
+	private Map[] right;
 	
 	//Original map images
 	private Image centerImg;
@@ -69,7 +69,7 @@ public class ConnectionsEditorPanel extends JPanel
 	
 	private long lW =0, lH = 0, rW = 0, rH = 0, uW = 0, uH = 0, dW = 0, dH = 0, xAdj = 0, wAdj = 0, yAdj = 0, hAdj = 0;
 	private int filter = Image.SCALE_SMOOTH;
-	public double scale = 1;
+	public double scale = 1.8;
 	
 	private static boolean dragging = false;
 	private static ConnectionType connectionDragging = null;
@@ -154,6 +154,33 @@ public class ConnectionsEditorPanel extends JPanel
 		downImg = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
 		leftImg = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
 		rightImg = new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB);
+		int dC = 0, uC = 0, lC = 0, rC = 0;
+		
+		for(Connection c : map.mapConnections.aConnections)
+		{
+			if(c == null)
+				continue;
+			if(c.lType == 0x1)
+				dC++;
+			else if (c.lType == 0x2)
+				uC++;
+			else if(c.lType == 0x3)
+				lC++;
+			else if(c.lType == 0x4)
+				rC++;
+
+			//TODO Diving maps!
+		}	
+		
+		up = new Map[uC];
+		down = new Map[dC];
+		left = new Map[lC];
+		right = new Map[rC];
+	
+		dC = 0;
+		uC = 0; 
+		lC = 0;
+		rC = 0;
 		
 		for(Connection c : map.mapConnections.aConnections)
 		{
@@ -161,33 +188,37 @@ public class ConnectionsEditorPanel extends JPanel
 				continue;
 			if(c.lType == 0x1)
 			{
-				down = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
-				downImg = Map.renderMap(down);
+				down[dC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
+				downImg = Map.renderMap(down[0], false);
 				downCon = c;
+				dC++;
 			}
 			else if (c.lType == 0x2)
 			{
-				up = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
-				upImg = Map.renderMap(up);
+				up[uC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
+				upImg = Map.renderMap(up[uC], false);
 				upCon = c;
+				uC++;
 			}
 			else if(c.lType == 0x3)
 			{
-				left = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
-				leftImg = Map.renderMap(left);
+				left[lC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
+				leftImg = Map.renderMap(left[lC], false);
 				leftCon = c;
+				lC++;
 			}
 			else if(c.lType == 0x4)
 			{
-				right = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
-				rightImg = Map.renderMap(right);
+				right[rC] = new Map(ROMManager.currentROM, c.bBank & 0xFF, c.bMap & 0xFF);
+				rightImg = Map.renderMap(right[rC], false);
 				rightCon = c;
+				rC++;
 			}
 
 			//TODO Diving maps!
 		}	
 		
-		centerImg = Map.renderMap(center); //Render last to switch the tileset back to normal
+		centerImg = Map.renderMap(center, false); //Render last to switch the tileset back to normal
 		
 		RescaleImages();
 	}
@@ -197,7 +228,7 @@ public class ConnectionsEditorPanel extends JPanel
 		try
 		{
 			upCon.lOffset -= upOfs;
-			for(Connection c : up.mapConnections.aConnections)
+			for(Connection c : up[0].mapConnections.aConnections)
 				if((int)((long)BankLoader.maps[c.bBank].get(c.bMap)) == center.dataOffset)
 					c.lOffset = -upCon.lOffset;
 		}
@@ -206,7 +237,7 @@ public class ConnectionsEditorPanel extends JPanel
 		try
 		{
 			downCon.lOffset -= downOfs;
-			for(Connection c : down.mapConnections.aConnections)
+			for(Connection c : down[0].mapConnections.aConnections)
 				if((int)((long)BankLoader.maps[c.bBank].get(c.bMap)) == center.dataOffset)
 					c.lOffset = -downCon.lOffset;
 		}
@@ -215,7 +246,7 @@ public class ConnectionsEditorPanel extends JPanel
 		try
 		{
 			leftCon.lOffset -= leftOfs;
-			for(Connection c : left.mapConnections.aConnections)
+			for(Connection c : left[0].mapConnections.aConnections)
 				if((int)((long)BankLoader.maps[c.bBank].get(c.bMap)) == center.dataOffset)
 					c.lOffset = -leftCon.lOffset;
 		}
@@ -224,7 +255,7 @@ public class ConnectionsEditorPanel extends JPanel
 		try
 		{
 			rightCon.lOffset -= rightOfs;
-			for(Connection c : right.mapConnections.aConnections)
+			for(Connection c : right[0].mapConnections.aConnections)
 			{
 				int mapOffs = (int)((long)BankLoader.maps[c.bBank].get(c.bMap));
 				if(mapOffs == center.dataOffset)
@@ -243,41 +274,46 @@ public class ConnectionsEditorPanel extends JPanel
 	{
 		try
 		{
-			lW = left.getMapData().mapWidth * 16;
-			lH = left.getMapData().mapHeight * 16;
+			lW = left[0].getMapData().mapWidth * 16;
+			lH = left[0].getMapData().mapHeight * 16;
 		}
 		catch(Exception e){}
 		
 		try
 		{
-			rW = right.getMapData().mapWidth * 16;
-			rH = right.getMapData().mapHeight * 16;
+			rW = right[0].getMapData().mapWidth * 16;
+			rH = right[0].getMapData().mapHeight * 16;
 		}
 		catch(Exception e){}
 		
 		try
 		{
-			uW = up.getMapData().mapWidth * 16;
-			uH = up.getMapData().mapHeight * 16;
+			uW = up[0].getMapData().mapWidth * 16;
+			uH = up[0].getMapData().mapHeight * 16;
 		}
 		catch(Exception e){}
 		
 		try
 		{
-			dW = down.getMapData().mapWidth * 16;
-			dH = down.getMapData().mapHeight * 16;
+			dW = down[0].getMapData().mapWidth * 16;
+			dH = down[0].getMapData().mapHeight * 16;
 		}
 		catch(Exception e){}
 		
 		if(resize)
 		{
-			xAdj = (int) (up.getMapData().mapWidth > center.getMapData().mapWidth ? up.getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
-			long xAdj2 = (int) (down.getMapData().mapWidth > center.getMapData().mapWidth ? down.getMapData().mapWidth - center.getMapData().mapWidth + downCon.lOffset : 0);
-			
+			long xAdj2 = 0;
+			try
+			{
+				xAdj = (int) (up[0].getMapData().mapWidth > center.getMapData().mapWidth ? up[0].getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
+				xAdj2 = (int) (down[0].getMapData().mapWidth > center.getMapData().mapWidth ? down[0].getMapData().mapWidth - center.getMapData().mapWidth + downCon.lOffset : 0);
+				int wAdj = (int) (up[0].getMapData().mapWidth > center.getMapData().mapWidth ? up[0].getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
+				int wAdj2 = (int) (up[0].getMapData().mapWidth > center.getMapData().mapWidth ? up[0].getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
+			}
+			catch(Exception e){}
 			xAdj = Math.max(xAdj,xAdj2) * 16;
 			
-			int wAdj = (int) (up.getMapData().mapWidth > center.getMapData().mapWidth ? up.getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
-			int wAdj2 = (int) (up.getMapData().mapWidth > center.getMapData().mapWidth ? up.getMapData().mapWidth - center.getMapData().mapWidth + upCon.lOffset : 0);
+			
 			setPreferredSize(new Dimension((int)(((lW + (center.getMapData().mapWidth * 16) + rW + xAdj)) / scale), ((int)(((uH + (center.getMapData().mapHeight * 16) + dH)) / scale))));
 			setSize(this.getPreferredSize());
 			
@@ -307,7 +343,7 @@ public class ConnectionsEditorPanel extends JPanel
 		catch(Exception e){}
 		try
 		{
-			centerRect = new Rectangle((int)((lW / scale) + xAdj), (int)(uH / scale),(int)((center.getMapData().mapWidth * 16) / scale),(int)((center.getMapData().mapHeight * 16) / scale));
+			centerRect = new Rectangle((int)((lW / scale) + xAdj / scale), (int)(uH / scale),(int)((center.getMapData().mapWidth * 16) / scale),(int)((center.getMapData().mapHeight * 16) / scale));
 		}
 		catch(Exception e){}
 		try
@@ -454,23 +490,28 @@ public class ConnectionsEditorPanel extends JPanel
 	{
 		try
 		{
-		up.save();
+		up[0].save();
 		}
 		catch(Exception e){}
 		try
 		{
-		down.save();
+		down[0].save();
 		}
 		catch(Exception e){}
 		try
 		{
-		left.save();
+		left[0].save();
 		}
 		catch(Exception e){}
 		try
 		{
-		right.save();
+		right[0].save();
 		}
 		catch(Exception e){}
+	}
+
+	public int getLargestWidth()
+	{
+		return 0;
 	}
 }
