@@ -29,7 +29,7 @@ public class PermissionTilePanel extends JPanel
 	private Tileset globalTiles;
 	private Tileset localTiles;
 	private boolean isMouseDown = true;
-	private PermissionTileMode permMode = PermissionTileMode.LEGACY_HYBRID;
+	private PermissionTileMode permMode = PermissionTileMode.MEH;
     private static boolean Redraw = true;
 	static Rectangle mouseTracker;
 	public static Image imgPermissions;
@@ -201,7 +201,7 @@ public class PermissionTilePanel extends JPanel
 				break;
 			case A_MAP:
 				editorWidth = 1;
-				imagePath = "/resources/permissionslinear.png"; //TODO Get Bela to do this one!
+				imagePath = "/resources/permissionsamap.png"; //TODO Get Bela to do this one!
 			default:
 				editorWidth = 4;
 		}
