@@ -1,6 +1,7 @@
 package org.zzl.minegaming.MEH;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 
 import javax.swing.JLabel;
@@ -52,6 +53,7 @@ public class BankLoader extends Thread implements Runnable
 	@Override
 	public void run()
 	{
+		Date d = new Date();
 		ArrayList<byte[]> bankPointersPre = rom.loadArrayOfStructuredData(tblOffs, DataStore.NumBanks, 4);
 		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
@@ -90,7 +92,7 @@ public class BankLoader extends Thread implements Runnable
 						mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName*8)+ 4));
 					}
 					
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(String.valueOf(rom.readPokeText(mapNamePokePtr) + " (" + mapNum + "." + miniMapNum + ")")); //TODO: Pull PokeText from header
+					DefaultMutableTreeNode node = new DefaultMutableTreeNode(rom.readPokeText(mapNamePokePtr) + " (" + mapNum + "." + miniMapNum + ")"); //TODO: Pull PokeText from header
 					findNode(root,String.valueOf(mapNum)).add(node);
 					miniMapNum++;
 				}
@@ -117,7 +119,9 @@ public class BankLoader extends Thread implements Runnable
 			}
 		}
 		banksLoaded = true;
-		setStatus("Banks Loaded!");
+		
+		Date eD = new Date();
+		setStatus("Banks Loaded in " + (double)(eD.getTime() - d.getTime()) + "ms!");
 	}
 
 	public void setStatus(String status)
