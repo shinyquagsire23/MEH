@@ -41,7 +41,7 @@ public class SignPanel extends JPanel {
 		JButton btnSave = new JButton("Save");
 		btnSave.setBounds(12, 119, 68, 25);
 		btnSave.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent e) {
 				Save(Map.mapSignManager);
 			}

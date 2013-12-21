@@ -31,7 +31,7 @@ public class SpritesExitManager implements ISaveable {
 		}
 	}
     
-    @Override
+    
 	public void save()
 	{
 		for(SpritesExit e : mapExits)

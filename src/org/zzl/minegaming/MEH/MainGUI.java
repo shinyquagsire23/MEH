@@ -239,7 +239,7 @@ public class MainGUI extends JFrame
 		mnOpen = new JMenuItem("Open...");
 		mnOpen.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent e) 
 			{
 				openROM();
@@ -252,7 +252,7 @@ public class MainGUI extends JFrame
 		mnSave.enable(false);
 		mnSave.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -268,7 +268,7 @@ public class MainGUI extends JFrame
 		mnFile.add(mnSaveMap);
 		mnSaveMap.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -290,7 +290,7 @@ public class MainGUI extends JFrame
 	
 		chckbxmntmDrawSprites = new JCheckBoxMenuItem("Draw Sprites");
 		chckbxmntmDrawSprites.addMouseListener(new MouseAdapter() {
-			@Override
+			
 			public void mouseClicked(MouseEvent arg0) {
 				
 				DataStore.mehSettingShowSprites=chckbxmntmUsePlugins.isSelected() ? 1 : 0;
@@ -300,13 +300,13 @@ public class MainGUI extends JFrame
 			}
 		});
 		chckbxmntmDrawSprites.addMenuKeyListener(new MenuKeyListener() {
-			@Override
+			
 			public void menuKeyPressed(MenuKeyEvent arg0) {
 			}
-			@Override
+			
 			public void menuKeyReleased(MenuKeyEvent arg0) {
 			}
-			@Override
+			
 			public void menuKeyTyped(MenuKeyEvent arg0) {
 			}
 		});
@@ -341,7 +341,7 @@ public class MainGUI extends JFrame
 
 		btnOpenROM.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				openROM();
@@ -354,7 +354,7 @@ public class MainGUI extends JFrame
 		btnSaveROM.setToolTipText("Write changes to ROM file");
 		btnSaveROM.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -389,7 +389,7 @@ public class MainGUI extends JFrame
 		JButton btnNewMap = new JButton("");
 		btnNewMap.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) 
 			{
 				MapEditorPanel.renderPalette = !MapEditorPanel.renderPalette;
@@ -401,7 +401,7 @@ public class MainGUI extends JFrame
 		btnSaveMap.setToolTipText("Save Map to VROM");
 		btnSaveMap.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent e) 
 			{
 				loadedMap.save();
@@ -435,7 +435,7 @@ public class MainGUI extends JFrame
 		JButton btnImportMap = new JButton("");
 		btnImportMap.addActionListener(new ActionListener() 
 		{
-			@Override
+			
 			public void actionPerformed(ActionEvent e) 
 			{
 				MapEditorPanel.renderTileset = !MapEditorPanel.renderTileset;
@@ -590,7 +590,7 @@ public class MainGUI extends JFrame
 		splitPane.setDividerSize(1);
 		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, 
 				new PropertyChangeListener() {
-			@Override
+			
 			public void propertyChange(PropertyChangeEvent e)
 			{
 				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
@@ -608,7 +608,7 @@ public class MainGUI extends JFrame
 			}
 		});
 		splitPane.addComponentListener(new ComponentAdapter() {
-			@Override
+			
 			public void componentResized(ComponentEvent e) 
 			{
 				if(((JSplitPane)e.getSource()).getDividerLocation() > 300)
@@ -662,7 +662,7 @@ public class MainGUI extends JFrame
 	{
 		setPreferredSize(new Dimension(800, 800));
 		addWindowListener(new WindowAdapter() {
-			@Override
+			
 			public void windowClosing(WindowEvent e) 
 			{
 				//TODO: Are you *sure* you want to exit / Check for saved changes
@@ -744,14 +744,14 @@ public class MainGUI extends JFrame
 
 		mapBanks = new JTree();
 		mapBanks.addKeyListener(new KeyAdapter() {
-			@Override
+			
 			public void keyTyped(KeyEvent e) 
 			{
 				loadMap();
 			}
 		});
 		mapBanks.addTreeSelectionListener(new TreeSelectionListener() {
-			@Override
+			
 			public void valueChanged(TreeSelectionEvent e) 
 			{
 				try
@@ -766,7 +766,7 @@ public class MainGUI extends JFrame
 		});
 		mapBanks.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		mapBanks.addMouseListener(new MouseAdapter() {
-			@Override
+			
 			public void mouseClicked(MouseEvent e) 
 			{
 				if(e.getButton() == MouseEvent.BUTTON1)
@@ -792,13 +792,13 @@ public class MainGUI extends JFrame
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {
-			@Override
+			
 			public void mousePressed(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
 				}
 			}
-			@Override
+			
 			public void mouseReleased(MouseEvent e) {
 				if (e.isPopupTrigger()) {
 					showMenu(e);
@@ -834,7 +834,7 @@ public class MainGUI extends JFrame
 		lblInfo.setText("Loading map...");
 		new Thread()
 		{
-			@Override
+			
 			public void run()
 			{
 				Date d = new Date();

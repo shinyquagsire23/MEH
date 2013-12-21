@@ -33,7 +33,7 @@ public class SpritesSigns implements ISaveable {
 			 pScript=rom.getPointer();
 		 }
 
-	  @Override
+	  
 	public void save()
 	  {
 		   rom.Seek(pData);

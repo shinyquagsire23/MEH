@@ -51,7 +51,7 @@ public class TileEditorPanel extends JPanel
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
-			@Override
+			
 			public void mouseDragged(MouseEvent e)
 			{
 				int b1 = InputEvent.BUTTON1_DOWN_MASK;
@@ -63,7 +63,7 @@ public class TileEditorPanel extends JPanel
 				}
 			}
 
-			@Override
+			
 			public void mouseMoved(MouseEvent e)
 			{
 				mouseTracker.x=e.getX();
@@ -78,7 +78,7 @@ public class TileEditorPanel extends JPanel
 		this.addMouseListener(new MouseListener()
 		{
 
-			@Override
+			
 			public void mouseClicked(MouseEvent e)
 			{
 				int x = 0;
@@ -109,7 +109,7 @@ public class TileEditorPanel extends JPanel
 
 			}
 
-			@Override
+			
 			public void mousePressed(MouseEvent e)
 			{
 				if(e.getButton() == 3)
@@ -118,19 +118,19 @@ public class TileEditorPanel extends JPanel
 				}
 			}
 
-			@Override
+			
 			public void mouseExited(MouseEvent e)
 			{
 
 			}
 
-			@Override
+			
 			public void mouseEntered(MouseEvent e)
 			{
 				isMouseDown = true;
 			}
 
-			@Override
+			
 			public void mouseReleased(MouseEvent e)
 			{
 				if(e.getButton() == 3)
@@ -206,7 +206,7 @@ public class TileEditorPanel extends JPanel
 		}
 		return b;
 	}
-	@Override
+	
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);

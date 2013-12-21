@@ -48,7 +48,7 @@ public class ExitPanel extends JPanel {
 		
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent e) {
 				Save(Map.mapExitManager);
 			}

@@ -61,7 +61,7 @@ public class MapEditorPanel extends JPanel
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
-			@Override
+			
 			public void mouseDragged(MouseEvent e)
 			{
 				if (e.getModifiersEx() == 1024) 
@@ -111,7 +111,7 @@ public class MapEditorPanel extends JPanel
 				}
 			}
 
-			@Override
+			
 			public void mouseMoved(MouseEvent e)
 			{
 				if(map == null)
@@ -130,7 +130,7 @@ public class MapEditorPanel extends JPanel
 		this.addMouseListener(new MouseListener()
 		{
 
-			@Override
+			
 			public void mouseClicked(MouseEvent e)
 			{
 				int x = (mouseTracker.x / 16);
@@ -189,7 +189,7 @@ public class MapEditorPanel extends JPanel
 				}
 			}
 
-			@Override
+			
 			public void mousePressed(MouseEvent e)
 			{
 				if(e.getButton() == 3)
@@ -202,19 +202,19 @@ public class MapEditorPanel extends JPanel
 				}
 			}
 
-			@Override
+			
 			public void mouseExited(MouseEvent e)
 			{
 
 			}
 
-			@Override
+			
 			public void mouseEntered(MouseEvent e)
 			{
 
 			}
 
-			@Override
+			
 			public void mouseReleased(MouseEvent e)
 			{
 				if(e.getButton() == 3)
@@ -395,7 +395,7 @@ public class MapEditorPanel extends JPanel
 		return imgBuffer;
 	}
 	
-	@Override
+	
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);

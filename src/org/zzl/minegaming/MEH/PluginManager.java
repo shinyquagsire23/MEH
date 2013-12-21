@@ -33,7 +33,7 @@ public class PluginManager
 				btnPlugin.setToolTipText(plugin.getToolTip());
 				btnPlugin.addActionListener(new ActionListener() 
 				{
-					@Override
+					
 					public void actionPerformed(ActionEvent e) 
 					{
 						if(plugin.bLoadROM){

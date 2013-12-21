@@ -33,7 +33,6 @@ public class BorderEditorPanel extends JPanel
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
-			@Override
 			public void mouseDragged(MouseEvent e)
 			{
 				int x = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
@@ -87,7 +86,6 @@ public class BorderEditorPanel extends JPanel
 				}
 			}
 
-			@Override
 			public void mouseMoved(MouseEvent e)
 			{
 				mouseX = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
@@ -106,7 +104,6 @@ public class BorderEditorPanel extends JPanel
 		this.addMouseListener(new MouseListener()
 		{
 
-			@Override
 			public void mouseClicked(MouseEvent e)
 			{
 				int x = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
@@ -154,25 +151,6 @@ public class BorderEditorPanel extends JPanel
 				}
 			}
 
-			@Override
-			public void mouseEntered(MouseEvent arg0)
-			{
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0)
-			{
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0)
-			{
-				
-			}
-
-			@Override
 			public void mouseReleased(MouseEvent e)
 			{
 				if(e.getButton() == 3)
@@ -194,6 +172,24 @@ public class BorderEditorPanel extends JPanel
 						for(int y = 0; y < MapEditorPanel.bufferHeight; y++)
 							MapEditorPanel.selectBuffer[x][y] = (MapTile)map.getMapTileData().getTile(MapEditorPanel.selectBox.x / 16 + x, MapEditorPanel.selectBox.y / 16 + y).clone();
 				}
+			}
+
+			public void mousePressed(MouseEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseEntered(MouseEvent e)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+
+			public void mouseExited(MouseEvent e)
+			{
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}

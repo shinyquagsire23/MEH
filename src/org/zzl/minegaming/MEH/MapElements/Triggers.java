@@ -38,7 +38,7 @@ public class Triggers implements ISaveable {
 		  LoadTriggers(rom);
 	  }
 	  
-	  @Override
+	  
 	  public void save()
 	  {
 		  rom.Seek(pData);

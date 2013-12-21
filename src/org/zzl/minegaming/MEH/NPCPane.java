@@ -152,7 +152,7 @@ public class NPCPane extends JPanel{
 		
 		JButton btnSave = new JButton("Save");
 		btnSave.addActionListener(new ActionListener() {
-			@Override
+			
 			public void actionPerformed(ActionEvent arg0) {
 				Save(Map.mapNPCManager);
 			}

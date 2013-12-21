@@ -100,13 +100,13 @@ public class EventEditorPanel extends JPanel
 		this.addMouseMotionListener(new MouseMotionListener()
 		{
 
-			@Override
+			
 			public void mouseDragged(MouseEvent e)
 			{
 				
 			}
 
-			@Override
+			
 			public void mouseMoved(MouseEvent e)
 			{
 				
@@ -118,7 +118,7 @@ public class EventEditorPanel extends JPanel
 		this.addMouseListener(new MouseListener(){
 
 			@SuppressWarnings("unused")
-			@Override
+			
 			public void mouseClicked(MouseEvent e)
 			{
 				int x = (e.getX() / 16);
@@ -205,7 +205,7 @@ public class EventEditorPanel extends JPanel
 				}
 			}
 
-			@Override
+			
 			public void mousePressed(MouseEvent e)
 			{
 				int x = (e.getX() / 16);
@@ -231,19 +231,19 @@ public class EventEditorPanel extends JPanel
 				
 			}
 
-			@Override
+			
 			public void mouseExited(MouseEvent e)
 			{
 
 			}
 
-			@Override
+			
 			public void mouseEntered(MouseEvent e)
 			{
 
 			}
 
-			@Override
+			
 			public void mouseReleased(MouseEvent e)
 			{
 				int x = (e.getX() / 16);
@@ -384,7 +384,7 @@ public class EventEditorPanel extends JPanel
     		 gcBuff.drawImage(imgWarp, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);
     	}
     }
-	@Override
+	
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);

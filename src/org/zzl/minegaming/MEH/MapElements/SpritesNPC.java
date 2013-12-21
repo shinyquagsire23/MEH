@@ -58,7 +58,7 @@ public class SpritesNPC implements ISaveable {
 			 b24= rom.readByte();
 		 }
 
-	  @Override
+	  
 	  public void save()
 	  {
 		  	 rom.Seek(pData);

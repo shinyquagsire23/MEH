@@ -31,7 +31,7 @@ public class SpritesExit implements ISaveable {
 		bBank=rom.readByte();
 		pData = offset;
 	}
-	@Override
+	
 	public void save()
 	{
 		rom.Seek(pData);
