@@ -89,6 +89,7 @@ import javax.swing.event.MenuKeyListener;
 import javax.swing.event.MenuKeyEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JTextField;
 
 public class MainGUI extends JFrame
 {
@@ -455,6 +456,27 @@ public class MainGUI extends JFrame
 		 
 		wildPokemonPanel = new JPanel();
 		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
+		wildPokemonPanel.setLayout(new BorderLayout(0, 0));
+		
+		panel_8 = new JPanel();
+		panel_8.setPreferredSize(new Dimension(100, 10));
+		wildPokemonPanel.add(panel_8, BorderLayout.WEST);
+		
+		panel_6 = new JPanel();
+		wildPokemonPanel.add(panel_6, BorderLayout.CENTER);
+		panel_6.setLayout(new BorderLayout(0, 0));
+		
+		lblNewLabel_1 = new JLabel("<html>\n<center>\nHey there,\n<br/>\n<br/>\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokemon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.\n</center>\n</html>");
+		panel_6.add(lblNewLabel_1, BorderLayout.CENTER);
+		
+		lblNewLabel = new JLabel("Hey there,\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokemon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.");
+		lblNewLabel.setPreferredSize(new Dimension(51215, 15));
+		lblNewLabel.setMaximumSize(new Dimension(512, 15));
+		//panel_6.add(lblNewLabel);
+		
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(100, 10));
+		wildPokemonPanel.add(panel, BorderLayout.EAST);
 	}
 	JPanel mimePanel;//Mr. Mime 2 dirty 4 mii
 	private JPanel panel_4;
@@ -580,6 +602,10 @@ public class MainGUI extends JFrame
 	private JPanel connectionsTabPanel;
 	private JPanel connectinonsInfoPanel;
 	private JScrollPane connectionsEditorScroll;
+	private JLabel lblNewLabel;
+	private JPanel panel_6;
+	private JPanel panel_8;
+	private JLabel lblNewLabel_1;
 
 	
 	void CreateSplitPane(){
