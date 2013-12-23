@@ -8,29 +8,29 @@ import org.zzl.minegaming.MEH.DataStore;
 public class MapData implements ISaveable
 {
 	private GBARom rom;
-	private int dataLoc;
+	private MapHeader mapHeader;
 	public long mapWidth, mapHeight;
 	public int borderTilePtr, mapTilesPtr, globalTileSetPtr, localTileSetPtr;
 	public int borderWidth, borderHeight;
 	public int secondarySize;
 	
-	public MapData(GBARom rom, int mapDataLoc)
+	public MapData(GBARom rom, MapHeader mHeader)
 	{
 		this.rom = rom;
-		dataLoc = mapDataLoc;
+		mapHeader = mHeader;
 		load();
 	}
 	
 	public void load()
 	{
-		mapWidth = rom.getPointer(dataLoc,true);
-		mapHeight = rom.getPointer(dataLoc+0x4,true);
-		borderTilePtr = rom.getPointerAsInt(dataLoc+0x8);
-		mapTilesPtr = rom.getPointerAsInt(dataLoc+0xC);
-		globalTileSetPtr = rom.getPointerAsInt(dataLoc+0x10);
-		localTileSetPtr = rom.getPointerAsInt(dataLoc+0x14);
-		borderWidth = BitConverter.ToInts(rom.readBytes(dataLoc+0x18, 2))[0];
-		borderHeight = BitConverter.ToInts(rom.readBytes(dataLoc+0x18, 2))[1];
+		mapWidth = rom.getPointer(((int)mapHeader.pMap),true);
+		mapHeight = rom.getPointer(((int)mapHeader.pMap)+0x4,true);
+		borderTilePtr = rom.getPointerAsInt(((int)mapHeader.pMap)+0x8);
+		mapTilesPtr = rom.getPointerAsInt(((int)mapHeader.pMap)+0xC);
+		globalTileSetPtr = rom.getPointerAsInt(((int)mapHeader.pMap)+0x10);
+		localTileSetPtr = rom.getPointerAsInt(((int)mapHeader.pMap)+0x14);
+		borderWidth = BitConverter.ToInts(rom.readBytes(((int)mapHeader.pMap)+0x18, 2))[0];
+		borderHeight = BitConverter.ToInts(rom.readBytes(((int)mapHeader.pMap)+0x18, 2))[1];
 		secondarySize = borderWidth + 0xA0;
 		//System.out.println(borderWidth + " " + borderHeight);
 		if(DataStore.EngineVersion==0) //If this is a RSE game...
@@ -48,13 +48,13 @@ public class MapData implements ISaveable
 	
 	public void save()
 	{
-		rom.Seek(dataLoc);
+		rom.Seek(((int)mapHeader.pMap));
 		rom.writePointer(mapWidth);
 		rom.writePointer(mapHeight);
 		rom.writePointer(borderTilePtr);
 		rom.writePointer(mapTilesPtr);
 		rom.writePointer(globalTileSetPtr);
 		rom.writePointer(localTileSetPtr);
-		//rom.writeBytes(dataLoc, new byte[]{(byte)(borderWidth), (byte)(borderHeight)}); //Isn't quite working yet :/
+		//rom.writeBytes(((int)mapHeader.pMap), new byte[]{(byte)(borderWidth), (byte)(borderHeight)}); //Isn't quite working yet :/
 	}
 }

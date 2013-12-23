@@ -6,21 +6,21 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 public class ConnectionData
 {
 	private GBARom rom;
-	private int dataLoc;
+	private MapHeader mapHeader;
 	public long pNumConnections;
 	public long pData;
 	public Connection[] aConnections;
 	
-	public ConnectionData(GBARom rom, int pointer)
+	public ConnectionData(GBARom rom, MapHeader mHeader)
 	{
 		this.rom = rom;
-		this.dataLoc = pointer;
+		mapHeader = mHeader;
 		load();
 	}
 	
 	public void load()
 	{
-		rom.Seek(dataLoc);
+		rom.Seek(BitConverter.shortenPointer(mapHeader.pConnect));
 		pNumConnections = rom.getPointer(true);
 		pData = rom.getPointer(true);
 		aConnections = new Connection[BitConverter.shortenPointer(pNumConnections)];
@@ -34,7 +34,7 @@ public class ConnectionData
 	
 	public void save()
 	{
-		rom.Seek(dataLoc);
+		rom.Seek(BitConverter.shortenPointer(mapHeader.pConnect));
 		rom.writePointer(pNumConnections);
 		rom.writePointer(pData);
 		

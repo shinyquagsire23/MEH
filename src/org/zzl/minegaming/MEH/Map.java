@@ -51,16 +51,17 @@ public class Map implements ISaveable
 	{
 		this.dataOffset = dataOffset;
 		mapHeader = new MapHeader(rom, dataOffset);
-		mapConnections = new ConnectionData(rom, BitConverter.shortenPointer(mapHeader.pConnect));
+		mapConnections = new ConnectionData(rom, mapHeader);
 		mapSprites = new Sprites(rom, (int) mapHeader.pSprites);
+		
 		mapNPCManager=new SpritesNPCManager(rom, (int) mapSprites.pNPC, mapSprites.bNumNPC);
 		mapSignManager = new SpritesSignManager(rom,(int) mapSprites.pSigns, mapSprites.bNumSigns);
 		mapTriggerManager = new TriggerManager(rom, (int) mapSprites.pTraps, mapSprites.bNumTraps);
 		mapExitManager = new SpritesExitManager(rom, (int) mapSprites.pExits, mapSprites.bNumExits);
 		overworldSpritesManager= new OverworldSpritesManager(rom, mapNPCManager.mapNPCs);
 
-		mapData = new MapData(rom, (int)mapHeader.pMap);
-		mapTileData = new MapTileData(rom, BitConverter.shortenPointer(mapData.mapTilesPtr),mapData);
+		mapData = new MapData(rom, mapHeader);
+		mapTileData = new MapTileData(rom ,mapData);
 	    isEdited=true;
 	}
 	

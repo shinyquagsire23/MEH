@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 
 import java.awt.BorderLayout;
@@ -90,6 +91,7 @@ import javax.swing.event.MenuKeyEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.JTextField;
+import javax.swing.JSpinner;
 
 public class MainGUI extends JFrame
 {
@@ -285,38 +287,15 @@ public class MainGUI extends JFrame
 		JMenu mnSettings = new JMenu("Settings");
 		menuBar.add(mnSettings);
 		
-		mnMehSettings = new JMenu("MEH Settings");
-		mnSettings.add(mnMehSettings);
-		
-	
-		chckbxmntmDrawSprites = new JCheckBoxMenuItem("Draw Sprites");
-		chckbxmntmDrawSprites.addMouseListener(new MouseAdapter() {
-			
-			public void mouseClicked(MouseEvent arg0) {
-				
-				DataStore.mehSettingShowSprites=chckbxmntmUsePlugins.isSelected() ? 1 : 0;
-				
-			    DataStore.WriteNumberEntry("MEH", "mehSettingShowSprites",DataStore.mehSettingShowSprites );
-			    if(eventEditorPanel!=null)eventEditorPanel.DrawMap();	
+		JMenuItem mntmPreferences = new JMenuItem("Preferences...");
+		mntmPreferences.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				//TODO
 			}
 		});
-		chckbxmntmDrawSprites.addMenuKeyListener(new MenuKeyListener() {
-			
-			public void menuKeyPressed(MenuKeyEvent arg0) {
-			}
-			
-			public void menuKeyReleased(MenuKeyEvent arg0) {
-			}
-			
-			public void menuKeyTyped(MenuKeyEvent arg0) {
-			}
-		});
-		
-		chckbxmntmScriptEditor = new JCheckBoxMenuItem("Script Editor");
-		mnMehSettings.add(chckbxmntmScriptEditor);
-
-
-		mnMehSettings.add(chckbxmntmDrawSprites);
+		mnSettings.add(mntmPreferences);
 
 		JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
@@ -493,11 +472,11 @@ public class MainGUI extends JFrame
 		panel_1.add(lblWelcome);
 
 		lblWidth = new JLabel("Width: ");
-		lblWidth.setBounds(64, 107, 157, 15);
+		lblWidth.setBounds(64, 107, 65, 15);
 		panel_1.add(lblWidth);
 
 		lblHeight = new JLabel("Height: ");
-		lblHeight.setBounds(64, 123, 157, 15);
+		lblHeight.setBounds(64, 134, 65, 15);
 		panel_1.add(lblHeight);
 
 		lblBorderHeight = new JLabel("Border Height: ");
@@ -592,10 +571,7 @@ public class MainGUI extends JFrame
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
 	private JMenuItem mntmNewMenuItem_1;
-	private JMenu mnMehSettings;
 	private JCheckBoxMenuItem chckbxmntmUsePlugins;
-	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
-	private JCheckBoxMenuItem chckbxmntmScriptEditor;
 	private PermissionTilePanel permissionTilePanel;
 	private JScrollPane movementScrollPane;
 	private JPanel panel_7;
@@ -606,7 +582,8 @@ public class MainGUI extends JFrame
 	private JPanel panel_6;
 	private JPanel panel_8;
 	private JLabel lblNewLabel_1;
-
+	private static JSpinner spnHeight;
+	private static JSpinner spnWidth;
 	
 	void CreateSplitPane(){
 		splitPane = new JSplitPane();
@@ -717,6 +694,60 @@ public class MainGUI extends JFrame
 		mimePic.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		mimePic.setBounds(545, 71, 164, 164);
 		panel_1.add(mimePic);
+		
+		spnWidth = new JSpinner(new SpinnerNumberModel(1,1,9001,1));
+		spnWidth.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				if(!lblInfo.getText().startsWith("Done!"))
+					return;
+				try
+				{
+					int x = (Integer)spnWidth.getValue();
+					int y = (Integer)spnHeight.getValue();
+					loadedMap.getMapTileData().resize(x,y);
+					mapEditorPanel.Redraw = true;
+					eventEditorPanel.Redraw = true;
+					connectionsEditorPanel.loadConnections(loadedMap);
+					mapEditorPanel.repaint();
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+		});
+		spnWidth.setPreferredSize(new Dimension(40, 24));
+		spnWidth.setBounds(130, 105, 50, 24);
+		panel_1.add(spnWidth);
+		
+		spnHeight = new JSpinner(new SpinnerNumberModel(1,1,9001,1));
+		spnHeight.setPreferredSize(new Dimension(40, 24));
+		spnHeight.setBounds(130, 132, 50, 24);
+		spnHeight.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				if(!lblInfo.getText().startsWith("Done!"))
+					return;
+				try
+				{
+					int x = (Integer)spnWidth.getValue();
+					int y = (Integer)spnHeight.getValue();
+					loadedMap.getMapTileData().resize(x,y);
+					mapEditorPanel.Redraw = true;
+					eventEditorPanel.Redraw = true;
+					connectionsEditorPanel.loadConnections(loadedMap);
+					mapEditorPanel.repaint();
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
+			}
+		});
+		panel_1.add(spnHeight);
 		
 		connectionsTabPanel = new JPanel();
 		editorTabs.addTab("Connections", null, connectionsTabPanel, null);
@@ -832,8 +863,8 @@ public class MainGUI extends JFrame
 
 	public static void reloadMimeLabels()
 	{
-		lblWidth.setText("Width: " + loadedMap.getMapData().mapWidth);
-		lblHeight.setText("Height: " + loadedMap.getMapData().mapHeight);
+		spnWidth.setValue((int)loadedMap.getMapData().mapWidth);
+		spnHeight.setValue((int)loadedMap.getMapData().mapHeight);
 		lblBorderWidth.setText("Border Width: " + loadedMap.getMapData().borderWidth);
 		lblBorderHeight.setText("Border Height: " + loadedMap.getMapData().borderHeight);
 		lblMapTilesPointer.setText("Map Tiles Pointer: " + BitConverter.toHexString(loadedMap.getMapData().mapTilesPtr));
@@ -939,7 +970,7 @@ public class MainGUI extends JFrame
 		}
 		lblInfo.setText("Loading...");
 		
-		chckbxmntmDrawSprites.setSelected(DataStore.mehSettingShowSprites==1);
+		//chckbxmntmDrawSprites.setSelected(DataStore.mehSettingShowSprites==1); TODO Redo this in settings
 		new BankLoader((int)DataStore.MapHeaders,ROMManager.getActiveROM(),lblInfo,mapBanks).start();
 		new WildDataCache(ROMManager.getActiveROM()).start();
 		mnSave.enable(true);

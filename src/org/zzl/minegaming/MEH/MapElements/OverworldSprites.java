@@ -108,6 +108,7 @@ public class OverworldSprites {
 	 gcBuff.drawImage(getTile(14,iPal&0xf), 16, 24,null);
 	 gcBuff.drawImage(getTile(15,iPal&0xf), 24, 24,null);
      }catch(Exception e){
+    	 e.printStackTrace();
 	 gcBuff.drawRect(0, 0, 24, 24);   
      }
    
@@ -211,8 +212,8 @@ public class OverworldSprites {
 		{
 			
 			
-			int x = ((tileNum) % (8)) * 8;
-			int y = ((tileNum) / (8)) * 8;
+			int x = tileNum * 8;
+			int y = 0;
 			BufferedImage toSend = new BufferedImage(8,8,BufferedImage.TYPE_INT_ARGB);
 			try
 			{
@@ -220,7 +221,7 @@ public class OverworldSprites {
 			}
 			catch(Exception e)
 			{
-				//e.printStackTrace();
+				e.printStackTrace();
 				//System.out.println("Attempted to read 8x8 at " + x + ", " + y);
 			}
 		

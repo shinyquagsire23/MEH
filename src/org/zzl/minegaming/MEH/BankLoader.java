@@ -3,6 +3,7 @@ package org.zzl.minegaming.MEH;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 
 import javax.swing.JLabel;
 import javax.swing.JTree;
@@ -24,6 +25,7 @@ public class BankLoader extends Thread implements Runnable
 	public static ArrayList<Long>[] maps;
 	public static ArrayList<Long> bankPointers = new ArrayList<Long>();
 	public static boolean banksLoaded = false;
+	public static HashMap<Integer,String> mapNames = new HashMap<Integer,String>();
 	
 	public static void reset()
 	{
@@ -84,15 +86,35 @@ public class BankLoader extends Thread implements Runnable
 					int mapName = BitConverter.GrabBytesAsInts(rom.getData(), (int)((dataPtr - (8 << 24)) + 0x14), 1)[0];
 					//mapName -= 0x58; //TODO: Add Jambo51's map header hack
 					int mapNamePokePtr = 0;
+					String convMapName = "";
 					if(DataStore.EngineVersion==1)
-					{//FRLG
-						mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName - 0x58) * 4)); //TODO use the actual structure
-					}else if(DataStore.EngineVersion==0)//RSE
 					{
-						mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName*8)+ 4));
+						if(!mapNames.containsKey(mapName))
+						{
+							mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName - 0x58) * 4)); //TODO use the actual structure
+							convMapName = rom.readPokeText(mapNamePokePtr);
+							mapNames.put(mapName, convMapName);
+						}
+						else
+						{
+							convMapName = mapNames.get(mapName);
+						}
+					}
+					else if(DataStore.EngineVersion==0)//RSE
+					{
+						if(!mapNames.containsKey(mapName))
+						{
+							mapNamePokePtr = rom.getPointerAsInt((int)DataStore.MapLabels+ ((mapName*8)+ 4));
+							convMapName = rom.readPokeText(mapNamePokePtr);
+							mapNames.put(mapName, convMapName);
+						}
+						else
+						{
+							convMapName = mapNames.get(mapName);
+						}
 					}
 					
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(rom.readPokeText(mapNamePokePtr) + " (" + mapNum + "." + miniMapNum + ")"); //TODO: Pull PokeText from header
+					DefaultMutableTreeNode node = new DefaultMutableTreeNode(convMapName + " (" + mapNum + "." + miniMapNum + ")"); //TODO: Pull PokeText from header
 					findNode(root,String.valueOf(mapNum)).add(node);
 					miniMapNum++;
 				}

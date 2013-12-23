@@ -340,11 +340,12 @@ public class EventEditorPanel extends JPanel
     		if(DataStore.mehSettingShowSprites==1){
 	    	   
 	    		Image imgNPCs=OverworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
-	    		 int dstX=(n.bX*16);
-	    		 int dstY=(n.bY*16) - (OverworldSpritesManager.GetSprite(n.bSpriteSet & 0xFF).mSpriteSize > 0 ? 16 : 0);
-	    		gcBuff.drawImage(imgNPCs, dstX , dstY, dstX+ 64,  dstY + 64, 0, 0, 64, 64, this);
+	    		int adjX = (OverworldSpritesManager.GetSprite(n.bSpriteSet & 0xFF).mSpriteSize == 2 ? 8 : 0);
+	    		 int dstX=(n.bX*16) - adjX;
+	    		 int dstY=(n.bY*16) - (OverworldSpritesManager.GetSprite(n.bSpriteSet & 0xFF).mSpriteSize == 1 ? 16 : 0) - adjX*2;
+	    		gcBuff.drawImage(imgNPCs, dstX , dstY, this);
     		}else{
-    			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64,64, this);
+    			gcBuff.drawImage(imgNPC, n.bX*16, n.bY*16, this);
     		}
     	}
     }
