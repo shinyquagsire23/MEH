@@ -670,22 +670,26 @@ public class ConnectionsEditorPanel extends JPanel
 	{
 		try
 		{
-		up[0].save();
+			for(int i = 0; i < up.length; i++)
+				up[i].save();
 		}
 		catch(Exception e){}
 		try
 		{
-		down[0].save();
+			for(int i = 0; i < down.length; i++)
+				down[i].save();
 		}
 		catch(Exception e){}
 		try
 		{
-		left[0].save();
+			for(int i = 0; i < left.length; i++)
+				left[i].save();
 		}
 		catch(Exception e){}
 		try
 		{
-		right[0].save();
+			for(int i = 0; i < right.length; i++)
+				right[i].save();
 		}
 		catch(Exception e){}
 	}
