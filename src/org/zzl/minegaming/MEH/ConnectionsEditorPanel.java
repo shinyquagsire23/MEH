@@ -81,6 +81,21 @@ public class ConnectionsEditorPanel extends JPanel
 		addMouseListener(new MouseAdapter() 
 		{
 			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				if(e.getClickCount() > 1)
+				{
+					if (upRect.contains(e.getX(), e.getY()))
+						MainGUI.loadMap(upCon.bBank & 0xFF, upCon.bMap & 0xFF);
+					else if (downRect.contains(e.getX(), e.getY()))
+						MainGUI.loadMap(downCon.bBank & 0xFF, downCon.bMap & 0xFF);
+					else if (leftRect.contains(e.getX(), e.getY()))
+						MainGUI.loadMap(leftCon.bBank & 0xFF, leftCon.bMap & 0xFF);
+					else if (rightRect.contains(e.getX(), e.getY()))
+						MainGUI.loadMap(rightCon.bBank & 0xFF, rightCon.bMap & 0xFF);
+				}
+			}
+			@Override
 			public void mousePressed(MouseEvent e) 
 			{
 				System.out.println(e.getModifiersEx());
