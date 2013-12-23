@@ -50,7 +50,7 @@ public class ExitPanel extends JPanel {
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				Save(Map.mapExitManager);
+				Save(MainGUI.loadedMap.mapExitManager);
 			}
 		});
 		

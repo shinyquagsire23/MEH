@@ -154,7 +154,7 @@ public class NPCPane extends JPanel{
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				Save(Map.mapNPCManager);
+				Save(MainGUI.loadedMap.mapNPCManager);
 			}
 		});
 		add(btnSave);

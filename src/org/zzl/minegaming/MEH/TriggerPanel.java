@@ -62,7 +62,7 @@ public class TriggerPanel extends JPanel {
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-			Save(Map.mapTriggerManager);
+			Save(MainGUI.loadedMap.mapTriggerManager);
 			}
 		});
 		add(btnSave);

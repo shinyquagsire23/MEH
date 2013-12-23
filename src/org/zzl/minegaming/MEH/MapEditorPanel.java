@@ -350,46 +350,6 @@ public class MapEditorPanel extends JPanel
 		gcBuff.finalize();
 	}
 	
-	void DrawText(String Text, int x, int y){
-		gcBuff.drawRect(x , y, 16, 16);
-		gcBuff.drawString(Text,x,y+16);
-	}
-	void DrawNPCs(){
-
-		int i=0;
-		for(i=0;i<Map.mapNPCManager.mapNPCs.length;i++){
-			SpritesNPC n=Map.mapNPCManager.mapNPCs[i];
-			DrawText("N", n.bX*16 , n.bY*16);
-		}
-	}
-	void DrawTriggers(){
-
-		int i=0;
-		for(i=0;i<Map.mapTriggerManager.mapTriggers.length;i++){
-			Triggers n=Map.mapTriggerManager.mapTriggers[i];
-
-			DrawText("T", n.bX*16 , n.bY*16);
-		}
-	}
-	void DrawSigns(){
-
-		int i=0;
-		for(i=0;i<Map.mapSignManager.mapSigns.length;i++){
-			SpritesSigns n=Map.mapSignManager.mapSigns[i];
-
-			DrawText("S", n.bX*16 , n.bY*16);
-		}
-	}
-	void DrawExits(){
-
-		int i=0;
-		SpritesExit[] tmp=Map.mapExitManager.mapExits;
-		for(i=0;i<tmp.length;i++){
-			SpritesExit n=tmp[i];
-			DrawText("E", n.bX*16 , n.bY*16);
-		}
-	}
-	
 	public static Image getMapImage()
 	{
 		return imgBuffer;

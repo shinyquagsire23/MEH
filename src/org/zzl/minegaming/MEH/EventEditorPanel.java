@@ -22,17 +22,6 @@ import org.zzl.minegaming.MEH.MapElements.Triggers;
 
 public class EventEditorPanel extends JPanel
 {
-	private static EventEditorPanel instance = null;
-
-	public static EventEditorPanel getInstance()
-	{
-		if (instance == null)
-		{
-			instance = new EventEditorPanel();
-		}
-		return instance;
-	}
-
 	private static final long serialVersionUID = -877213633894324075L;
 	private Tileset globalTiles;
 	private Tileset localTiles;
@@ -58,25 +47,25 @@ public class EventEditorPanel extends JPanel
 	public void GrabSelectedEvent(MouseEvent e){
 		int x = (e.getX() / 16);
 		int y = (e.getY() / 16);
-		 IndexNPC=Map.mapNPCManager.IsPresent(x,y);
+		 IndexNPC=map.mapNPCManager.IsPresent(x,y);
 			if(IndexNPC!=-1){
 				
 				selectedEvent=0;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 				//return;
 			}
-			 IndexSign=Map.mapSignManager.IsPresent(x,y);
+			 IndexSign=map.mapSignManager.IsPresent(x,y);
 			if(IndexSign!=-1){
 				
 				selectedEvent=1;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 				return;
 			}
-			IndexExit=Map.mapExitManager.IsPresent(x,y);
+			IndexExit=map.mapExitManager.IsPresent(x,y);
 			if(IndexExit!=-1){
 			
 				selectedEvent=2;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
 				return;
 			}
-			 IndexTriggers=Map.mapTriggerManager.IsPresent(x,y);
+			 IndexTriggers=map.mapTriggerManager.IsPresent(x,y);
 			if(IndexTriggers!=-1){
 				
 				selectedEvent=3;//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger
@@ -137,25 +126,25 @@ public class EventEditorPanel extends JPanel
 				//If there's two events on tile, we'll handle that later with some kind of picker 
 					switch(selectedEvent){
 					case 0:
-						MainGUI.panel_5.add(new NPCPane(Map.mapNPCManager,IndexNPC));
+						MainGUI.panel_5.add(new NPCPane(map.mapNPCManager,IndexNPC));
 						
 						break;
 					case 1:
 						
-						MainGUI.panel_5.add(new SignPanel(Map.mapSignManager, IndexSign));
+						MainGUI.panel_5.add(new SignPanel(map.mapSignManager, IndexSign));
 						break;
 					case 2:
 						if(e.getClickCount() > 1)
 						{
 							//Load map number
-							MainGUI.loadMap(Map.mapExitManager.mapExits[IndexExit].bBank & 0xFF, Map.mapExitManager.mapExits[IndexExit].bMap & 0xFF);
+							MainGUI.loadMap(map.mapExitManager.mapExits[IndexExit].bBank & 0xFF, map.mapExitManager.mapExits[IndexExit].bMap & 0xFF);
 						}
 						else
-							MainGUI.panel_5.add(new ExitPanel(Map.mapExitManager, IndexExit));
+							MainGUI.panel_5.add(new ExitPanel(map.mapExitManager, IndexExit));
 						break;
 					case 3:
 						
-						MainGUI.panel_5.add(new TriggerPanel(Map.mapTriggerManager, IndexTriggers));
+						MainGUI.panel_5.add(new TriggerPanel(map.mapTriggerManager, IndexTriggers));
 						break;
 					
 						
@@ -164,6 +153,8 @@ public class EventEditorPanel extends JPanel
 				 
 					MainGUI.panel_5.revalidate();
 					MainGUI.panel_5.repaint();
+					Redraw = true;
+					repaint();
 				}
 				else if(e.getButton()==3)
 				{
@@ -174,17 +165,17 @@ public class EventEditorPanel extends JPanel
 						switch(selectedEvent){
 						case 0:
 							tmp=IndexNPC;
-							offset =(int) Map.mapNPCManager.mapNPCs[tmp].pScript;
+							offset =(int) map.mapNPCManager.mapNPCs[tmp].pScript;
 							
 							break;
 						case 1:
 							tmp=IndexSign;
-							offset =(int) Map.mapSignManager.mapSigns[tmp].pScript;
+							offset =(int) map.mapSignManager.mapSigns[tmp].pScript;
 							break;
 					
 						case 3:
 							tmp=IndexTriggers;
-							offset =(int) Map.mapTriggerManager.mapTriggers[tmp].pScript;
+							offset =(int) map.mapTriggerManager.mapTriggers[tmp].pScript;
 							break;
 						
 							
@@ -255,20 +246,20 @@ public class EventEditorPanel extends JPanel
 					try{
 					switch(s){//-1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is Trigger)
 					case 0:
-						Map.mapNPCManager.mapNPCs[IndexNPC].bX=(byte) x;
-						Map.mapNPCManager.mapNPCs[IndexNPC].bY=(byte) y;
+						map.mapNPCManager.mapNPCs[IndexNPC].bX=(byte) x;
+						map.mapNPCManager.mapNPCs[IndexNPC].bY=(byte) y;
 						break;
 					case 1:
-						Map.mapSignManager.mapSigns[IndexSign].bX=(byte) x;
-						Map.mapSignManager.mapSigns[IndexSign].bY=(byte) y;
+						map.mapSignManager.mapSigns[IndexSign].bX=(byte) x;
+						map.mapSignManager.mapSigns[IndexSign].bY=(byte) y;
 						break;
 					case 2:
-						Map.mapExitManager.mapExits[IndexExit].bX=(byte) x;
-						Map.mapExitManager.mapExits[IndexExit].bY=(byte) y;
+						map.mapExitManager.mapExits[IndexExit].bX=(byte) x;
+						map.mapExitManager.mapExits[IndexExit].bY=(byte) y;
 						break;
 					case 3:
-						Map.mapTriggerManager.mapTriggers[IndexTriggers].bX=(byte) x;
-						Map.mapTriggerManager.mapTriggers[IndexTriggers].bY=(byte) y;
+						map.mapTriggerManager.mapTriggers[IndexTriggers].bX=(byte) x;
+						map.mapTriggerManager.mapTriggers[IndexTriggers].bY=(byte) y;
 						break;
 					};
 					}catch(Exception e1){
@@ -344,8 +335,8 @@ public class EventEditorPanel extends JPanel
     	
     	int i=0;
     	
-    	for(i=0;i<Map.mapNPCManager.mapNPCs.length;i++){
-    		SpritesNPC n=Map.mapNPCManager.mapNPCs[i];
+    	for(i=0;i<map.mapNPCManager.mapNPCs.length;i++){
+    		SpritesNPC n=map.mapNPCManager.mapNPCs[i];
     		if(DataStore.mehSettingShowSprites==1){
 	    	   
 	    		Image imgNPCs=OverworldSpritesManager.GetImage(n.bSpriteSet & 0xFF);
@@ -360,8 +351,8 @@ public class EventEditorPanel extends JPanel
     void DrawTriggers(){
     	
     	int i=0;
-    	for(i=0;i<Map.mapTriggerManager.mapTriggers.length;i++){
-    		Triggers n=Map.mapTriggerManager.mapTriggers[i];
+    	for(i=0;i<map.mapTriggerManager.mapTriggers.length;i++){
+    		Triggers n=map.mapTriggerManager.mapTriggers[i];
     		
     		 gcBuff.drawImage(imgTrigger, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);
     	}
@@ -369,8 +360,8 @@ public class EventEditorPanel extends JPanel
     void DrawSigns(){
     	
     	int i=0;
-    	for(i=0;i<Map.mapSignManager.mapSigns.length;i++){
-    		SpritesSigns n=Map.mapSignManager.mapSigns[i];
+    	for(i=0;i<map.mapSignManager.mapSigns.length;i++){
+    		SpritesSigns n=map.mapSignManager.mapSigns[i];
     		
     		 gcBuff.drawImage(imgSign, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);
     	}
@@ -378,7 +369,7 @@ public class EventEditorPanel extends JPanel
     void DrawExits(){
     	
     	int i=0;
-    	SpritesExit[] tmp=Map.mapExitManager.mapExits;
+    	SpritesExit[] tmp=map.mapExitManager.mapExits;
     	for(i=0;i<tmp.length;i++){
     		SpritesExit n=tmp[i];
     		 gcBuff.drawImage(imgWarp, n.bX*16, n.bY*16,n.bX*16+ 16, n.bY*16 + 16, 0, 0, 64, 64, this);

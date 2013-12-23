@@ -43,7 +43,7 @@ public class SignPanel extends JPanel {
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				Save(Map.mapSignManager);
+				Save(MainGUI.loadedMap.mapSignManager);
 			}
 		});
 		add(btnSave);

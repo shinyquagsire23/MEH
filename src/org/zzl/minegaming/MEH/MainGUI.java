@@ -838,9 +838,10 @@ public class MainGUI extends JFrame
 			public void run()
 			{
 				Date d = new Date();
+				boolean firstLoad = false;
 				if(loadedMap != null)
 					TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
-
+				
 				long offset=BankLoader.maps[selectedBank].get(selectedMap);
 				loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
 				currentBank = selectedBank;
@@ -864,7 +865,9 @@ public class MainGUI extends JFrame
 				mapEditorPanel.DrawMap();
 				mapEditorPanel.DrawMovementPerms();
 				mapEditorPanel.repaint();
+				
 				eventEditorPanel.setMap(loadedMap);
+				eventEditorPanel.Redraw = true;
 				eventEditorPanel.DrawMap();
 				eventEditorPanel.repaint();
 				borderTileEditor.setGlobalTileset(TilesetCache.get(loadedMap.getMapData().globalTileSetPtr));

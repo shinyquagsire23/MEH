@@ -33,11 +33,11 @@ public class Map implements ISaveable
 	public ConnectionData mapConnections;
 	public Sprites mapSprites;
 	
-	public static SpritesNPCManager mapNPCManager;
-	public static SpritesSignManager mapSignManager;
-	public static SpritesExitManager mapExitManager;
-	public static TriggerManager mapTriggerManager;
-	public static OverworldSpritesManager overworldSpritesManager;
+	public SpritesNPCManager mapNPCManager;
+	public SpritesSignManager mapSignManager;
+	public SpritesExitManager mapExitManager;
+	public TriggerManager mapTriggerManager;
+	public OverworldSpritesManager overworldSpritesManager;
 	public int dataOffset = 0;
 	public OverworldSprites[] eventSprites;
 	public boolean isEdited;
@@ -101,7 +101,11 @@ public class Map implements ISaveable
 		
 		
 		BufferedImage imgBuffer = new BufferedImage(8,8, BufferedImage.TYPE_INT_ARGB);
-		Image tiles = MainGUI.tileEditorPanel.RerenderSecondary(MainGUI.tileEditorPanel.imgBuffer);
+		Image tiles;
+		if(!full)
+			tiles = MainGUI.tileEditorPanel.RerenderSecondary(MainGUI.tileEditorPanel.imgBuffer);
+		else
+			tiles = MainGUI.tileEditorPanel.RerenderTiles(MainGUI.tileEditorPanel.imgBuffer, 0);
 		try
 		{		
 			imgBuffer = new BufferedImage((int) map.getMapData().mapWidth * 16,
