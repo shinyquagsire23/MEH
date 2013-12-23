@@ -75,6 +75,7 @@ public class ConnectionsEditorPanel extends JPanel
 	
 	private static boolean dragging = false;
 	private static ConnectionType connectionDragging = null;
+	private static int connectionNumDragging = 0;
 	private Point startDrag = new Point(-1,-1);
 	private Point mouseTracker = new Point(-1,-1);
 	
@@ -87,34 +88,52 @@ public class ConnectionsEditorPanel extends JPanel
 			{
 				if(e.getClickCount() > 1)
 				{
-					if (upRect[0].contains(e.getX(), e.getY()))
-						MainGUI.loadMap(upCon[0].bBank & 0xFF, upCon[0].bMap & 0xFF);
-					else if (downRect[0].contains(e.getX(), e.getY()))
-						MainGUI.loadMap(downCon[0].bBank & 0xFF, downCon[0].bMap & 0xFF);
-					else if (leftRect[0].contains(e.getX(), e.getY()))
-						MainGUI.loadMap(leftCon[0].bBank & 0xFF, leftCon[0].bMap & 0xFF);
-					else if (rightRect[0].contains(e.getX(), e.getY()))
-						MainGUI.loadMap(rightCon[0].bBank & 0xFF, rightCon[0].bMap & 0xFF);
+					for(int i = 0; i < upRect.length; i++)
+						if (upRect[i].contains(e.getX(), e.getY()))
+							MainGUI.loadMap(upCon[i].bBank & 0xFF, upCon[i].bMap & 0xFF);
+					for(int i = 0; i < downRect.length; i++)
+						if (downRect[i].contains(e.getX(), e.getY()))
+							MainGUI.loadMap(downCon[i].bBank & 0xFF, downCon[i].bMap & 0xFF);
+					for(int i = 0; i < leftRect.length; i++)
+						if (leftRect[i].contains(e.getX(), e.getY()))
+							MainGUI.loadMap(leftCon[i].bBank & 0xFF, leftCon[i].bMap & 0xFF);
+					for(int i = 0; i < rightRect.length; i++)
+						if (rightRect[i].contains(e.getX(), e.getY()))
+							MainGUI.loadMap(rightCon[i].bBank & 0xFF, rightCon[i].bMap & 0xFF);
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) 
 			{
-				System.out.println(e.getModifiersEx());
 				if(e.getModifiersEx() != 1024)
 					return;
 				
-				System.out.println("Pressed");
 				startDrag = e.getPoint();
 				
-				if(upRect[0].contains(e.getX(), e.getY()))
+				for(int i = 0; i < upRect.length; i++)
+					if (upRect[i].contains(e.getX(), e.getY()))
+					{
 						connectionDragging = ConnectionType.UP;
-				else if(downRect[0].contains(e.getX(), e.getY()))
-					connectionDragging = ConnectionType.DOWN;
-				else if(leftRect[0].contains(e.getX(), e.getY()))
-					connectionDragging = ConnectionType.LEFT;
-				else if(rightRect[0].contains(e.getX(), e.getY()))
-					connectionDragging = ConnectionType.RIGHT;
+						connectionNumDragging = i;
+					}
+				for(int i = 0; i < downRect.length; i++)
+					if (downRect[i].contains(e.getX(), e.getY()))
+					{
+						connectionDragging = ConnectionType.DOWN;
+						connectionNumDragging = i;
+					}
+				for(int i = 0; i < leftRect.length; i++)
+					if (leftRect[i].contains(e.getX(), e.getY()))
+					{
+						connectionDragging = ConnectionType.LEFT;
+						connectionNumDragging = i;
+					}
+				for(int i = 0; i < rightRect.length; i++)
+					if (rightRect[i].contains(e.getX(), e.getY()))
+					{
+						connectionDragging = ConnectionType.RIGHT;
+						connectionNumDragging = i;
+					}
 				
 				dragging = true;
 			}
@@ -137,16 +156,16 @@ public class ConnectionsEditorPanel extends JPanel
 					switch(connectionDragging)
 					{
 						case UP:
-							upOfs[0] = (int)((startDrag.x - e.getX()) / (16 / scale));
+							upOfs[connectionNumDragging] = (int)((startDrag.x - e.getX()) / (16 / scale));
 							break;
 						case DOWN:
-							downOfs[0] = (int)((startDrag.x - e.getX()) / (16 / scale));
+							downOfs[connectionNumDragging] = (int)((startDrag.x - e.getX()) / (16 / scale));
 							break;
 						case LEFT:
-							leftOfs[0] = (int)((startDrag.y - e.getY()) / (16 / scale));
+							leftOfs[connectionNumDragging] = (int)((startDrag.y - e.getY()) / (16 / scale));
 							break;
 						case RIGHT:
-							rightOfs[0] = (int)((startDrag.y - e.getY()) / (16 / scale));
+							rightOfs[connectionNumDragging] = (int)((startDrag.y - e.getY()) / (16 / scale));
 							break;
 					}
 					RecalculateScaling(false, false);
