@@ -461,9 +461,8 @@ public class MainGUI extends JFrame
 	void CreateMimeTab(){
 		mimePanel = new JPanel();
 		editorTabs.addTab("Mime", null, mimePanel, null);
-		mimePanel.setLayout(null);
+		mimePanel.setLayout(new BorderLayout(0, 0));
 		panel_1 = new JPanel();
-		panel_1.setBounds(700, 0, 796, 454);
 		mimePanel.add(panel_1);
 		panel_1.setLayout(null);
 
@@ -575,7 +574,6 @@ public class MainGUI extends JFrame
 	private JCheckBoxMenuItem chckbxmntmUsePlugins;
 	public static JCheckBoxMenuItem chckbxmntmDrawSprites;
 	private JCheckBoxMenuItem chckbxmntmScriptEditor;
-	private JScrollPane scrollPane;
 	private PermissionTilePanel permissionTilePanel;
 	private JScrollPane movementScrollPane;
 	private JPanel panel_7;
@@ -693,10 +691,6 @@ public class MainGUI extends JFrame
 		mimePic.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		mimePic.setBounds(545, 71, 164, 164);
 		panel_1.add(mimePic);
-		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(0, 0, 2, 133);
-		mimePanel.add(scrollPane);
 		
 		connectionsTabPanel = new JPanel();
 		editorTabs.addTab("Connections", null, connectionsTabPanel, null);
