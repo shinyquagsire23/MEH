@@ -108,7 +108,7 @@ public class BorderEditorPanel extends JPanel
 			{
 				int x = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
 				int y = ((e.getY() - 20) / 16);
-				System.out.println(x + " " + y);
+				//System.out.println(x + " " + y);
 				if(e.getButton() == MouseEvent.BUTTON1)
 				{
 					int bufWidth = (MapEditorPanel.bufferWidth > map.getMapData().borderWidth ? map.getMapData().borderWidth : MapEditorPanel.bufferWidth);

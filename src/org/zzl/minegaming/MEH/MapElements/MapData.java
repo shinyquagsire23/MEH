@@ -32,7 +32,7 @@ public class MapData implements ISaveable
 		borderWidth = BitConverter.ToInts(rom.readBytes(dataLoc+0x18, 2))[0];
 		borderHeight = BitConverter.ToInts(rom.readBytes(dataLoc+0x18, 2))[1];
 		secondarySize = borderWidth + 0xA0;
-		System.out.println(borderWidth + " " + borderHeight);
+		//System.out.println(borderWidth + " " + borderHeight);
 		if(DataStore.EngineVersion==0) //If this is a RSE game...
 		{
 			borderWidth = 2;
