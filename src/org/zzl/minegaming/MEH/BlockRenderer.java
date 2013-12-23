@@ -40,10 +40,10 @@ public class BlockRenderer extends Component
 	public Image renderBlock(int blockNum, boolean transparency)
 	{
 		boolean isSecondaryBlock = false;
-		if(blockNum >= DataStore.MainTSSize)
+		if(blockNum >= DataStore.MainTSBlocks)
 		{
 			isSecondaryBlock = true;
-			blockNum -= DataStore.MainTSSize;
+			blockNum -= DataStore.MainTSBlocks;
 		}
 		
 		int blockPointer = (int) ((isSecondaryBlock ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (blockNum * 16));

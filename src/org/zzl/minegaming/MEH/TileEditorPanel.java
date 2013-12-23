@@ -181,7 +181,8 @@ public class TileEditorPanel extends JPanel
 	
 	public Image RerenderTiles(Image b, int startBlock, int endBlock, boolean completeRender)
 	{
-		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSBlocks / editorWidth)*(DataStore.LocalTSBlocks / editorWidth) *16);
+		//startBlock = DataStore.MainTSBlocks;
+		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSSize / editorWidth)*(DataStore.LocalTSSize / editorWidth) *16);
 		if(completeRender)
 		{
 			if(DataStore.EngineVersion == 0)
