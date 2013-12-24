@@ -1073,7 +1073,8 @@ public class MainGUI extends JFrame
 		try
 		{
 			Runtime r = Runtime.getRuntime();
-			r.exec((DataStore.mehSettingCallScriptEditor.toLowerCase().endsWith(".jar") ? "java -jar" : "") + DataStore.mehSettingCallScriptEditor + " \"" + ROMManager.currentROM.input_filepath.replace("\"", "") + "\" 0x" + String.format("%x", scriptOffset));
+			String s = (DataStore.mehSettingCallScriptEditor.toLowerCase().endsWith(".jar") ? "java -jar " : "") + DataStore.mehSettingCallScriptEditor + " \"" + ROMManager.currentROM.input_filepath.replace("\"", "") + "\" 0x" + String.format("%x", scriptOffset);
+			r.exec(s);
 		}
 		catch (IOException e)
 		{
