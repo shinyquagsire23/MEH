@@ -1,20 +1,29 @@
 package org.zzl.minegaming.MEH.MapElements;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
+import org.zzl.minegaming.MEH.ConnectionType;
 
 public class Connection
 {
 	private GBARom rom;
-	public int dataLoc;
 	public long lType, lOffset;
 	public byte bBank, bMap;
 	public int wFiller;
 	
-	public Connection(GBARom rom, int pointer)
+	public Connection(GBARom rom)
 	{
 		this.rom = rom;
-		dataLoc = pointer;
 		load();
+	}
+	
+	public Connection(GBARom rom, ConnectionType c, byte bank, byte map)
+	{
+		this.rom = rom;
+		lType = c.ordinal();
+		lOffset = 0;
+		bBank = bank;
+		bMap = map;
+		wFiller = 0;
 	}
 	
 	public void load()
@@ -24,14 +33,13 @@ public class Connection
 		bBank = rom.readByte();
 		bMap = rom.readByte();
 		wFiller = rom.readWord();
+		int i = 0;
 	}
 	
 	public void save()
 	{
-		rom.Seek(dataLoc);
 		rom.writePointer(lType);
 		rom.writeSignedPointer(lOffset);
-		int i = 0;
 		rom.writeByte(bBank);
 		rom.writeByte(bMap);
 		rom.writeWord(wFiller);

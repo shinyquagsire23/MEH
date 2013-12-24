@@ -160,6 +160,8 @@ public class DataStore
 		MainTSHeight = (int) ReadNumberEntry(ROMHeader, "MainTSHeight");
 		LocalTSHeight = (int) ReadNumberEntry(ROMHeader, "LocalTSHeight");
 		NumBanks = (int) ReadNumberEntry(ROMHeader, "NumBanks");
+		FreespaceStart = (int) ReadNumberEntry(ROMHeader, "FreespaceStart");
+		FreespaceByte = (byte) ReadNumberEntry(ROMHeader, "FreespaceByte");
 		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
 		MapBankSize = new int[NumBanks];
 	
@@ -198,7 +200,7 @@ public class DataStore
 				"mehSettingCallScriptEditor");
 		mehPermissionTranslucency= ReadFloatEntry("MEH", "mehPermissionTranslucency");
 		
- 
+		
 	}
 
 	public static void WriteNumberEntry(String Section, String key, int val)// Writes
@@ -316,6 +318,8 @@ public class DataStore
 	public static   int mehUsePlugins;
 	public static   int mehSettingShowSprites;
 	public static   String mehSettingCallScriptEditor;
+	public static 	long FreespaceStart;
+	public static	byte FreespaceByte;
 
 
 	public static   boolean bDataStoreInited;//Not stored in INI :p

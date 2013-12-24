@@ -1,20 +1,28 @@
 	package org.zzl.minegaming.MEH;
 
 	import java.awt.Rectangle;
+
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.TitledBorder;
 
 	import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPCManager;
+
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.BoxLayout;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class NPCPane extends JPanel{
 
@@ -22,7 +30,7 @@ public class NPCPane extends JPanel{
 	JLabel lblNPCNum;
 	JComboBox numNPCs;
 	JLabel lblb1;
-	JLabel lblSpriteSet;JTextField txtSpriteSet;
+	JLabel lblSpriteSet;JSpinner txtSpriteSet;
 	JLabel lblb3;
 	JLabel lblb4;
 	JLabel lblbX;JTextField txtX;
@@ -50,7 +58,7 @@ public class NPCPane extends JPanel{
 	private JTextField textField_1;
 	void Load(SpritesNPCManager mgr, int NPCIndex){
 		SpritesNPC t = mgr.mapNPCs[NPCIndex];
-		txtSpriteSet.setText(Byte.toString(t.bSpriteSet));
+		txtSpriteSet.setValue(t.bSpriteSet & 0xFF);
 		txtBehavior1.setText(Byte.toString(t.bBehavior1));
 		txtBehavior2.setText(Byte.toString(t.bBehavior2));
 		chkIsTrainer.setSelected(t.bIsTrainer==1);
@@ -59,8 +67,10 @@ public class NPCPane extends JPanel{
 		txtiFlag.setText(BitConverter.toHexString(t.iFlag));
 	}
 	void Save(SpritesNPCManager mgr){
+		try
+		{
 		SpritesNPC t = mgr.mapNPCs[myIndex];
-		mgr.mapNPCs[myIndex].bSpriteSet = Byte.parseByte(txtSpriteSet.getText());
+		mgr.mapNPCs[myIndex].bSpriteSet = (byte)((int)((Integer)txtSpriteSet.getValue()));
 		mgr.mapNPCs[myIndex].bBehavior1 = Byte.parseByte(txtBehavior1.getText());
 		mgr.mapNPCs[myIndex].bBehavior2 = Byte.parseByte(txtBehavior2.getText());
 		mgr.mapNPCs[myIndex].bIsTrainer = (byte) (chkIsTrainer.isSelected() ? 1:0);
@@ -68,6 +78,10 @@ public class NPCPane extends JPanel{
 		mgr.mapNPCs[myIndex].bTrainerLOS= Byte.parseByte(txtTrainerLOS.getText());
 		mgr.mapNPCs[myIndex].pScript= Integer.parseInt(txtScript.getText(), 16);
 		mgr.mapNPCs[myIndex].iFlag = Integer.parseInt(txtiFlag.getText());
+		}
+		catch(Exception e){}
+		MainGUI.eventEditorPanel.Redraw = true;
+		MainGUI.eventEditorPanel.repaint();
 	}
 	
     void CreateNPCPane(){
@@ -85,11 +99,16 @@ public class NPCPane extends JPanel{
 		add(lblSpriteSet);
 		lblSpriteSet.setBounds(10,38,lblSpriteSet.getText().length()*8,16);
 		Rectangle r=lblSpriteSet.getBounds();
-		txtSpriteSet =new JTextField();
-		txtSpriteSet.setColumns(2);
+		txtSpriteSet =new JSpinner(new SpinnerNumberModel(0,0,255,1));
+		txtSpriteSet.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) 
+			{
+				Save(MainGUI.loadedMap.mapNPCManager);
+			}
+		});
 		add(txtSpriteSet);
 		txtSpriteSet.setBounds(90,38,87,16);
-		txtSpriteSet.disable();
+		//txtSpriteSet.disable();
 		
 		
 		lblBehavior1=new JLabel("Behavior1:");

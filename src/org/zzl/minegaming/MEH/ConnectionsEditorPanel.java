@@ -271,7 +271,7 @@ public class ConnectionsEditorPanel extends JPanel
 				downImg[dC] = Map.renderMap(down[dC], false);
 				downCon[dC] = c;
 				dC++;
-				if(dC > 1)
+				//if(dC > 1)
 					System.out.println("Down");
 			}
 			else if (c.lType == 0x2)
@@ -280,7 +280,7 @@ public class ConnectionsEditorPanel extends JPanel
 				upImg[uC] = Map.renderMap(up[uC], false);
 				upCon[uC] = c;
 				uC++;
-				if(uC > 1)
+				//if(uC > 1)
 					System.out.println("Up");
 			}
 			else if(c.lType == 0x3)
@@ -289,7 +289,7 @@ public class ConnectionsEditorPanel extends JPanel
 				leftImg[lC] = Map.renderMap(left[lC], false);
 				leftCon[lC] = c;
 				lC++;
-				if(lC > 1)
+				//if(lC > 1)
 					System.out.println("Left");
 			}
 			else if(c.lType == 0x4)
@@ -298,7 +298,7 @@ public class ConnectionsEditorPanel extends JPanel
 				rightImg[rC] = Map.renderMap(right[rC], false);
 				rightCon[rC] = c;
 				rC++;
-				if(rC > 1)
+				//if(rC > 1)
 					System.out.println("Right");
 			}
 

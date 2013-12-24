@@ -3,6 +3,7 @@ package org.zzl.minegaming.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
+import org.zzl.minegaming.MEH.DataStore;
 
 public class MapTileData implements ISaveable
 {
@@ -65,7 +66,7 @@ public class MapTileData implements ISaveable
 		//TODO make this a setting, ie always repoint vs keep pointers
 		if(originalSize < getSize())
 		{
-			mData.mapTilesPtr = rom.findFreespace(getSize());
+			mData.mapTilesPtr = rom.findFreespace(DataStore.FreespaceStart, getSize());
 		}
 		
 		for(int x = 0; x < xSize; x++)

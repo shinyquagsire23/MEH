@@ -92,6 +92,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.JTextField;
 import javax.swing.JSpinner;
+import javax.swing.BoxLayout;
 
 public class MainGUI extends JFrame
 {
@@ -129,6 +130,8 @@ public class MainGUI extends JFrame
 	public static JLabel lblTileVal;
 	public DataStore dataStore;
 	private JPanel editorPanel;
+	static boolean doneLoading = false;
+	
 	void CreateToolbar(){
 		JToolBar toolBar = new JToolBar();
 		lblTileVal=new JLabel("Current Tile: 0x0000");
@@ -584,6 +587,12 @@ public class MainGUI extends JFrame
 	private JLabel lblNewLabel_1;
 	private static JSpinner spnHeight;
 	private static JSpinner spnWidth;
+	private JMenu mnAddCon;
+	private JMenuItem mntmLeftCon;
+	private JMenuBar menuBar_1;
+	private JMenuItem mntmRightCon;
+	private JMenuItem mntmUpCon;
+	private JMenuItem mntmDownCon;
 	
 	void CreateSplitPane(){
 		splitPane = new JSplitPane();
@@ -700,7 +709,7 @@ public class MainGUI extends JFrame
 		{
 			public void stateChanged(ChangeEvent e) 
 			{
-				if(!lblInfo.getText().startsWith("Done!"))
+				if(!doneLoading)
 					return;
 				try
 				{
@@ -729,7 +738,7 @@ public class MainGUI extends JFrame
 		{
 			public void stateChanged(ChangeEvent e) 
 			{
-				if(!lblInfo.getText().startsWith("Done!"))
+				if(!doneLoading)
 					return;
 				try
 				{
@@ -756,6 +765,58 @@ public class MainGUI extends JFrame
 		connectinonsInfoPanel = new JPanel();
 		connectinonsInfoPanel.setPreferredSize(new Dimension(10, 24));
 		connectionsTabPanel.add(connectinonsInfoPanel, BorderLayout.NORTH);
+		connectinonsInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+		
+		menuBar_1 = new JMenuBar();
+		menuBar_1.setBorderPainted(false);
+		connectinonsInfoPanel.add(menuBar_1);
+		
+		mnAddCon = new JMenu("Add...");
+		menuBar_1.add(mnAddCon);
+		
+		mntmLeftCon = new JMenuItem("Left Connection");
+		mntmLeftCon.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.LEFT);
+				g.setVisible(true);
+			}
+		});
+		mnAddCon.add(mntmLeftCon);
+		
+		mntmRightCon = new JMenuItem("Right Connection");
+		mntmRightCon.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.RIGHT);
+				g.setVisible(true);
+			}
+		});
+		mnAddCon.add(mntmRightCon);
+		
+		mntmUpCon = new JMenuItem("Up Connection");
+		mntmUpCon.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.UP);
+				g.setVisible(true);
+			}
+		});
+		mnAddCon.add(mntmUpCon);
+		
+		mntmDownCon = new JMenuItem("Down Connection");
+		mntmDownCon.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				ConnectionAddGUI g = new ConnectionAddGUI(ConnectionType.DOWN);
+				g.setVisible(true);
+			}
+		});
+		mnAddCon.add(mntmDownCon);
 		
 		
 		connectionsEditorPanel = new ConnectionsEditorPanel();
@@ -889,7 +950,7 @@ public class MainGUI extends JFrame
 			public void run()
 			{
 				Date d = new Date();
-				boolean firstLoad = false;
+				doneLoading = false;
 				if(loadedMap != null)
 					TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
 				
@@ -932,6 +993,7 @@ public class MainGUI extends JFrame
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
 				MainGUI.lblInfo.setText("Done! Finished in " + (double)(time / 1000) + " seconds!");
+				doneLoading = true;
 				
 				PluginManager.fireMapLoad(selectedBank, selectedMap);
 				
