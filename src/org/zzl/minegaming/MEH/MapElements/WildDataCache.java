@@ -8,7 +8,7 @@ import org.zzl.minegaming.MEH.MapID;
 
 public class WildDataCache extends Thread implements Runnable
 {
-	private static HashMap<MapID,WildData> dataCache = new HashMap<MapID,WildData>();
+	private static HashMap<Integer,WildData> dataCache = new HashMap<Integer,WildData>();
 	private static GBARom rom;
 	
 	public WildDataCache(GBARom rom)
@@ -26,14 +26,16 @@ public class WildDataCache extends Thread implements Runnable
 				break;
 			
 			WildData d = new WildData(rom,h);
-			dataCache.put(new MapID(h.bBank & 0xFF,h.bMap & 0xFF),d);
+			int num = (h.bBank & 0xFF) + ((h.bMap & 0xFF)<<8);
+			dataCache.put(num,d);
 			pData += (4 * 5);
 		}
 	}
 	
 	public static WildData getWildData(int bank, int map)
 	{
-		return dataCache.get(new MapID(bank,map));
+		int num = (bank & 0xFF) + ((map & 0xFF)<<8);
+		return dataCache.get(num);
 	}
 	
 	@Override

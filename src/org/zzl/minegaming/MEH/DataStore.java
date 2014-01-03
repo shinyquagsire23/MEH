@@ -162,6 +162,7 @@ public class DataStore
 		NumBanks = (int) ReadNumberEntry(ROMHeader, "NumBanks");
 		FreespaceStart = (int) ReadNumberEntry(ROMHeader, "FreespaceStart");
 		FreespaceByte = (byte) ReadNumberEntry(ROMHeader, "FreespaceByte");
+		SpeciesNames = (int) ReadNumberEntry(ROMHeader, "SpeciesNames");
 		String[] mBS = ReadString(ROMHeader, "MapBankSize").split(",");
 		MapBankSize = new int[NumBanks];
 	
@@ -196,8 +197,8 @@ public class DataStore
 		}
 		mehSettingShowSprites = (int) ReadNumberEntry("MEH", "mehSettingShowSprites");
 		mehUsePlugins = (int) ReadNumberEntry("MEH", "mehUsePlugins");
-		mehSettingCallScriptEditor = ReadString("MEH",
-				"mehSettingCallScriptEditor");
+		mehSettingCallScriptEditor = ReadString("MEH", "mehSettingCallScriptEditor");
+		NumPokemon = (int) ReadNumberEntry("MEH", "NumPokemon");
 		mehPermissionTranslucency= ReadFloatEntry("MEH", "mehPermissionTranslucency");
 		
 		
@@ -320,7 +321,8 @@ public class DataStore
 	public static   String mehSettingCallScriptEditor;
 	public static 	long FreespaceStart;
 	public static	byte FreespaceByte;
-
+	public static	int NumPokemon = 412;
+	public static 	int SpeciesNames;
 
 	public static   boolean bDataStoreInited;//Not stored in INI :p
 

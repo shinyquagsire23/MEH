@@ -12,9 +12,21 @@ public class WildData
 	{
 		this.rom = rom;
 		wildDataHeader = h;
-		aWildPokemon[0] = new WildPokemonData(rom, h.pGrass);
-		aWildPokemon[1] = new WildPokemonData(rom, h.pWater);
-		aWildPokemon[2] = new WildPokemonData(rom, h.pTrees);
-		aWildPokemon[3] = new WildPokemonData(rom, h.pFishing);
+		
+		rom.Seek((int)h.pGrass);
+		if(h.pGrass != 0)
+			aWildPokemon[0] = new WildPokemonData(rom, WildDataType.GRASS);
+		
+		rom.Seek((int)h.pWater);
+		if(h.pWater != 0)
+			aWildPokemon[1] = new WildPokemonData(rom, WildDataType.WATER);
+		
+		rom.Seek((int)h.pTrees);
+		if(h.pTrees != 0)
+			aWildPokemon[2] = new WildPokemonData(rom, WildDataType.TREE);
+		
+		rom.Seek((int)h.pFishing);
+		if(h.pFishing != 0)
+			aWildPokemon[3] = new WildPokemonData(rom, WildDataType.FISHING);
 	}
 }

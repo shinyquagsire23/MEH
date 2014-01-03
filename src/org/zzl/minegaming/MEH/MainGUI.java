@@ -60,6 +60,7 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ImagePanel;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 import org.zzl.minegaming.MEH.MapElements.TilesetCache;
+import org.zzl.minegaming.MEH.MapElements.WildData;
 import org.zzl.minegaming.MEH.MapElements.WildDataCache;
 
 import javax.swing.JPopupMenu;
@@ -93,6 +94,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.JTextField;
 import javax.swing.JSpinner;
 import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class MainGUI extends JFrame
 {
@@ -440,25 +443,932 @@ public class MainGUI extends JFrame
 		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
 		wildPokemonPanel.setLayout(new BorderLayout(0, 0));
 		
-		panel_8 = new JPanel();
-		panel_8.setPreferredSize(new Dimension(100, 10));
-		wildPokemonPanel.add(panel_8, BorderLayout.WEST);
 		
-		panel_6 = new JPanel();
-		wildPokemonPanel.add(panel_6, BorderLayout.CENTER);
-		panel_6.setLayout(new BorderLayout(0, 0));
+		panelWildEditor = new JPanel();
+		scrollPaneWildEditor = new JScrollPane(panelWildEditor);
+		scrollPaneWildEditor.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollPaneWildEditor.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneWildEditor.getVerticalScrollBar().setUnitIncrement(16);
+		wildPokemonPanel.add(scrollPaneWildEditor, BorderLayout.CENTER);
+		panelWildEditor.setLayout(null);
+		panelWildEditor.setPreferredSize(new Dimension(panelWildEditor.getWidth(),550));
 		
-		lblNewLabel_1 = new JLabel("<html>\n<center>\nHey there,\n<br/>\n<br/>\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokemon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.\n</center>\n</html>");
-		panel_6.add(lblNewLabel_1, BorderLayout.CENTER);
+		JPanel panelWildHeader = new JPanel();
+		panelWildHeader.setBounds(12, 12, 544, 83);
+		panelWildEditor.add(panelWildHeader);
+		panelWildHeader.setLayout(null);
+		
+		lblNewLabel_1 = new JLabel("Environment:");
+		lblNewLabel_1.setBounds(0, 5, 93, 15);
+		panelWildHeader.add(lblNewLabel_1);
+		
+		lblNewLabel_2 = new JLabel("Time of Day:");
+		lblNewLabel_2.setBounds(281, 5, 93, 15);
+		panelWildHeader.add(lblNewLabel_2);
+		
+		pkTime = new JComboBox();
+		pkTime.setEnabled(false);
+		pkTime.setModel(new DefaultComboBoxModel(new String[] {"Morning", "Day", "Evening", "Night"}));
+		pkTime.setSelectedIndex(1);
+		pkTime.setBounds(371, 0, 112, 24);
+		panelWildHeader.add(pkTime);
+		
+		pkEnvironment = new JComboBox();
+		pkEnvironment.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				currentType = pkEnvironment.getSelectedIndex();
+				loadWildPokemon();
+			}
+		});
+		pkEnvironment.setModel(new DefaultComboBoxModel(new String[] {"Grass", "Water", "Rock Smash", "Fishing"}));
+		pkEnvironment.setBounds(98, 0, 144, 24);
+		panelWildHeader.add(pkEnvironment);
+		
+		panelpk1_5 = new JPanel();
+		panelpk1_5.setBounds(12, 100, 544, 202);
+		panelWildEditor.add(panelpk1_5);
+		panelpk1_5.setLayout(null);
+		
+		JLabel lblpkmin = new JLabel("Min");
+		lblpkmin.setBounds(22, 12, 50, 15);
+		panelpk1_5.add(lblpkmin);
+		
+		lblpkmax = new JLabel("Max");
+		lblpkmax.setBounds(80, 12, 50, 15);
+		panelpk1_5.add(lblpkmax);
+		
+		lblPkMn = new JLabel("Pokemon");
+		lblPkMn.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPkMn.setBounds(147, 12, 159, 15);
+		panelpk1_5.add(lblPkMn);
+		
+		lblpknum = new JLabel("No.");
+		lblpknum.setHorizontalAlignment(SwingConstants.CENTER);
+		lblpknum.setBounds(306, 12, 50, 15);
+		panelpk1_5.add(lblpknum);
+		
+		lblpkchance = new JLabel("Chance");
+		lblpkchance.setBounds(382, 12, 70, 15);
+		panelpk1_5.add(lblpkchance);
+		
+		pkMin1 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin1.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin1.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[0].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMin1.setBounds(12, 30, 60, 32);
+		panelpk1_5.add(pkMin1);
+		
+		pkMax1 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax1.setBounds(75, 30, 60, 32);
+		panelpk1_5.add(pkMax1);
+		
+		pkName1 = new JComboBox();
+		pkName1.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo1.setValue(pkName1.getSelectedIndex());
+				try
+				{
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					d.aWildPokemon[currentType].aWildPokemon[0].wNum = pkName1.getSelectedIndex();
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkName1.setBounds(141, 30, 165, 32);
+		panelpk1_5.add(pkName1);
+		
+		pkNo1 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo1.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo1.getValue();
+				pkName1.setSelectedIndex(i);
+			}
+		});
+		pkNo1.setBounds(306, 30, 72, 32);
+		panelpk1_5.add(pkNo1);
+		
+		pkchance1 = new JLabel("20%");
+		pkchance1.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance1.setBounds(395, 38, 125, 15);
+		panelpk1_5.add(pkchance1);
+		
+		pkMin2 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin2.setBounds(12, 65, 60, 32);
+		pkMin2.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin2.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[1].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk1_5.add(pkMin2);
+		
+		pkMax2 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax2.setBounds(75, 65, 60, 32);
+		panelpk1_5.add(pkMax2);
+		
+		pkName2 = new JComboBox();
+		pkName2.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo2.setValue(pkName2.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[1].wNum = pkName2.getSelectedIndex();
+				}
+			catch(Exception ex){}
+			}
+		});
+		
+		pkName2.setBounds(141, 65, 165, 32);
+		panelpk1_5.add(pkName2);
+		
+		pkNo2 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo2.setBounds(306, 65, 72, 32);
+		pkNo2.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo2.getValue();
+				pkName2.setSelectedIndex(i);
+			}
+		});
+		panelpk1_5.add(pkNo2);
+		
+		pkchance2 = new JLabel("20%");
+		pkchance2.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance2.setBounds(395, 73, 125, 15);
+		panelpk1_5.add(pkchance2);
+		
+		pkMin3 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin3.setBounds(12, 98, 60, 32);
+		pkMin3.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin3.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[2].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk1_5.add(pkMin3);
+		
+		pkMax3 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax3.setBounds(75, 98, 60, 32);
+		panelpk1_5.add(pkMax3);
+		
+		pkName3 = new JComboBox();
+		pkName3.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo3.setValue(pkName3.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[2].wNum = pkName3.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		pkName3.setBounds(141, 98, 165, 32);
+		panelpk1_5.add(pkName3);
+		
+		pkNo3 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo3.setBounds(306, 98, 72, 32);
+		pkNo3.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo3.getValue();
+				pkName3.setSelectedIndex(i);
+			}
+		});
+		panelpk1_5.add(pkNo3);
+		
+		pkchance3 = new JLabel("10%");
+		pkchance3.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance3.setBounds(395, 106, 125, 15);
+		panelpk1_5.add(pkchance3);
+		
+		pkMin4 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin4.setBounds(12, 133, 60, 32);
+		pkMin4.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin4.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[3].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk1_5.add(pkMin4);
+		
+		pkMax4 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax4.setBounds(75, 133, 60, 32);
+		panelpk1_5.add(pkMax4);
+		
+		pkName4 = new JComboBox();
+		pkName4.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo4.setValue(pkName4.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[3].wNum = pkName4.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		pkName4.setBounds(141, 133, 165, 32);
+		panelpk1_5.add(pkName4);
+		
+		pkNo4 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo4.setBounds(306, 133, 72, 32);
+		pkNo4.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo4.getValue();
+				pkName4.setSelectedIndex(i);
+			}
+		});
+		panelpk1_5.add(pkNo4);
+		
+		pkchance4 = new JLabel("10%");
+		pkchance4.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance4.setBounds(395, 141, 125, 15);
+		panelpk1_5.add(pkchance4);
+		
+		pkMin5 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin5.setBounds(12, 168, 60, 32);
+		pkMin5.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin5.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[4].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk1_5.add(pkMin5);
+		
+		pkMax5 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax5.setBounds(75, 168, 60, 32);
+		panelpk1_5.add(pkMax5);
+		
+		pkName5 = new JComboBox();
+		pkName5.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo5.setValue(pkName5.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[4].wNum = pkName5.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		pkName5.setBounds(141, 168, 165, 32);
+		panelpk1_5.add(pkName5);
+		
+		pkNo5 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo5.setBounds(306, 168, 72, 32);
+		pkNo5.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo5.getValue();
+				pkName5.setSelectedIndex(i);
+			}
+		});
+		panelpk1_5.add(pkNo5);
+		
+		pkchance5 = new JLabel("10%");
+		pkchance5.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance5.setBounds(395, 176, 125, 15);
+		panelpk1_5.add(pkchance5);
+		
+		panelpk6_10 = new JPanel();
+		panelpk6_10.setLayout(null);
+		panelpk6_10.setBounds(12, 275, 544, 202);
+		panelWildEditor.add(panelpk6_10);
+		
+		pkMin6 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin6.setBounds(12, 30, 60, 32);
+		pkMin6.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin6.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[5].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk6_10.add(pkMin6);
+		
+		pkMax6 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax6.setBounds(75, 30, 60, 32);
+		panelpk6_10.add(pkMax6);
+		
+		pkName6 = new JComboBox();
+		pkName6.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo6.setValue(pkName6.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[5].wNum = pkName6.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		pkName6.setBounds(141, 30, 165, 32);
+		panelpk6_10.add(pkName6);
+		
+		pkNo6 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo6.setBounds(306, 30, 72, 32);
+		pkNo6.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo6.getValue();
+				pkName6.setSelectedIndex(i);
+			}
+		});
+		panelpk6_10.add(pkNo6);
+		
+		pkchance6 = new JLabel("10%");
+		pkchance6.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance6.setBounds(395, 38, 137, 15);
+		panelpk6_10.add(pkchance6);
+		
+		pkMin7 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin7.setBounds(12, 65, 60, 32);
+		pkMin7.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin7.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[6].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk6_10.add(pkMin7);
+		
+		pkMax7 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax7.setBounds(75, 65, 60, 32);
+		panelpk6_10.add(pkMax7);
+		
+		pkName7 = new JComboBox();
+		pkName7.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo7.setValue(pkName7.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[6].wNum = pkName7.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		pkName7.setBounds(141, 65, 165, 32);
+		panelpk6_10.add(pkName7);
+		
+		pkNo7 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo7.setBounds(306, 65, 72, 32);
+		pkNo7.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo7.getValue();
+				pkName7.setSelectedIndex(i);
+			}
+		});
+		panelpk6_10.add(pkNo7);
+		
+		pkchance7 = new JLabel("5%");
+		pkchance7.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance7.setBounds(395, 73, 137, 15);
+		panelpk6_10.add(pkchance7);
+		
+		pkMin8 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin8.setBounds(12, 98, 60, 32);
+		pkMin8.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin8.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[7].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk6_10.add(pkMin8);
+		
+		pkMax8 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax8.setBounds(75, 98, 60, 32);
+		panelpk6_10.add(pkMax8);
+		
+		pkName8 = new JComboBox();
+		pkName8.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo8.setValue(pkName8.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[7].wNum = pkName8.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		pkName8.setBounds(141, 98, 165, 32);
+		panelpk6_10.add(pkName8);
+		
+		pkNo8 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo8.setBounds(306, 98, 72, 32);
+		pkNo8.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo8.getValue();
+				pkName8.setSelectedIndex(i);
+			}
+		});
+		panelpk6_10.add(pkNo8);
+		
+		pkchance8 = new JLabel("5%");
+		pkchance8.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance8.setBounds(395, 106, 137, 15);
+		panelpk6_10.add(pkchance8);
+		
+		pkMin9 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin9.setBounds(12, 133, 60, 32);
+		pkMin9.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin9.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[8].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk6_10.add(pkMin9);
+		
+		pkMax9 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax9.setBounds(75, 133, 60, 32);
+		panelpk6_10.add(pkMax9);
+		
+		pkName9 = new JComboBox();
+		pkName9.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo9.setValue(pkName9.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[8].wNum = pkName9.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		pkName9.setBounds(141, 133, 165, 32);
+		panelpk6_10.add(pkName9);
+		
+		pkNo9 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo9.setBounds(306, 133, 72, 32);
+		pkNo9.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo9.getValue();
+				pkName9.setSelectedIndex(i);
+			}
+		});
+		panelpk6_10.add(pkNo9);
+		
+		pkchance9 = new JLabel("4%");
+		pkchance9.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance9.setBounds(395, 141, 137, 15);
+		panelpk6_10.add(pkchance9);
+		
+		pkMin10 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin10.setBounds(12, 168, 60, 32);
+		pkMin10.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin10.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[9].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk6_10.add(pkMin10);
+		
+		pkMax10 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax10.setBounds(75, 168, 60, 32);
+		panelpk6_10.add(pkMax10);
+		
+		pkName10 = new JComboBox();
+		pkName10.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo10.setValue(pkName10.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[9].wNum = pkName10.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+			
+		});
+		pkName10.setBounds(141, 168, 165, 32);
+		panelpk6_10.add(pkName10);
+		
+		pkNo10 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo10.setBounds(306, 168, 72, 32);
+		pkNo10.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo10.getValue();
+				pkName10.setSelectedIndex(i);
+			}
+		});
+		panelpk6_10.add(pkNo10);
+		
+		pkchance10 = new JLabel("4%");
+		pkchance10.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance10.setBounds(395, 176, 137, 15);
+		panelpk6_10.add(pkchance10);
+		
+		panelpk11_12 = new JPanel();
+		panelpk11_12.setBounds(12, 477, 544, 73);
+		panelWildEditor.add(panelpk11_12);
+		panelpk11_12.setLayout(null);
+		
+		pkMin11 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin11.setBounds(12, 0, 60, 32);
+		pkMin11.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin11.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[10].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk11_12.add(pkMin11);
+		
+		pkMin12 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMin12.setBounds(12, 35, 60, 32);
+		pkMin12.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMin12.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[11].bMinLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		panelpk11_12.add(pkMin12);
+		
+		pkMax11 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax11.setBounds(75, 0, 60, 32);
+		panelpk11_12.add(pkMax11);
+		
+		pkMax12 = new JSpinner(new SpinnerNumberModel(1,1,100,1));
+		pkMax12.setBounds(75, 35, 60, 32);
+		panelpk11_12.add(pkMax12);
+		
+		pkName11 = new JComboBox();
+		pkName11.setBounds(141, 0, 165, 32);
+		pkName11.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo11.setValue(pkName11.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[10].wNum = pkName11.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		panelpk11_12.add(pkName11);
+		
+		pkName12 = new JComboBox();
+		pkName12.setBounds(141, 35, 165, 32);
+		pkName12.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				pkNo12.setValue(pkName12.getSelectedIndex());
+				try
+				{
+				WildData d = WildDataCache.getWildData(currentBank, currentMap);
+				d.aWildPokemon[currentType].aWildPokemon[11].wNum = pkName12.getSelectedIndex();
+			}
+			catch(Exception ex){}
+			}
+		});
+		panelpk11_12.add(pkName12);
+		
+		pkNo11 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo11.setBounds(306, 0, 72, 32);
+		pkNo11.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo11.getValue();
+				pkName11.setSelectedIndex(i);
+			}
+		});
+		panelpk11_12.add(pkNo11);
+		
+		pkNo12 = new JSpinner(new SpinnerNumberModel(1,1,DataStore.NumPokemon,1));
+		pkNo12.setBounds(306, 35, 72, 32);
+		pkNo12.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				int i = (Integer)pkNo12.getValue();
+				pkName12.setSelectedIndex(i);
+			}
+		});
+		panelpk11_12.add(pkNo12);
+		
+		pkMax1.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax1.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[0].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax2.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax2.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[1].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax3.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax3.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[2].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax4.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax4.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[3].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax5.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax5.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[4].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax6.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax6.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[5].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax7.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax7.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[6].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax8.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax8.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[7].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax9.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax9.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[8].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax10.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax10.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[9].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax11.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax11.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[10].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkMax12.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					int i = (Integer)pkMax12.getValue();
+					d.aWildPokemon[currentType].aWildPokemon[11].bMaxLV = (byte)i;
+				}
+				catch(Exception ex){}
+			}
+		});
+		
+		pkchance11 = new JLabel("1%");
+		pkchance11.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance11.setBounds(395, 8, 137, 15);
+		panelpk11_12.add(pkchance11);
+		
+		pkchance12 = new JLabel("1%");
+		pkchance12.setHorizontalAlignment(SwingConstants.LEFT);
+		pkchance12.setBounds(395, 43, 70, 15);
+		panelpk11_12.add(pkchance12);
 		
 		lblNewLabel = new JLabel("Hey there,\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokemon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.");
 		lblNewLabel.setPreferredSize(new Dimension(51215, 15));
 		lblNewLabel.setMaximumSize(new Dimension(512, 15));
-		//panel_6.add(lblNewLabel);
-		
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(100, 10));
-		wildPokemonPanel.add(panel, BorderLayout.EAST);
 	}
 	JPanel mimePanel;//Mr. Mime 2 dirty 4 mii
 	private JPanel panel_4;
@@ -582,9 +1492,7 @@ public class MainGUI extends JFrame
 	private JPanel connectinonsInfoPanel;
 	private JScrollPane connectionsEditorScroll;
 	private JLabel lblNewLabel;
-	private JPanel panel_6;
-	private JPanel panel_8;
-	private JLabel lblNewLabel_1;
+	private JPanel panelWildEditor;
 	private static JSpinner spnHeight;
 	private static JSpinner spnWidth;
 	private JMenu mnAddCon;
@@ -593,6 +1501,75 @@ public class MainGUI extends JFrame
 	private JMenuItem mntmRightCon;
 	private JMenuItem mntmUpCon;
 	private JMenuItem mntmDownCon;
+	
+	private static JSpinner pkMin1;
+	private static JSpinner pkMax1;
+	private static JComboBox pkName1;
+	private static JSpinner pkNo1;
+	private static JPanel panelpk1_5;
+	private static JLabel lblpkmax;
+	private static JLabel lblPkMn;
+	private static JLabel lblpknum;
+	private static JLabel lblpkchance;
+	private static JLabel pkchance1;
+	private static JSpinner pkMin2;
+	private static JSpinner pkMax2;
+	private static JComboBox pkName2;
+	private static JSpinner pkNo2;
+	private static JLabel pkchance2;
+	private static JSpinner pkMin3;
+	private static JSpinner pkMax3;
+	private static JComboBox pkName3;
+	private static JSpinner pkNo3;
+	private static JLabel pkchance3;
+	private static JSpinner pkMin4;
+	private static JSpinner pkMax4;
+	private static JComboBox pkName4;
+	private static JSpinner pkNo4;
+	private static JLabel pkchance4;
+	private static JSpinner pkMin5;
+	private static JSpinner pkMax5;
+	private static JComboBox pkName5;
+	private static JSpinner pkNo5;
+	private static JLabel pkchance5;
+	private static JPanel panelpk6_10;
+	private static JSpinner pkMin6;
+	private static JSpinner pkMax6;
+	private static JComboBox pkName6;
+	private static JSpinner pkNo6;
+	private static JLabel pkchance6;
+	private static JSpinner pkMin7;
+	private static JSpinner pkMax7;
+	private static JComboBox pkName7;
+	private static JSpinner pkNo7;
+	private static JLabel pkchance7;
+	private static JSpinner pkMin8;
+	private static JSpinner pkMax8;
+	private static JComboBox pkName8;
+	private static JSpinner pkNo8;
+	private static JLabel pkchance8;
+	private static JSpinner pkMin9;
+	private static JSpinner pkMax9;
+	private static JComboBox pkName9;
+	private static JSpinner pkNo9;
+	private static JLabel pkchance9;
+	private static JSpinner pkMin10;
+	private static JSpinner pkMax10;
+	private static JComboBox pkName10;
+	private static JSpinner pkNo10;
+	private static JLabel pkchance10;
+	private static JPanel panelpk11_12;
+	private static JSpinner pkMin11;
+	private static JSpinner pkMin12;
+	private static JSpinner pkMax11;
+	private static JSpinner pkMax12;
+	private static JComboBox pkName11;
+	private static JComboBox pkName12;
+	private static JSpinner pkNo11;
+	private static JSpinner pkNo12;
+	private static JLabel pkchance11;
+	private static JLabel pkchance12;
+	private static JScrollPane scrollPaneWildEditor;
 	
 	void CreateSplitPane(){
 		splitPane = new JSplitPane();
@@ -670,7 +1647,7 @@ public class MainGUI extends JFrame
 	
 	public MainGUI()
 	{
-		setPreferredSize(new Dimension(800, 800));
+		setPreferredSize(new Dimension(800, 1800));
 		addWindowListener(new WindowAdapter() {
 			
 			public void windowClosing(WindowEvent e) 
@@ -851,6 +1828,7 @@ public class MainGUI extends JFrame
 		
 		CreatePermissions();
 		JPanel panel_3 = new JPanel();
+		panel_3.setPreferredSize(new Dimension(242, 10));
 		splitPane.setLeftComponent(panel_3);
 		panel_3.setLayout(new BorderLayout(0, 0));
 
@@ -941,9 +1919,23 @@ public class MainGUI extends JFrame
 		loadMap();
 	}
 	
-	private static void loadMap()
+	public static void loadMap()
+	{
+		long offset=BankLoader.maps[selectedBank].get(selectedMap);
+		loadMapFromPointer(offset, false);
+	}
+	
+	public static void loadMapFromPointer(long offs, boolean justPointer)
 	{
 		lblInfo.setText("Loading map...");
+		final long offset = offs;
+		
+		if(!justPointer)
+		{
+			currentBank = -1;
+			currentMap = -1;
+		}
+		
 		new Thread()
 		{
 			
@@ -954,7 +1946,6 @@ public class MainGUI extends JFrame
 				if(loadedMap != null)
 					TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); //Clean up any custom rendered tiles
 				
-				long offset=BankLoader.maps[selectedBank].get(selectedMap);
 				loadedMap = new Map(ROMManager.getActiveROM(), (int)(offset));
 				currentBank = selectedBank;
 				currentMap = selectedMap;
@@ -988,6 +1979,8 @@ public class MainGUI extends JFrame
 				borderTileEditor.repaint();
 				connectionsEditorPanel.loadConnections(loadedMap);
 				connectionsEditorPanel.repaint();
+				
+				loadWildPokemon();
 
 				mapEditorPanel.repaint();
 				Date eD = new Date();
@@ -1000,6 +1993,176 @@ public class MainGUI extends JFrame
 			}
 		}.start();
 	}
+	
+	public static String[] pokemonNames;
+	public static void loadPokemonNames()
+	{
+		pokemonNames = new String[DataStore.NumPokemon];
+		ROMManager.currentROM.Seek(ROMManager.currentROM.getPointerAsInt(DataStore.SpeciesNames));
+		for(int i = 0; i < DataStore.NumPokemon; i++)
+		{
+			pokemonNames[i] = ROMManager.currentROM.readPokeText();
+		}
+		addStringArray(pkName1,pokemonNames);
+		addStringArray(pkName2,pokemonNames);
+		addStringArray(pkName3,pokemonNames);
+		addStringArray(pkName4,pokemonNames);
+		addStringArray(pkName5,pokemonNames);
+		addStringArray(pkName6,pokemonNames);
+		addStringArray(pkName7,pokemonNames);
+		addStringArray(pkName8,pokemonNames);
+		addStringArray(pkName9,pokemonNames);
+		addStringArray(pkName10,pokemonNames);
+		addStringArray(pkName11,pokemonNames);
+		addStringArray(pkName12,pokemonNames);
+	}
+	
+	public static void addStringArray(JComboBox b, String[] strs)
+	{
+		b.removeAllItems();
+		for(String s : strs)
+			b.addItem(s);
+		b.repaint();
+	}
+	
+	public static int currentType = 0;
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_2;
+	private JComboBox pkTime;
+	private JComboBox pkEnvironment;
+	public static void loadWildPokemon()
+	{
+		WildData d = WildDataCache.getWildData(currentBank, currentMap);
+		if(currentBank != -1 && currentMap != -1 && d.aWildPokemon[currentType] != null)
+		{
+			panelpk1_5.setVisible(true);
+			
+			pkMin1.setValue((int) d.aWildPokemon[currentType].aWildPokemon[0].bMinLV);
+			pkMax1.setValue((int) d.aWildPokemon[currentType].aWildPokemon[0].bMaxLV);
+			pkName1.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[0].wNum);
+			pkName1.repaint();
+			pkNo1.setValue((int) d.aWildPokemon[currentType].aWildPokemon[0].wNum);
+
+			pkMin2.setValue((int) d.aWildPokemon[currentType].aWildPokemon[1].bMinLV);
+			pkMax2.setValue((int) d.aWildPokemon[currentType].aWildPokemon[1].bMaxLV);
+			pkName2.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[1].wNum);
+			pkName2.repaint();
+			pkNo2.setValue((int) d.aWildPokemon[currentType].aWildPokemon[1].wNum);
+
+			pkMin3.setValue((int) d.aWildPokemon[currentType].aWildPokemon[2].bMinLV);
+			pkMax3.setValue((int) d.aWildPokemon[currentType].aWildPokemon[2].bMaxLV);
+			pkName3.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[2].wNum);
+			pkName3.repaint();
+			pkNo3.setValue((int) d.aWildPokemon[currentType].aWildPokemon[2].wNum);
+
+			pkMin4.setValue((int) d.aWildPokemon[currentType].aWildPokemon[3].bMinLV);
+			pkMax4.setValue((int) d.aWildPokemon[currentType].aWildPokemon[3].bMaxLV);
+			pkName4.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[3].wNum);
+			pkName4.repaint();
+			pkNo4.setValue((int) d.aWildPokemon[currentType].aWildPokemon[3].wNum);
+
+			pkMin5.setValue((int) d.aWildPokemon[currentType].aWildPokemon[4].bMinLV);
+			pkMax5.setValue((int) d.aWildPokemon[currentType].aWildPokemon[4].bMaxLV);
+			pkName5.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[4].wNum);
+			pkName5.repaint();
+			pkNo5.setValue((int) d.aWildPokemon[currentType].aWildPokemon[4].wNum);
+
+			if (currentType == 0 || currentType == 3)
+			{
+				panelpk6_10.setVisible(true);
+				
+				pkMin6.setValue((int) d.aWildPokemon[currentType].aWildPokemon[5].bMinLV);
+				pkMax6.setValue((int) d.aWildPokemon[currentType].aWildPokemon[5].bMaxLV);
+				pkName6.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[5].wNum);
+				pkName6.repaint();
+				pkNo6.setValue((int) d.aWildPokemon[currentType].aWildPokemon[5].wNum);
+
+				pkMin7.setValue((int) d.aWildPokemon[currentType].aWildPokemon[6].bMinLV);
+				pkMax7.setValue((int) d.aWildPokemon[currentType].aWildPokemon[6].bMaxLV);
+				pkName7.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[6].wNum);
+				pkName7.repaint();
+				pkNo7.setValue((int) d.aWildPokemon[currentType].aWildPokemon[6].wNum);
+
+				pkMin8.setValue((int) d.aWildPokemon[currentType].aWildPokemon[7].bMinLV);
+				pkMax8.setValue((int) d.aWildPokemon[currentType].aWildPokemon[7].bMaxLV);
+				pkName8.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[7].wNum);
+				pkName8.repaint();
+				pkNo8.setValue((int) d.aWildPokemon[currentType].aWildPokemon[7].wNum);
+
+				pkMin9.setValue((int) d.aWildPokemon[currentType].aWildPokemon[8].bMinLV);
+				pkMax9.setValue((int) d.aWildPokemon[currentType].aWildPokemon[8].bMaxLV);
+				pkName9.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[8].wNum);
+				pkName9.repaint();
+				pkNo9.setValue((int) d.aWildPokemon[currentType].aWildPokemon[8].wNum);
+
+				pkMin10.setValue((int) d.aWildPokemon[currentType].aWildPokemon[9].bMinLV);
+				pkMax10.setValue((int) d.aWildPokemon[currentType].aWildPokemon[9].bMaxLV);
+				pkName10.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[9].wNum);
+				pkName10.repaint();
+				pkNo10.setValue((int) d.aWildPokemon[currentType].aWildPokemon[9].wNum);
+
+				if (currentType == 0)
+				{
+					panelpk11_12.setVisible(true);
+					
+					pkMin11.setValue((int) d.aWildPokemon[currentType].aWildPokemon[10].bMinLV);
+					pkMax11.setValue((int) d.aWildPokemon[currentType].aWildPokemon[10].bMaxLV);
+					pkName11.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[10].wNum);
+					pkName11.repaint();
+					pkNo11.setValue((int) d.aWildPokemon[currentType].aWildPokemon[10].wNum);
+
+					pkMin12.setValue((int) d.aWildPokemon[currentType].aWildPokemon[11].bMinLV);
+					pkMax12.setValue((int) d.aWildPokemon[currentType].aWildPokemon[11].bMaxLV);
+					pkName12.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[11].wNum);
+					pkName12.repaint();
+					pkNo12.setValue((int) d.aWildPokemon[currentType].aWildPokemon[11].wNum);
+					
+					pkchance1.setText("20%");
+					pkchance2.setText("20%");
+					pkchance3.setText("10%");
+					pkchance4.setText("10%");
+					pkchance5.setText("10%");
+					pkchance6.setText("10%");
+					pkchance7.setText("5%");
+					pkchance8.setText("5%");
+					pkchance9.setText("4%");
+					pkchance10.setText("4%");
+					pkchance11.setText("1%");
+					pkchance12.setText("1%");
+				}
+				else
+				{
+					pkchance1.setText("70%  (old rod)");
+					pkchance2.setText("30%  (old rod)");
+					pkchance3.setText("60%  (good rod)");
+					pkchance4.setText("20%  (good rod)");
+					pkchance5.setText("20%  (good rod)");
+					pkchance6.setText("40%  (super rod)");
+					pkchance7.setText("40%  (super rod)");
+					pkchance8.setText("15%  (super rod)");
+					pkchance9.setText("4%    (super rod)");
+					pkchance10.setText("1%    (super rod)");
+					panelpk11_12.setVisible(false);
+				}
+			}
+			else
+			{
+				pkchance1.setText("60%");
+				pkchance2.setText("30%");
+				pkchance3.setText("5%");
+				pkchance4.setText("4%");
+				pkchance5.setText("1%");
+				panelpk6_10.setVisible(false);
+				panelpk11_12.setVisible(false);
+			}
+		}
+		else
+		{
+			panelpk1_5.setVisible(false);
+			panelpk6_10.setVisible(false);
+			panelpk11_12.setVisible(false);
+		}
+	}
 
 	public static void repaintTileEditorPanel()
 	{
@@ -1011,6 +2174,7 @@ public class MainGUI extends JFrame
 		int i = GBARom.loadRom();
 
 		dataStore = new DataStore("MEH.ini", ROMManager.currentROM.getGameCode() );
+		loadPokemonNames();
 
 		if(1 != -1)
 		{
