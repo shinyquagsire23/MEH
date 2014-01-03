@@ -96,6 +96,7 @@ import javax.swing.JSpinner;
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JSlider;
 
 public class MainGUI extends JFrame
 {
@@ -121,6 +122,7 @@ public class MainGUI extends JFrame
 	public static JLabel lblHeight;
 	public static JLabel lblBorderHeight;
 	public static JLabel lblGlobalTilesetPointer;
+	public static JLabel lblEncounterPercent;
 	
 	private JPanel panel_1;
 	JPanel panelTilesContainer;
@@ -434,6 +436,7 @@ public class MainGUI extends JFrame
 		panelButtons.add(btnImportMap);
 		
 	}
+	private static JSlider pkEncounter;
 	
 	void CreateWildPokemonPanel(){
 		
@@ -485,6 +488,37 @@ public class MainGUI extends JFrame
 		pkEnvironment.setModel(new DefaultComboBoxModel(new String[] {"Grass", "Water", "Rock Smash", "Fishing"}));
 		pkEnvironment.setBounds(98, 0, 144, 24);
 		panelWildHeader.add(pkEnvironment);
+		
+		JLabel lblNewLabel_3 = new JLabel("Total Encounter Rate:");
+		lblNewLabel_3.setBounds(0, 55, 154, 15);
+		panelWildHeader.add(lblNewLabel_3);
+		
+		pkEncounter = new JSlider();
+		pkEncounter.addChangeListener(new ChangeListener() 
+		{
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+					int percent = Math.round((pkEncounter.getValue() / 255.0f) * 100);
+					lblEncounterPercent.setText(percent + "%");
+					
+					WildData d = WildDataCache.getWildData(currentBank, currentMap);
+					d.aWildPokemon[currentType].bRatio = (byte)pkEncounter.getValue();
+				}
+				catch(Exception ex){}
+			}
+		});
+		pkEncounter.setPaintTicks(true);
+		pkEncounter.setMajorTickSpacing(64);
+		pkEncounter.setValue(128);
+		pkEncounter.setMaximum(255);
+		pkEncounter.setBounds(158, 32, 200, 52);
+		panelWildHeader.add(pkEncounter);
+		
+		lblEncounterPercent = new JLabel("50%");
+		lblEncounterPercent.setBounds(370, 55, 70, 15);
+		panelWildHeader.add(lblEncounterPercent);
 		
 		panelpk1_5 = new JPanel();
 		panelpk1_5.setBounds(12, 100, 544, 202);
@@ -2033,8 +2067,16 @@ public class MainGUI extends JFrame
 	public static void loadWildPokemon()
 	{
 		WildData d = WildDataCache.getWildData(currentBank, currentMap);
+		if(d == null)
+		{
+			panelpk1_5.setVisible(false);
+			panelpk6_10.setVisible(false);
+			panelpk11_12.setVisible(false);
+		}
+		
 		if(currentBank != -1 && currentMap != -1 && d.aWildPokemon[currentType] != null)
 		{
+			pkEncounter.setValue(d.aWildPokemon[currentType].bRatio);
 			panelpk1_5.setVisible(true);
 			
 			pkMin1.setValue((int) d.aWildPokemon[currentType].aWildPokemon[0].bMinLV);
