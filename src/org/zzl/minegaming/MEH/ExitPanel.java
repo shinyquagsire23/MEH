@@ -1,18 +1,19 @@
 package org.zzl.minegaming.MEH;
 
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.border.TitledBorder;
 
 import org.zzl.minegaming.MEH.MapElements.SpritesExitManager;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-import javax.swing.JSpinner;
-import java.awt.Dimension;
-import java.awt.Component;
-import javax.swing.Box;
 
 public class ExitPanel extends JPanel {
 	int myIndex;

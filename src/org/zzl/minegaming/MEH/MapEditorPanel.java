@@ -16,12 +16,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.MEH.MapElements.MapTile;
-import org.zzl.minegaming.MEH.MapElements.SpritesExit;
-import org.zzl.minegaming.MEH.MapElements.SpritesNPC;
-import org.zzl.minegaming.MEH.MapElements.SpritesSigns;
 import org.zzl.minegaming.MEH.MapElements.Tileset;
-import org.zzl.minegaming.MEH.MapElements.Triggers;
 
 public class MapEditorPanel extends JPanel
 {

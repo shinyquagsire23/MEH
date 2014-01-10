@@ -1,16 +1,16 @@
 package org.zzl.minegaming.MEH;
 
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.MEH.MapElements.SpritesSignManager;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
 
 public class SignPanel extends JPanel {
 	private JTextField textField;

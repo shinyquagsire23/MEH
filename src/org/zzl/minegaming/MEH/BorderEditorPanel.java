@@ -4,7 +4,6 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -13,6 +12,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.MEH.MapElements.MapTile;
 import org.zzl.minegaming.MEH.MapElements.Tileset;
 
@@ -88,6 +88,7 @@ public class BorderEditorPanel extends JPanel
 
 			public void mouseMoved(MouseEvent e)
 			{
+				if(map==null) return;
 				mouseX = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
 				mouseY = ((e.getY() - 20) / 16);
 				

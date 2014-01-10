@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.MEH.MapElements.Tileset;
 
 public class BlockRenderer extends Component
