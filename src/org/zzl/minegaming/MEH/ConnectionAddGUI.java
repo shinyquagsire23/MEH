@@ -1,20 +1,21 @@
 package org.zzl.minegaming.MEH;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
 import javax.swing.JSpinner;
-import java.awt.Dimension;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import org.zzl.minegaming.GBAUtils.DataStore;
 
 public class ConnectionAddGUI extends JFrame
 {

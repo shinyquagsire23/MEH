@@ -2,6 +2,7 @@ package org.zzl.minegaming.MEH;
 
 import javax.swing.ImageIcon;
 
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class Plugin

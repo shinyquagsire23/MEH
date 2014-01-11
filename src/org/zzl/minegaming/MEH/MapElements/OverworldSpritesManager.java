@@ -2,8 +2,8 @@ package org.zzl.minegaming.MEH.MapElements;
 
 import java.awt.Image;
 
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
-import org.zzl.minegaming.MEH.DataStore;
 
 public class OverworldSpritesManager extends Thread implements Runnable
 {

@@ -1,102 +1,79 @@
 package org.zzl.minegaming.MEH;
 
-import javax.imageio.ImageIO;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
-
-import java.awt.BorderLayout;
-
-import javax.swing.JButton;
-
-import java.awt.Dimension;
-
-import javax.swing.JSplitPane;
-import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.FlowLayout;
-
-import javax.swing.JToolBar;
-
-import java.awt.Component;
-
-import javax.swing.Box;
-
 import java.awt.Adjustable;
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Desktop;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.SystemColor;
-
-import javax.swing.ImageIcon;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Date;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
+import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
+import javax.swing.JToolBar;
+import javax.swing.JTree;
+import javax.swing.JViewport;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ImagePanel;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 import org.zzl.minegaming.MEH.MapElements.TilesetCache;
 import org.zzl.minegaming.MEH.MapElements.WildData;
 import org.zzl.minegaming.MEH.MapElements.WildDataCache;
-
-import javax.swing.JPopupMenu;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JLabel;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeSelectionModel;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.border.TitledBorder;
-import javax.swing.border.LineBorder;
-
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-
-import javax.swing.JMenuItem;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.event.MenuKeyListener;
-import javax.swing.event.MenuKeyEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JSlider;
 
 public class MainGUI extends JFrame
 {
@@ -313,6 +290,7 @@ public class MainGUI extends JFrame
 	}
 	public static JPanel panelButtons;
 	void CreateButtons(){
+		System.out.println("Resource path:" + MainGUI.class.getResource("."));
 		panelButtons = new JPanel();
 		panelButtons.setPreferredSize(new Dimension(10, 50));
 		panelButtons.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));

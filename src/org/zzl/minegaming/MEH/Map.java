@@ -2,7 +2,6 @@ package org.zzl.minegaming.MEH;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
@@ -20,7 +19,6 @@ import org.zzl.minegaming.MEH.MapElements.Sprites;
 import org.zzl.minegaming.MEH.MapElements.SpritesExitManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesNPCManager;
 import org.zzl.minegaming.MEH.MapElements.SpritesSignManager;
-import org.zzl.minegaming.MEH.MapElements.Tileset;
 import org.zzl.minegaming.MEH.MapElements.TilesetCache;
 import org.zzl.minegaming.MEH.MapElements.TriggerManager;
 

@@ -1,16 +1,17 @@
 package org.zzl.minegaming.MEH;
 
-import javax.swing.JPanel;
-import javax.swing.border.TitledBorder;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.MEH.MapElements.TriggerManager;
 import org.zzl.minegaming.MEH.MapElements.Triggers;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class TriggerPanel extends JPanel {
 

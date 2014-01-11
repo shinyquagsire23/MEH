@@ -5,18 +5,18 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.MEH.MapElements.MapTile;
 import org.zzl.minegaming.MEH.MapElements.Tileset;
-
-import java.awt.event.InputEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 
 //TODO Make this a base class for *any* tileset, ie movement perms
 public class TileEditorPanel extends JPanel

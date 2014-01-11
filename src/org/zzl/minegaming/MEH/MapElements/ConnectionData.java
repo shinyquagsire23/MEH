@@ -3,9 +3,9 @@ package org.zzl.minegaming.MEH.MapElements;
 import java.util.ArrayList;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.MEH.ConnectionType;
-import org.zzl.minegaming.MEH.DataStore;
 import org.zzl.minegaming.MEH.MainGUI;
 
 public class ConnectionData
