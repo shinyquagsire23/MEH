@@ -78,6 +78,7 @@ import us.plxhack.MEH.IO.Map;
 import us.plxhack.MEH.IO.TilesetCache;
 import us.plxhack.MEH.MapElements.WildData;
 import us.plxhack.MEH.MapElements.WildDataCache;
+import us.plxhack.MEH.MapElements.WildDataType;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.Structures.ConnectionType;
 import us.plxhack.MEH.Structures.EditMode;
@@ -451,14 +452,14 @@ public class MainGUI extends JFrame
 		panelWildHeader.add(lblNewLabel_1);
 		
 		lblNewLabel_2 = new JLabel("Time of Day:");
-		lblNewLabel_2.setBounds(281, 5, 93, 15);
+		lblNewLabel_2.setBounds(320, 5, 93, 15);
 		panelWildHeader.add(lblNewLabel_2);
 		
 		pkTime = new JComboBox();
 		pkTime.setEnabled(false);
 		pkTime.setModel(new DefaultComboBoxModel(new String[] {"Morning", "Day", "Evening", "Night"}));
 		pkTime.setSelectedIndex(1);
-		pkTime.setBounds(371, 0, 112, 24);
+		pkTime.setBounds(409, 0, 112, 24);
 		panelWildHeader.add(pkTime);
 		
 		pkEnvironment = new JComboBox();
@@ -504,6 +505,38 @@ public class MainGUI extends JFrame
 		lblEncounterPercent = new JLabel("50%");
 		lblEncounterPercent.setBounds(370, 55, 70, 15);
 		panelWildHeader.add(lblEncounterPercent);
+		
+		JSplitPane splitPane_1 = new JSplitPane();
+		splitPane_1.setDividerSize(0);
+		splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		splitPane_1.setEnabled(false);
+		splitPane_1.setBounds(409, 30, 99, 52);
+		panelWildHeader.add(splitPane_1);
+		
+		JButton btnAddPokeData = new JButton("Add");
+		btnAddPokeData.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				WildDataCache.createWildDataIfNotExists(currentBank, currentMap).addWildData(WildDataType.values()[currentType]);
+				loadWildPokemon();
+			}
+		});
+		splitPane_1.setLeftComponent(btnAddPokeData);
+		
+		JButton btnRemovePokeData = new JButton("Remove");
+		btnRemovePokeData.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(WildDataCache.getWildData(currentBank, currentMap) == null)
+					return;
+				WildDataCache.getWildData(currentBank, currentMap).removeWildData(WildDataType.values()[currentType]);
+				loadWildPokemon();
+			}
+		});
+		splitPane_1.setRightComponent(btnRemovePokeData);
+		splitPane_1.setDividerLocation(25);
 		
 		panelpk1_5 = new JPanel();
 		panelpk1_5.setBounds(12, 100, 544, 202);
@@ -2233,6 +2266,7 @@ public class MainGUI extends JFrame
 	public void saveROM()
 	{
 		PluginManager.fireROMSave();
+		WildDataCache.save();
 		ROMManager.getActiveROM().commitChangesToROMFile();
 	}
 	

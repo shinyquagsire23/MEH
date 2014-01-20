@@ -3,11 +3,10 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class WildDataHeader implements ISaveable
+public class WildDataHeader
 {
 	public byte bBank, bMap;
 	public long pGrass, pWater, pTrees, pFishing;
-	private int pData;
 	private GBARom rom;
 	public WildDataHeader(GBARom rom)
 	{
@@ -16,8 +15,29 @@ public class WildDataHeader implements ISaveable
 	
 	public WildDataHeader(GBARom rom, int offset)
 	{
+		loadWildData(rom, offset);
+	}
+	
+	public WildDataHeader(GBARom rom, int bank, int map)
+	{
+			this.rom = rom;
+			
+			bBank = (byte)bank;
+			bMap = (byte)map;
+			pGrass = 0;
+			pWater = 0;
+			pTrees = 0;
+			pFishing = 0;
+	}
+	
+	public static int getSize()
+	{
+		return 20;
+	}
+	
+	private void loadWildData(GBARom rom, int offset)
+	{
 		this.rom = rom;
-		pData = offset;
 		
 		rom.Seek(offset);
 		bBank = rom.readByte();
@@ -29,16 +49,31 @@ public class WildDataHeader implements ISaveable
 		pFishing = rom.getPointer();
 	}
 	
-	
-	public void save()
+	public void save(int headerloc)
 	{
-		rom.Seek(pData);
+		rom.Seek(headerloc);
 		rom.writeByte(bBank);
 		rom.writeByte(bMap);
 		rom.internalOffset+=2; //Filler bytes
-		rom.writePointer(pGrass);
-		rom.writePointer(pWater);
-		rom.writePointer(pTrees);
-		rom.writePointer(pFishing);
+		
+		if(pGrass != 0)
+			rom.writePointer((int)pGrass);
+		else
+			rom.writePointer((long)0);
+		
+		if(pWater != 0)
+			rom.writePointer((int)pWater);
+		else
+			rom.writePointer((long)0);
+		
+		if(pTrees != 0)
+			rom.writePointer((int)pTrees);
+		else
+			rom.writePointer((long)0);
+		
+		if(pFishing != 0)
+			rom.writePointer((int)pFishing);
+		else
+			rom.writePointer((long)0);
 	}
 }

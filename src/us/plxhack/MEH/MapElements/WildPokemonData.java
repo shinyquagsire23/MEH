@@ -1,5 +1,6 @@
 package us.plxhack.MEH.MapElements;
 
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
@@ -7,6 +8,7 @@ public class WildPokemonData implements ISaveable
 {
 	private WildDataType type;
 	private GBARom rom;
+	private long pData;
 	public byte bRatio;
 	public long pPokemonData;
 	public WildPokemon[] aWildPokemon;
@@ -16,7 +18,6 @@ public class WildPokemonData implements ISaveable
 	public WildPokemonData(GBARom rom, WildDataType t)
 	{
 		this.rom = rom;
-		
 		type = t;
 		bRatio = rom.readByte();
 		rom.internalOffset += 0x3;
@@ -32,10 +33,27 @@ public class WildPokemonData implements ISaveable
 	
 	public WildPokemonData(GBARom rom, WildDataType t, byte ratio)
 	{
+		this.rom = rom;
 		type = t;
 		bRatio = ratio;
-		pPokemonData = rom.findFreespace(0);
-		//TODO rest of this stuff
+		pPokemonData = -1;
+		aWildPokemon = new WildPokemon[numPokemon[type.ordinal()]];
+		
+		rom.Seek((int)pPokemonData);
+		for(int i = 0; i < numPokemon[type.ordinal()]; i++)
+		{
+			aWildPokemon[i] = new WildPokemon(rom,1,1,0);
+		}
+	}
+	
+	public static int getSize()
+	{
+		return 8;
+	}
+	
+	public int getWildDataSize()
+	{
+		return numPokemon[type.ordinal()] * WildPokemon.getSize();
 	}
 	
 	public WildDataType getType()
@@ -47,7 +65,11 @@ public class WildPokemonData implements ISaveable
 	{
 		rom.writeByte(bRatio);
 		rom.internalOffset += 0x3;
-		rom.writePointer(pPokemonData);
+		
+		if(pPokemonData == -1)
+			pPokemonData = rom.findFreespace(DataStore.FreespaceStart, getWildDataSize());
+		
+		rom.writePointer((int)pPokemonData);
 		rom.Seek((int)pPokemonData);
 		for(int i = 0; i < numPokemon[type.ordinal()]; i++)
 		{
