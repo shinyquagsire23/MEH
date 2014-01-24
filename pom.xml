@@ -36,7 +36,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
-                            <mainClass>org.zzl.minegaming.MEH.Main</mainClass>
+                            <mainClass>us.plxhack.MEH.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
