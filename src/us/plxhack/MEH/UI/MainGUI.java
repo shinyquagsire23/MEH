@@ -2306,7 +2306,7 @@ public class MainGUI extends JFrame
 	public static void loadWildPokemon()
 	{
 		WildData d = WildDataCache.getWildData(currentBank, currentMap);
-		if (d == null)
+		if (d == null || d.aWildPokemon == null)
 		{
 			panelpk1_5.setVisible(false);
 			panelpk6_10.setVisible(false);
@@ -2314,7 +2314,7 @@ public class MainGUI extends JFrame
 			return;
 		}
 
-		if (currentBank != -1 && currentMap != -1 && d.aWildPokemon[currentType] != null)
+		if (currentBank != -1 && currentMap != -1 && d.aWildPokemon[currentType].aWildPokemon != null)
 		{
 			pkEncounter.setValue(d.aWildPokemon[currentType].bRatio);
 			panelpk1_5.setVisible(true);
