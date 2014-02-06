@@ -19,7 +19,7 @@ import javax.swing.event.ChangeListener;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 
-import us.plxhack.MEH.MapElements.SpritesNPC;
+import us.plxhack.MEH.MapElements.SpriteNPC;
 import us.plxhack.MEH.MapElements.SpritesNPCManager;
 
 public class NPCPane extends JPanel{
@@ -55,7 +55,7 @@ public class NPCPane extends JPanel{
 	private JTextField textField;
 	private JTextField textField_1;
 	void Load(SpritesNPCManager mgr, int NPCIndex){
-		SpritesNPC t = mgr.mapNPCs[NPCIndex];
+		SpriteNPC t = mgr.mapNPCs.get(NPCIndex);
 		txtSpriteSet.setValue(t.bSpriteSet & 0xFF);
 		txtBehavior1.setText(Byte.toString(t.bBehavior1));
 		txtBehavior2.setText(Byte.toString(t.bBehavior2));
@@ -67,15 +67,15 @@ public class NPCPane extends JPanel{
 	void Save(SpritesNPCManager mgr){
 		try
 		{
-		SpritesNPC t = mgr.mapNPCs[myIndex];
-		mgr.mapNPCs[myIndex].bSpriteSet = (byte)((int)((Integer)txtSpriteSet.getValue()));
-		mgr.mapNPCs[myIndex].bBehavior1 = Byte.parseByte(txtBehavior1.getText());
-		mgr.mapNPCs[myIndex].bBehavior2 = Byte.parseByte(txtBehavior2.getText());
-		mgr.mapNPCs[myIndex].bIsTrainer = (byte) (chkIsTrainer.isSelected() ? 1:0);
+		SpriteNPC t = mgr.mapNPCs.get(myIndex);
+		mgr.mapNPCs.get(myIndex).bSpriteSet = (byte)((int)((Integer)txtSpriteSet.getValue()));
+		mgr.mapNPCs.get(myIndex).bBehavior1 = Byte.parseByte(txtBehavior1.getText());
+		mgr.mapNPCs.get(myIndex).bBehavior2 = Byte.parseByte(txtBehavior2.getText());
+		mgr.mapNPCs.get(myIndex).bIsTrainer = (byte) (chkIsTrainer.isSelected() ? 1:0);
 		
-		mgr.mapNPCs[myIndex].bTrainerLOS= Byte.parseByte(txtTrainerLOS.getText());
-		mgr.mapNPCs[myIndex].pScript= Integer.parseInt(txtScript.getText(), 16);
-		mgr.mapNPCs[myIndex].iFlag = Integer.parseInt(txtiFlag.getText());
+		mgr.mapNPCs.get(myIndex).bTrainerLOS= Byte.parseByte(txtTrainerLOS.getText());
+		mgr.mapNPCs.get(myIndex).pScript= Integer.parseInt(txtScript.getText(), 16);
+		mgr.mapNPCs.get(myIndex).iFlag = Integer.parseInt(txtiFlag.getText());
 		}
 		catch(Exception e){}
 		MainGUI.eventEditorPanel.Redraw = true;

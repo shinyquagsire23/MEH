@@ -26,6 +26,7 @@ public class Plugin
 	public void loadROM(GBARom rom)
 	{
 		this.rom = rom;
+		
 		new DataStore("../MEH.ini", rom.getFriendlyROMHeader());//Init our data store and grab ini from outside plugin folder
 		//Do stuff when ROM is loaded
 	}

@@ -2,7 +2,7 @@ package us.plxhack.MEH.MapElements;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
 
-public class Sprites {
+public class HeaderSprites {
 	public   byte bNumNPC;
 	public   byte bNumExits;
 	public   byte bNumTraps;
@@ -13,11 +13,11 @@ public class Sprites {
 	public  long pSigns;
 	private int pData;
 	private GBARom rom;
-	public Sprites(GBARom rom){
+	public HeaderSprites(GBARom rom){
 
 		this(rom,rom.internalOffset);
 	}	  
-	public Sprites(GBARom rom, int offset){
+	public HeaderSprites(GBARom rom, int offset){
 
 		pData = offset;
 		this.rom = rom;

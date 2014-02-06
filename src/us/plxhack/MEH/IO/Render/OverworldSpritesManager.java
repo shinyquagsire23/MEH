@@ -1,9 +1,12 @@
-package us.plxhack.MEH.MapElements;
+package us.plxhack.MEH.IO.Render;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
+
+import us.plxhack.MEH.MapElements.SpriteNPC;
 
 public class OverworldSpritesManager extends Thread implements Runnable
 {
@@ -26,7 +29,7 @@ public class OverworldSpritesManager extends Thread implements Runnable
 			return loadSprite(index);
 	}
 	
-	public OverworldSpritesManager(GBARom rom, SpritesNPC[] NPCs)
+	public OverworldSpritesManager(GBARom rom)
 	{
 		OverworldSpritesManager.rom = rom;
 	}

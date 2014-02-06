@@ -17,10 +17,10 @@ public class SignPanel extends JPanel {
 	private JTextField textField;
 	int myIndex;
     void Load(SpritesSignManager mgr, int index){
-    	textField.setText(BitConverter.toHexString((int) mgr.mapSigns[index].pScript));
+    	textField.setText(BitConverter.toHexString((int) mgr.mapSigns.get(index).pScript));
     }
     void Save(SpritesSignManager mgr){
-    	mgr.mapSigns[myIndex].pScript = Integer.parseInt(textField.getText(), 16);
+    	mgr.mapSigns.get(myIndex).pScript = Integer.parseInt(textField.getText(), 16);
     }
 	/**
 	 * Create the panel.

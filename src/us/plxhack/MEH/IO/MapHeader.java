@@ -24,21 +24,7 @@ public class MapHeader implements ISaveable {
 	 public MapHeader(GBARom rom, int offset){
 		  bOffset=offset&0x1FFFFFF;
 		  this.rom = rom;
-		/*  pMap = rom.getPointer(bOffset);bOffset+=4;
-		  pSprites =rom.getPointer(bOffset);bOffset+=4;
-		  pScript = rom.getPointer(bOffset);bOffset+=4;
-		  pConnect = rom.getPointer(bOffset);bOffset+=4;
-		  hSong = rom.readWord(bOffset);bOffset+=2;
-		  hMap = rom.readWord(bOffset);bOffset+=2;
-
-		  bLabelID= rom.readByte(bOffset);bOffset+=1;
-		  bFlash= rom.readByte(bOffset);bOffset+=1;
-		  bWeather= rom.readByte(bOffset);bOffset+=1;
-		  bType= rom.readByte(bOffset);bOffset+=1;
-		  bUnused1= rom.readByte(bOffset);bOffset+=1;
-		  bUnused2= rom.readByte(bOffset);bOffset+=1;
-		  bLabelToggle= rom.readByte(bOffset);bOffset+=1;
-		  bUnused3= rom.readByte(bOffset);bOffset+=1;*/
+		  
 		  rom.Seek(bOffset);
   		  pMap = rom.getPointer();
 		  pSprites =rom.getPointer();

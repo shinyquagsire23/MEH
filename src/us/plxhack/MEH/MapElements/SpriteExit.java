@@ -3,7 +3,7 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class SpritesExit implements ISaveable {
+public class SpriteExit implements ISaveable {
 	public  byte bX;
 	public byte b2;
 	public byte bY;
@@ -12,12 +12,13 @@ public class SpritesExit implements ISaveable {
 	public byte b6;
 	public byte bMap;
 	public byte bBank;
-	private int pData;
 	private GBARom rom;
-	public  SpritesExit(GBARom rom){
+	
+	public  SpriteExit(GBARom rom){
 		this(rom,rom.internalOffset);
 	}
-	public SpritesExit(GBARom rom, int offset){
+	public SpriteExit(GBARom rom, int offset)
+	{
 		this.rom = rom; 
 		rom.Seek(offset);
 
@@ -29,12 +30,29 @@ public class SpritesExit implements ISaveable {
 		b6=rom.readByte();
 		bMap=rom.readByte();
 		bBank=rom.readByte();
-		pData = offset;
+	}
+	
+	public SpriteExit(GBARom rom, byte x, byte y)
+	{
+		this.rom = rom; 
+		
+		bX = x;
+		bY = y;
+		b2 = 0;
+		b4 = 0;
+		b5 = 0;
+		b6 = 0;
+		bMap = 0;
+		bBank = 0;
+	}
+	
+	public static int getSize()
+	{
+		return 8;
 	}
 	
 	public void save()
 	{
-		rom.Seek(pData);
 		rom.writeByte(bX);
 		rom.writeByte(b2);
 		rom.writeByte(bY);

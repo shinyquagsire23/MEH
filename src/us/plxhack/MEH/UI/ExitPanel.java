@@ -21,12 +21,12 @@ public class ExitPanel extends JPanel {
 	JSpinner spinner_1;
 	
 	void Load(SpritesExitManager mgr, int index){
-		spinner.setValue(mgr.mapExits[index].bBank);
-		spinner_1.setValue(mgr.mapExits[index].bMap);
+		spinner.setValue(mgr.mapExits.get(index).bBank);
+		spinner_1.setValue(mgr.mapExits.get(index).bMap);
 	}
     void Save(SpritesExitManager mgr){
-    	mgr.mapExits[myIndex].bBank = (Byte)spinner.getValue();
-    	mgr.mapExits[myIndex].bMap = (Byte)spinner_1.getValue();
+    	mgr.mapExits.get(myIndex).bBank = ((Byte)spinner.getValue()).byteValue();
+    	mgr.mapExits.get(myIndex).bMap = ((Integer)spinner_1.getValue()).byteValue();
     }
 	/**
 	 * Create the panel.

@@ -1,4 +1,4 @@
-package us.plxhack.MEH.MapElements;
+package us.plxhack.MEH.IO.Render;
 
 import java.awt.Graphics;
 import java.awt.Image;

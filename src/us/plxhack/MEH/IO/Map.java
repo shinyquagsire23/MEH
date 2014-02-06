@@ -10,9 +10,9 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
-import us.plxhack.MEH.MapElements.OverworldSprites;
-import us.plxhack.MEH.MapElements.OverworldSpritesManager;
-import us.plxhack.MEH.MapElements.Sprites;
+import us.plxhack.MEH.IO.Render.OverworldSprites;
+import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
+import us.plxhack.MEH.MapElements.HeaderSprites;
 import us.plxhack.MEH.MapElements.SpritesExitManager;
 import us.plxhack.MEH.MapElements.SpritesNPCManager;
 import us.plxhack.MEH.MapElements.SpritesSignManager;
@@ -28,7 +28,7 @@ public class Map implements ISaveable
 	private MapTileData mapTileData;
 	public MapHeader mapHeader; 
 	public ConnectionData mapConnections;
-	public Sprites mapSprites;
+	public HeaderSprites mapSprites;
 	
 	public SpritesNPCManager mapNPCManager;
 	public SpritesSignManager mapSignManager;
@@ -49,13 +49,13 @@ public class Map implements ISaveable
 		this.dataOffset = dataOffset;
 		mapHeader = new MapHeader(rom, dataOffset);
 		mapConnections = new ConnectionData(rom, mapHeader);
-		mapSprites = new Sprites(rom, (int) mapHeader.pSprites);
+		mapSprites = new HeaderSprites(rom, (int) mapHeader.pSprites);
 		
-		mapNPCManager=new SpritesNPCManager(rom, (int) mapSprites.pNPC, mapSprites.bNumNPC);
-		mapSignManager = new SpritesSignManager(rom,(int) mapSprites.pSigns, mapSprites.bNumSigns);
-		mapTriggerManager = new TriggerManager(rom, (int) mapSprites.pTraps, mapSprites.bNumTraps);
-		mapExitManager = new SpritesExitManager(rom, (int) mapSprites.pExits, mapSprites.bNumExits);
-		overworldSpritesManager= new OverworldSpritesManager(rom, mapNPCManager.mapNPCs);
+		mapNPCManager=new SpritesNPCManager(rom, this, (int) mapSprites.pNPC, mapSprites.bNumNPC);
+		mapSignManager = new SpritesSignManager(rom, this, (int)mapSprites.pSigns, mapSprites.bNumSigns);
+		mapTriggerManager = new TriggerManager(rom, this, (int) mapSprites.pTraps, mapSprites.bNumTraps);
+		mapExitManager = new SpritesExitManager(rom, this, (int) mapSprites.pExits, mapSprites.bNumExits);
+		overworldSpritesManager= new OverworldSpritesManager(rom);
 
 		mapData = new MapData(rom, mapHeader);
 		mapTileData = new MapTileData(rom ,mapData);
@@ -75,15 +75,18 @@ public class Map implements ISaveable
 	
 	public void save()
 	{
-		mapHeader.save();
-		mapConnections.save();
-		mapSprites.save();
+		//Save in reverse order in case we have repointing to do first.
+		mapTileData.save();
+		mapData.save();
+
 		mapNPCManager.save();
 		mapSignManager.save();
 		mapTriggerManager.save();
 		mapExitManager.save();
-		mapData.save();
-		mapTileData.save();
+		mapSprites.save();
+		
+		mapConnections.save();
+		mapHeader.save();
 	}
 
 	public static Image renderMap(int bank, int map)
