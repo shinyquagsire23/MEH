@@ -15,6 +15,7 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 
 import us.plxhack.MEH.IO.BorderMap;
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.Structures.EditMode;
@@ -152,7 +153,7 @@ public class BorderEditorPanel extends JPanel
 				{
 					TileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
 					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
-					MainGUI.repaintTileEditorPanel();
+					MapIO.repaintTileEditorPanel();
 				}
 			}
 

@@ -11,6 +11,7 @@ import javax.swing.border.TitledBorder;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.MapElements.TriggerManager;
 import us.plxhack.MEH.MapElements.Trigger;
 
@@ -72,7 +73,7 @@ public class TriggerPanel extends JPanel
 
 			public void actionPerformed(ActionEvent e)
 			{
-				Save(MainGUI.loadedMap.mapTriggerManager);
+				Save(MapIO.loadedMap.mapTriggerManager);
 			}
 		});
 		add(btnSave);

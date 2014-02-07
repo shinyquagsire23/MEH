@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.border.TitledBorder;
 
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.MapElements.SpritesExitManager;
 
 public class ExitPanel extends JPanel {
@@ -51,7 +52,7 @@ public class ExitPanel extends JPanel {
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				Save(MainGUI.loadedMap.mapExitManager);
+				Save(MapIO.loadedMap.mapExitManager);
 			}
 		});
 		

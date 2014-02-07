@@ -17,6 +17,7 @@ import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import us.plxhack.MEH.IO.Map;
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
@@ -157,7 +158,7 @@ public class EventEditorPanel extends JPanel
 						case SIGN:
 							if (e.getClickCount() > 1 && IndexSign >= 0)
 							{
-								MainGUI.openScript(BitConverter.shortenPointer(map.mapSignManager.mapSigns.get(IndexSign).pScript));
+								MapIO.openScript(BitConverter.shortenPointer(map.mapSignManager.mapSigns.get(IndexSign).pScript));
 							}
 							else if (IndexSign >= 0)
 								MainGUI.panel_5.add(new SignPanel(map.mapSignManager, IndexSign));
@@ -166,7 +167,7 @@ public class EventEditorPanel extends JPanel
 							if (e.getClickCount() > 1 && IndexExit >= 0)
 							{
 								// Load map number
-								MainGUI.loadMap(map.mapExitManager.mapExits.get(IndexExit).bBank & 0xFF, map.mapExitManager.mapExits.get(IndexExit).bMap & 0xFF);
+								MapIO.loadMap(map.mapExitManager.mapExits.get(IndexExit).bBank & 0xFF, map.mapExitManager.mapExits.get(IndexExit).bMap & 0xFF);
 							}
 							else if (IndexExit >= 0)
 								MainGUI.panel_5.add(new ExitPanel(map.mapExitManager, IndexExit));

@@ -11,6 +11,7 @@ import javax.swing.border.TitledBorder;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.MapElements.SpritesSignManager;
 
 public class SignPanel extends JPanel {
@@ -44,7 +45,7 @@ public class SignPanel extends JPanel {
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				Save(MainGUI.loadedMap.mapSignManager);
+				Save(MapIO.loadedMap.mapSignManager);
 			}
 		});
 		add(btnSave);
@@ -54,7 +55,7 @@ public class SignPanel extends JPanel {
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
-				MainGUI.openScript(Integer.parseInt(textField.getText(), 16));
+				MapIO.openScript(Integer.parseInt(textField.getText(), 16));
 			}
 		});
 		btnOpenScript.setBounds(56, 54, 142, 25);

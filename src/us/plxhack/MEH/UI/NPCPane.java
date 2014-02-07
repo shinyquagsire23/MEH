@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.MapElements.SpriteNPC;
 import us.plxhack.MEH.MapElements.SpritesNPCManager;
 
@@ -101,7 +102,7 @@ public class NPCPane extends JPanel{
 		txtSpriteSet.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) 
 			{
-				Save(MainGUI.loadedMap.mapNPCManager);
+				Save(MapIO.loadedMap.mapNPCManager);
 			}
 		});
 		add(txtSpriteSet);
@@ -171,7 +172,7 @@ public class NPCPane extends JPanel{
 		btnSave.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				Save(MainGUI.loadedMap.mapNPCManager);
+				Save(MapIO.loadedMap.mapNPCManager);
 			}
 		});
 		add(btnSave);

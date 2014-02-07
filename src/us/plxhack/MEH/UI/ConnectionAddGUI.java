@@ -17,6 +17,7 @@ import javax.swing.event.ChangeListener;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.Structures.ConnectionType;
 
 public class ConnectionAddGUI extends JFrame
@@ -88,7 +89,7 @@ public class ConnectionAddGUI extends JFrame
 			{
 				map = (Integer)spinnerMap.getValue();
 				bank = (Integer)spinnerBank.getValue();
-				MainGUI.loadedMap.mapConnections.addConnection(cType, (byte)bank, (byte)map);
+				MapIO.loadedMap.mapConnections.addConnection(cType, (byte)bank, (byte)map);
 			}
 		});
 		btnNewButton.setBounds(284, 224, 134, 25);

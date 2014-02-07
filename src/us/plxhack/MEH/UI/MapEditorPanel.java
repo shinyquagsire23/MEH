@@ -19,6 +19,7 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 
 import us.plxhack.MEH.IO.Map;
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.Structures.EditMode;
@@ -103,7 +104,7 @@ public class MapEditorPanel extends JPanel
 
 
 					map.isEdited = true;
-					MainGUI.mapEditorPanel.repaint();
+					MapIO.repaintTileEditorPanel();
 				}
 				else
 				{
@@ -186,7 +187,7 @@ public class MapEditorPanel extends JPanel
 						MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
 					}
 					
-					MainGUI.repaintTileEditorPanel();
+					MapIO.repaintTileEditorPanel();
 				}
 			}
 
@@ -430,7 +431,7 @@ public class MapEditorPanel extends JPanel
 		}
 		try
 		{
-			// g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")),
+			// g.drawImage(ImageIO.read(MapIO.class.getResourceAsStream("/resources/smeargle.png")),
 			// 100, 240, null);
 		}
 		catch (Exception e)

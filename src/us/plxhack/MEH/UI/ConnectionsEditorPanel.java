@@ -19,6 +19,7 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.IO.Connection;
 import us.plxhack.MEH.IO.Map;
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.Structures.ConnectionType;
 
 public class ConnectionsEditorPanel extends JPanel
@@ -88,16 +89,16 @@ public class ConnectionsEditorPanel extends JPanel
 				{
 					for(int i = 0; i < upRect.length; i++)
 						if (upRect[i].contains(e.getX(), e.getY()))
-							MainGUI.loadMap(upCon[i].bBank & 0xFF, upCon[i].bMap & 0xFF);
+							MapIO.loadMap(upCon[i].bBank & 0xFF, upCon[i].bMap & 0xFF);
 					for(int i = 0; i < downRect.length; i++)
 						if (downRect[i].contains(e.getX(), e.getY()))
-							MainGUI.loadMap(downCon[i].bBank & 0xFF, downCon[i].bMap & 0xFF);
+							MapIO.loadMap(downCon[i].bBank & 0xFF, downCon[i].bMap & 0xFF);
 					for(int i = 0; i < leftRect.length; i++)
 						if (leftRect[i].contains(e.getX(), e.getY()))
-							MainGUI.loadMap(leftCon[i].bBank & 0xFF, leftCon[i].bMap & 0xFF);
+							MapIO.loadMap(leftCon[i].bBank & 0xFF, leftCon[i].bMap & 0xFF);
 					for(int i = 0; i < rightRect.length; i++)
 						if (rightRect[i].contains(e.getX(), e.getY()))
-							MainGUI.loadMap(rightCon[i].bBank & 0xFF, rightCon[i].bMap & 0xFF);
+							MapIO.loadMap(rightCon[i].bBank & 0xFF, rightCon[i].bMap & 0xFF);
 				}
 			}
 			@Override

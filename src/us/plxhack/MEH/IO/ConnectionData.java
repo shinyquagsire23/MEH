@@ -81,6 +81,6 @@ public class ConnectionData
 			pData = rom.findFreespace(DataStore.FreespaceStart, getConnectionDataSize());
 		}
 		
-		MainGUI.connectionsEditorPanel.loadConnections(MainGUI.loadedMap);
+		MainGUI.connectionsEditorPanel.loadConnections(MapIO.loadedMap);
 	}
 }
