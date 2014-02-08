@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
+import us.plxhack.MEH.MapElements.WildData;
+import us.plxhack.MEH.MapElements.WildDataCache;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.DNPokePatcher;
 import us.plxhack.MEH.UI.MainGUI;
@@ -27,6 +29,7 @@ public class MapIO
 	public static int currentBank = 0;
 	public static int currentMap = 0;
 	public static boolean doneLoading = false;
+	public static WildData wildData;
 	
 	public static void loadMap(int bank, int map)
 	{
@@ -94,7 +97,15 @@ public class MapIO
 				MainGUI.borderTileEditor.repaint();
 				MainGUI.connectionsEditorPanel.loadConnections(loadedMap);
 				MainGUI.connectionsEditorPanel.repaint();
-
+				try
+				{
+					wildData = (WildData) WildDataCache.getWildData(currentBank, currentMap).clone();
+				}
+				catch (CloneNotSupportedException e)
+				{
+					e.printStackTrace();
+				}
+				
 				MainGUI.loadWildPokemon();
 
 				MainGUI.mapEditorPanel.repaint();
@@ -190,5 +201,27 @@ public class MapIO
 	{
 		DNPokePatcher n = new DNPokePatcher();
 		n.setVisible(true);
+	}
+
+	public static void saveMap()
+	{
+		MapIO.loadedMap.save();
+		MainGUI.connectionsEditorPanel.save(); // Save surrounding maps
+		WildDataCache.setWildData(currentBank, currentMap, wildData);
+		PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
+	}
+	
+	public static void saveROM()
+	{
+		PluginManager.fireROMSave();
+		
+		WildDataCache.save();
+		ROMManager.getActiveROM().commitChangesToROMFile();
+	}
+	
+	public static void saveAll()
+	{
+		saveMap();
+		saveROM();
 	}
 }

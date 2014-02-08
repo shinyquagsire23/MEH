@@ -58,6 +58,20 @@ public class WildDataCache extends Thread implements Runnable
 		return dataCache.get(num);
 	}
 	
+	public static void setWildData(int bank, int map, WildData d)
+	{
+		int num = (bank & 0xFF) + ((map & 0xFF)<<8);
+		dataCache.remove(num);
+		try
+		{
+			dataCache.put(num, (WildData)d.clone());
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public static WildData createWildDataIfNotExists(int bank, int map)
 	{
 		if(dataCache.containsKey((bank & 0xFF) + ((map & 0xFF)<<8)))

@@ -474,10 +474,7 @@ public class MainGUI extends JFrame
 
 			public void actionPerformed(ActionEvent e)
 			{
-				MapIO.loadedMap.save();
-				connectionsEditorPanel.save(); // Save surrounding maps
-				PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
-				saveROM();
+				MapIO.saveAll();
 			}
 		});
 		mnFile.add(mnSave);
@@ -490,9 +487,7 @@ public class MainGUI extends JFrame
 
 			public void actionPerformed(ActionEvent e)
 			{
-				MapIO.loadedMap.save();
-				connectionsEditorPanel.save(); // Save surrounding maps
-				PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
+				MapIO.saveMap();
 			}
 		});
 		mnFile.addSeparator();
@@ -573,15 +568,13 @@ public class MainGUI extends JFrame
 			{
 				try
 				{
-					MapIO.loadedMap.save();
-					connectionsEditorPanel.save(); // Save surrounding maps
-					PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
+					MapIO.saveMap();
 				}
 				catch(Exception ex)
 				{
 					ex.printStackTrace();
 				}
-				saveROM();
+				MapIO.saveROM();
 			}
 		});
 		btnSaveROM.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/ROMsave.png")));
@@ -625,9 +618,7 @@ public class MainGUI extends JFrame
 
 			public void actionPerformed(ActionEvent e)
 			{
-				MapIO.loadedMap.save();
-				connectionsEditorPanel.save(); // Save surrounding maps
-				PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
+				MapIO.saveMap();
 			}
 		});
 		btnSaveMap.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/mapsave.png")));
@@ -743,8 +734,7 @@ public class MainGUI extends JFrame
 					int percent = Math.round((pkEncounter.getValue() / 255.0f) * 100);
 					lblEncounterPercent.setText(percent + "%");
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].bRatio = (byte) pkEncounter.getValue();
+					MapIO.wildData.aWildPokemon[currentType].bRatio = (byte) pkEncounter.getValue();
 				}
 				catch (Exception ex)
 				{
@@ -811,8 +801,7 @@ public class MainGUI extends JFrame
 				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild pokemon data to a new format no longer supported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
 				if(result == JOptionPane.YES_OPTION)
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].convertToDN();
+					MapIO.wildData.aWildPokemon[currentType].convertToDN();
 					loadWildPokemon();
 				}
 			}
@@ -855,9 +844,8 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
 					int i = (Integer) pkMin1.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -879,9 +867,7 @@ public class MainGUI extends JFrame
 				pkNo1.setValue(pkName1.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
-					d = d;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -918,9 +904,8 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
 					int i = (Integer) pkMin2.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -941,8 +926,8 @@ public class MainGUI extends JFrame
 				pkNo2.setValue(pkName2.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum = pkName2.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum = pkName2.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -979,9 +964,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin3.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1002,8 +987,8 @@ public class MainGUI extends JFrame
 				pkNo3.setValue(pkName3.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum = pkName3.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum = pkName3.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1039,9 +1024,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin4.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1062,8 +1047,8 @@ public class MainGUI extends JFrame
 				pkNo4.setValue(pkName4.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum = pkName4.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum = pkName4.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1099,9 +1084,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin5.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1122,8 +1107,8 @@ public class MainGUI extends JFrame
 				pkNo5.setValue(pkName5.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum = pkName5.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum = pkName5.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1164,9 +1149,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin6.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1187,8 +1172,8 @@ public class MainGUI extends JFrame
 				pkNo6.setValue(pkName6.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum = pkName6.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum = pkName6.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1224,9 +1209,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin7.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1247,8 +1232,8 @@ public class MainGUI extends JFrame
 				pkNo7.setValue(pkName7.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum = pkName7.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum = pkName7.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1284,9 +1269,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin8.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1307,8 +1292,8 @@ public class MainGUI extends JFrame
 				pkNo8.setValue(pkName8.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum = pkName8.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum = pkName8.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1344,9 +1329,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin9.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1367,8 +1352,8 @@ public class MainGUI extends JFrame
 				pkNo9.setValue(pkName9.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum = pkName9.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum = pkName9.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1404,9 +1389,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin10.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1427,8 +1412,8 @@ public class MainGUI extends JFrame
 				pkNo10.setValue(pkName10.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum = pkName10.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum = pkName10.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1470,9 +1455,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin11.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1490,9 +1475,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMin12.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMinLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMinLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1518,8 +1503,8 @@ public class MainGUI extends JFrame
 				pkNo11.setValue(pkName11.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][10].wNum = pkName11.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].wNum = pkName11.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1537,8 +1522,8 @@ public class MainGUI extends JFrame
 				pkNo12.setValue(pkName12.getSelectedIndex());
 				try
 				{
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum = pkName12.getSelectedIndex();
+			
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum = pkName12.getSelectedIndex();
 				}
 				catch (Exception ex)
 				{
@@ -1578,9 +1563,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax1.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1594,9 +1579,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax2.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1610,9 +1595,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax3.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1626,9 +1611,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax4.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1642,9 +1627,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax5.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1658,9 +1643,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax6.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1674,9 +1659,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax7.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1690,9 +1675,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax8.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1706,9 +1691,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax9.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1722,9 +1707,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax10.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1738,9 +1723,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax11.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -1754,9 +1739,9 @@ public class MainGUI extends JFrame
 				try
 				{
 
-					WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
+			
 					int i = (Integer) pkMax12.getValue();
-					d.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMaxLV = (byte) i;
+					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMaxLV = (byte) i;
 				}
 				catch (Exception ex)
 				{
@@ -2248,8 +2233,8 @@ public class MainGUI extends JFrame
 
 	public static void loadWildPokemon()
 	{
-		WildData d = WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap);
-		if (d == null || d.aWildPokemon == null)
+
+		if (MapIO.wildData == null || MapIO.wildData.aWildPokemon == null)
 		{
 			panelpk1_5.setVisible(false);
 			panelpk6_10.setVisible(false);
@@ -2257,7 +2242,7 @@ public class MainGUI extends JFrame
 			return;
 		}
 		
-		if(d.aWildPokemon[currentType].bDNEnabled == 1)
+		if(MapIO.wildData.aWildPokemon[currentType].bDNEnabled == 1)
 			pkTime.enable();
 		else
 		{
@@ -2267,90 +2252,90 @@ public class MainGUI extends JFrame
 		
 		System.out.println(selectedTime);
 
-		if (MapIO.currentBank != -1 && MapIO.currentMap != -1 && d.aWildPokemon[currentType].aWildPokemon != null)
+		if (MapIO.currentBank != -1 && MapIO.currentMap != -1 && MapIO.wildData.aWildPokemon[currentType].aWildPokemon != null)
 		{
-			pkEncounter.setValue(d.aWildPokemon[currentType].bRatio);
+			pkEncounter.setValue(MapIO.wildData.aWildPokemon[currentType].bRatio);
 			panelpk1_5.setVisible(true);
 
-			pkMin1.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMinLV);
-			pkMax1.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMaxLV);
-			pkName1.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum);
+			pkMin1.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMinLV);
+			pkMax1.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMaxLV);
+			pkName1.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum);
 			pkName1.repaint();
-			pkNo1.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum);
+			pkNo1.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum);
 
-			pkMin2.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMinLV);
-			pkMax2.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMaxLV);
-			pkName2.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum);
+			pkMin2.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMinLV);
+			pkMax2.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMaxLV);
+			pkName2.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum);
 			pkName2.repaint();
-			pkNo2.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum);
+			pkNo2.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum);
 
-			pkMin3.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMinLV);
-			pkMax3.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMaxLV);
-			pkName3.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum);
+			pkMin3.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMinLV);
+			pkMax3.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMaxLV);
+			pkName3.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum);
 			pkName3.repaint();
-			pkNo3.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum);
+			pkNo3.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum);
 
-			pkMin4.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMinLV);
-			pkMax4.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMaxLV);
-			pkName4.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum);
+			pkMin4.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMinLV);
+			pkMax4.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMaxLV);
+			pkName4.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum);
 			pkName4.repaint();
-			pkNo4.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum);
+			pkNo4.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum);
 
-			pkMin5.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMinLV);
-			pkMax5.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMaxLV);
-			pkName5.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum);
+			pkMin5.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMinLV);
+			pkMax5.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMaxLV);
+			pkName5.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum);
 			pkName5.repaint();
-			pkNo5.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum);
+			pkNo5.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum);
 
 			if (currentType == 0 || currentType == 3)
 			{
 				panelpk6_10.setVisible(true);
 
-				pkMin6.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMinLV);
-				pkMax6.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMaxLV);
-				pkName6.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum);
+				pkMin6.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMinLV);
+				pkMax6.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].bMaxLV);
+				pkName6.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum);
 				pkName6.repaint();
-				pkNo6.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum);
+				pkNo6.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][5].wNum);
 
-				pkMin7.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMinLV);
-				pkMax7.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMaxLV);
-				pkName7.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum);
+				pkMin7.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMinLV);
+				pkMax7.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].bMaxLV);
+				pkName7.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum);
 				pkName7.repaint();
-				pkNo7.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum);
+				pkNo7.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][6].wNum);
 
-				pkMin8.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMinLV);
-				pkMax8.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMaxLV);
-				pkName8.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum);
+				pkMin8.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMinLV);
+				pkMax8.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].bMaxLV);
+				pkName8.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum);
 				pkName8.repaint();
-				pkNo8.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum);
+				pkNo8.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][7].wNum);
 
-				pkMin9.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMinLV);
-				pkMax9.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMaxLV);
-				pkName9.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum);
+				pkMin9.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMinLV);
+				pkMax9.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].bMaxLV);
+				pkName9.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum);
 				pkName9.repaint();
-				pkNo9.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum);
+				pkNo9.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][8].wNum);
 
-				pkMin10.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMinLV);
-				pkMax10.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMaxLV);
-				pkName10.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum);
+				pkMin10.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMinLV);
+				pkMax10.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].bMaxLV);
+				pkName10.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum);
 				pkName10.repaint();
-				pkNo10.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum);
+				pkNo10.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][9].wNum);
 
 				if (currentType == 0)
 				{
 					panelpk11_12.setVisible(true);
 
-					pkMin11.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMinLV);
-					pkMax11.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMaxLV);
-					pkName11.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][10].wNum);
+					pkMin11.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMinLV);
+					pkMax11.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].bMaxLV);
+					pkName11.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].wNum);
 					pkName11.repaint();
-					pkNo11.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][10].wNum);
+					pkNo11.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][10].wNum);
 
-					pkMin12.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMinLV);
-					pkMax12.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMaxLV);
-					pkName12.setSelectedIndex(d.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum);
+					pkMin12.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMinLV);
+					pkMax12.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].bMaxLV);
+					pkName12.setSelectedIndex(MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum);
 					pkName12.repaint();
-					pkNo12.setValue((int) d.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum);
+					pkNo12.setValue((int) MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][11].wNum);
 
 					pkchance1.setText("20%");
 					pkchance2.setText("20%");
@@ -2433,13 +2418,6 @@ public class MainGUI extends JFrame
 		new WildDataCache(ROMManager.getActiveROM()).start();
 		mnSave.enable(true);
 		PluginManager.fireROMLoad();
-	}
-
-	public void saveROM()
-	{
-		PluginManager.fireROMSave();
-		WildDataCache.save();
-		ROMManager.getActiveROM().commitChangesToROMFile();
 	}
 
 	public static void showEventPopUp(int x, int y, EventType event, int index)

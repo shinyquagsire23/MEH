@@ -3,7 +3,7 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
-public class WildData
+public class WildData implements Cloneable
 {
 	public WildPokemonData[] aWildPokemon = new WildPokemonData[4];
 	public WildDataHeader wildDataHeader;
@@ -35,6 +35,28 @@ public class WildData
 	{
 		this.rom = rom;
 		wildDataHeader = new WildDataHeader(rom, bank, map);
+	}
+	
+	public WildData(WildData d)
+	{
+		this.rom = d.rom;
+		this.wildDataHeader = d.wildDataHeader;
+		
+		rom.Seek((int)wildDataHeader.pGrass);
+		if(wildDataHeader.pGrass != 0)
+			aWildPokemon[0] = new WildPokemonData(rom, WildDataType.GRASS);
+		
+		rom.Seek((int)wildDataHeader.pWater);
+		if(wildDataHeader.pWater != 0)
+			aWildPokemon[1] = new WildPokemonData(rom, WildDataType.WATER);
+		
+		rom.Seek((int)wildDataHeader.pTrees);
+		if(wildDataHeader.pTrees != 0)
+			aWildPokemon[2] = new WildPokemonData(rom, WildDataType.TREE);
+		
+		rom.Seek((int)wildDataHeader.pFishing);
+		if(wildDataHeader.pFishing != 0)
+			aWildPokemon[3] = new WildPokemonData(rom, WildDataType.FISHING);
 	}
 	
 	public void addWildData(WildDataType t)
@@ -143,5 +165,10 @@ public class WildData
 			aWildPokemon[3].save();
 		}
 		wildDataHeader.save(headerloc);
+	}
+
+	public Object clone() throws CloneNotSupportedException
+	{
+		return new WildData(this);
 	}
 }
