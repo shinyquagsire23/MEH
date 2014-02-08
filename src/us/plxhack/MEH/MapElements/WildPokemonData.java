@@ -99,6 +99,7 @@ public class WildPokemonData implements ISaveable, Cloneable
 	
 	public WildPokemonData(WildPokemonData d)
 	{
+		this.rom = d.rom;
 		try
 		{
 			this.aDNPokemon = d.aDNPokemon.clone();
@@ -110,7 +111,7 @@ public class WildPokemonData implements ISaveable, Cloneable
 		{
 			for(int i = 0; i < numPokemon[d.type.ordinal()]; i++)
 			{
-				pokeTransfer[j][i] = new WildPokemon(rom,d.aWildPokemon[j][i].bMinLV,d.aWildPokemon[j][i].bMaxLV,d.aWildPokemon[j][i].wNum);
+				pokeTransfer[j][i] = new WildPokemon(d.rom,d.aWildPokemon[j][i].bMinLV,d.aWildPokemon[j][i].bMaxLV,d.aWildPokemon[j][i].wNum);
 			}
 		}
 		this.aWildPokemon = pokeTransfer.clone();
@@ -120,7 +121,6 @@ public class WildPokemonData implements ISaveable, Cloneable
 		this.pData = d.pData;
 		this.pPokemonData = d.pPokemonData;
 		this.type = d.type;
-		this.rom = d.rom;
 	}
 
 	public void convertToDN()

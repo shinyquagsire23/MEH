@@ -43,9 +43,37 @@ public class WildData implements Cloneable
 		try
 		{
 			this.wildDataHeader = (WildDataHeader) d.wildDataHeader.clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
 			aWildPokemon[0] = (WildPokemonData) d.aWildPokemon[0].clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
 			aWildPokemon[1] = (WildPokemonData) d.aWildPokemon[1].clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
 			aWildPokemon[2] = (WildPokemonData) d.aWildPokemon[2].clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
 			aWildPokemon[3] = (WildPokemonData) d.aWildPokemon[3].clone();
 		}
 		catch (CloneNotSupportedException e)
