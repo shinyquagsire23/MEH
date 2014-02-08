@@ -2417,6 +2417,7 @@ public class MainGUI extends JFrame
 		new BankLoader((int) DataStore.MapHeaders, ROMManager.getActiveROM(), lblInfo, mapBanks).start();
 		new WildDataCache(ROMManager.getActiveROM()).start();
 		mnSave.enable(true);
+		this.setTitle("Map Editor of Happiness - " + new File(ROMManager.getActiveROM().input_filepath).getName());
 		PluginManager.fireROMLoad();
 	}
 
