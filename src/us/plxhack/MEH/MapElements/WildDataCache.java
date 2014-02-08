@@ -61,15 +61,10 @@ public class WildDataCache extends Thread implements Runnable
 	public static void setWildData(int bank, int map, WildData d)
 	{
 		int num = (bank & 0xFF) + ((map & 0xFF)<<8);
-		dataCache.remove(num);
-		try
-		{
-			dataCache.put(num, (WildData)d.clone());
-		}
-		catch (CloneNotSupportedException e)
-		{
-			e.printStackTrace();
-		}
+		WildData data = getWildData(bank, map);
+		data.aWildPokemon = d.aWildPokemon.clone();
+		data.wildDataHeader = d.wildDataHeader;
+		//dataCache.put(num, d);
 	}
 	
 	public static WildData createWildDataIfNotExists(int bank, int map)

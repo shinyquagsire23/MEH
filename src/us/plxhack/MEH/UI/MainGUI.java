@@ -775,9 +775,9 @@ public class MainGUI extends JFrame
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				if (WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap) == null)
+				if (MapIO.wildData == null)
 					return;
-				WildDataCache.getWildData(MapIO.currentBank, MapIO.currentMap).removeWildData(WildDataType.values()[currentType]);
+				MapIO.wildData.removeWildData(WildDataType.values()[currentType]);
 				loadWildPokemon();
 			}
 		});

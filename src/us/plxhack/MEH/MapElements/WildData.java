@@ -40,23 +40,19 @@ public class WildData implements Cloneable
 	public WildData(WildData d)
 	{
 		this.rom = d.rom;
-		this.wildDataHeader = d.wildDataHeader;
+		try
+		{
+			this.wildDataHeader = (WildDataHeader) d.wildDataHeader.clone();
+			aWildPokemon[0] = (WildPokemonData) d.aWildPokemon[0].clone();
+			aWildPokemon[1] = (WildPokemonData) d.aWildPokemon[1].clone();
+			aWildPokemon[2] = (WildPokemonData) d.aWildPokemon[2].clone();
+			aWildPokemon[3] = (WildPokemonData) d.aWildPokemon[3].clone();
+		}
+		catch (CloneNotSupportedException e)
+		{
+			e.printStackTrace();
+		}
 		
-		rom.Seek((int)wildDataHeader.pGrass);
-		if(wildDataHeader.pGrass != 0)
-			aWildPokemon[0] = new WildPokemonData(rom, WildDataType.GRASS);
-		
-		rom.Seek((int)wildDataHeader.pWater);
-		if(wildDataHeader.pWater != 0)
-			aWildPokemon[1] = new WildPokemonData(rom, WildDataType.WATER);
-		
-		rom.Seek((int)wildDataHeader.pTrees);
-		if(wildDataHeader.pTrees != 0)
-			aWildPokemon[2] = new WildPokemonData(rom, WildDataType.TREE);
-		
-		rom.Seek((int)wildDataHeader.pFishing);
-		if(wildDataHeader.pFishing != 0)
-			aWildPokemon[3] = new WildPokemonData(rom, WildDataType.FISHING);
 	}
 	
 	public void addWildData(WildDataType t)

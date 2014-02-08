@@ -3,7 +3,7 @@ package us.plxhack.MEH.MapElements;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
-public class WildDataHeader
+public class WildDataHeader implements Cloneable
 {
 	public byte bBank, bMap;
 	public long pGrass, pWater, pTrees, pFishing;
@@ -75,5 +75,10 @@ public class WildDataHeader
 			rom.writePointer((int)pFishing);
 		else
 			rom.writePointer((long)0);
+	}
+
+	public Object clone() throws CloneNotSupportedException
+	{
+		return super.clone();
 	}
 }
