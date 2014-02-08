@@ -162,13 +162,13 @@ public class WildPokemonData implements ISaveable, Cloneable
 
 		if (pPokemonData == -1)
 		{
-			pPokemonData = rom.findFreespace(DataStore.FreespaceStart, (bDNEnabled == 1 ? 4*4 : getWildDataSize()));
+			pPokemonData = rom.findFreespace((bDNEnabled == 1 ? 4*4 : getWildDataSize()), (int)DataStore.FreespaceStart);
 			rom.floodBytes((int)pPokemonData, (byte)0, (bDNEnabled == 1 ? 4*4 : getWildDataSize())); //Prevent them from taking the same freespace
 		}
 		for(int i = 0; i < 4; i++)
 			if(aDNPokemon[i] == -1 && bDNEnabled == 0x1)
 			{
-				aDNPokemon[i] = rom.findFreespace(DataStore.FreespaceStart, getWildDataSize());
+				aDNPokemon[i] = rom.findFreespace(getWildDataSize(), (int)DataStore.FreespaceStart);
 				rom.floodBytes((int)aDNPokemon[i], (byte)0, getWildDataSize()); //Prevent them from taking the same freespace
 			}
 
@@ -192,7 +192,14 @@ public class WildPokemonData implements ISaveable, Cloneable
 			
 			for (int i = 0; i < numPokemon[type.ordinal()]; i++)
 			{
-				aWildPokemon[j][i].save();
+				try
+				{
+					aWildPokemon[j][i].save();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
