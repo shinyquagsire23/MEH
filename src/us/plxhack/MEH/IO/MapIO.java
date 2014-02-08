@@ -188,6 +188,7 @@ public class MapIO
 
 	public static void patchDNPokemon()
 	{
-		new DNPokePatcher().setVisible(true);
+		DNPokePatcher n = new DNPokePatcher();
+		n.setVisible(true);
 	}
 }

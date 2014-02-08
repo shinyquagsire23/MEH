@@ -186,6 +186,11 @@ public class DNPokePatcher extends JFrame
 		}
 	}
 	
+	public boolean successful()
+	{
+		return successfulPatch;
+	}
+	
 	private boolean patchROM(int freespace, int status)
 	{
 		if(!ROMManager.getActiveROM().getGameCode().equalsIgnoreCase("BPRE"))
@@ -218,6 +223,7 @@ public class DNPokePatcher extends JFrame
 		ROMManager.getActiveROM().writeBytes(freespace,frPatch);
 		ROMManager.getActiveROM().writeBytes(frLevelLoc, frLevelPatch);
 		ROMManager.getActiveROM().writeBytes(frPkmnLoc, frPkmnPatch);
+		ROMManager.getActiveROM().updateFlags();
 		
 		return true;
 	}

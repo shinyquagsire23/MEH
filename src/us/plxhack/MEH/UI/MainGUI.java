@@ -524,7 +524,8 @@ public class MainGUI extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				MapIO.patchDNPokemon();
+				if(ROMManager.getActiveROM().isDNPkmnPatchAdded == false)
+					MapIO.patchDNPokemon();
 			}
 		});
 		mnPatches.add(mntmDaynightPokemon);
@@ -798,6 +799,15 @@ public class MainGUI extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
+				if(!ROMManager.getActiveROM().isDNPkmnPatchAdded)
+				{
+					int result = JOptionPane.showConfirmDialog(new JFrame(),"It appears that you haven't patched your ROM for Day/Night pokemon.\nWould you like to do that now?","Peer Pressure", JOptionPane.YES_NO_OPTION);
+					if(result == JOptionPane.YES_OPTION)
+					{
+						MapIO.patchDNPokemon();
+						return;
+					}
+				}
 				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild pokemon data to a new format no longer supported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
 				if(result == JOptionPane.YES_OPTION)
 				{
