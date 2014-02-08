@@ -208,6 +208,7 @@ public class MainGUI extends JFrame
 	private JLabel lblNewLabel_2;
 	private static JComboBox pkTime;
 	private JComboBox pkEnvironment;
+	private static JButton btnEnableTimebasedPokemon;
 	
 	// Map Creation
 	JPanel panelMapTilesContainer;
@@ -694,7 +695,7 @@ public class MainGUI extends JFrame
 
 		pkTime = new JComboBox();
 		pkTime.setModel(new DefaultComboBoxModel(new String[] { "Morning", "Day", "Evening", "Night" }));
-		pkTime.setSelectedIndex(1);
+		pkTime.setSelectedIndex(0);
 		pkTime.setBounds(409, 0, 112, 24);
 		pkTime.addActionListener(new ActionListener() 
 		{
@@ -784,7 +785,7 @@ public class MainGUI extends JFrame
 		splitPane_1.setRightComponent(btnRemovePokeData);
 		splitPane_1.setDividerLocation(25);
 		
-		JButton btnEnableTimebasedPokemon = new JButton("Enable Time-Based Edits");
+		btnEnableTimebasedPokemon = new JButton("Enable Time-Based Edits");
 		btnEnableTimebasedPokemon.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -2243,11 +2244,15 @@ public class MainGUI extends JFrame
 		}
 		
 		if(MapIO.wildData.aWildPokemon[currentType].bDNEnabled == 1)
+		{
 			pkTime.enable();
+			btnEnableTimebasedPokemon.setVisible(false);
+		}
 		else
 		{
 			pkTime.disable();
 			selectedTime = 0;
+			btnEnableTimebasedPokemon.setVisible(true);
 		}
 		
 		System.out.println(selectedTime);
