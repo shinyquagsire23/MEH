@@ -515,6 +515,19 @@ public class MainGUI extends JFrame
 
 		JMenu mnTools = new JMenu("Tools");
 		menuBar.add(mnTools);
+		
+		mnPatches = new JMenu("Patches");
+		mnTools.add(mnPatches);
+		
+		mntmDaynightPokemon = new JMenuItem("Day/Night Pokemon");
+		mntmDaynightPokemon.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				MapIO.patchDNPokemon();
+			}
+		});
+		mnPatches.add(mntmDaynightPokemon);
 
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -557,9 +570,16 @@ public class MainGUI extends JFrame
 
 			public void actionPerformed(ActionEvent e)
 			{
-				MapIO.loadedMap.save();
-				connectionsEditorPanel.save(); // Save surrounding maps
-				PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
+				try
+				{
+					MapIO.loadedMap.save();
+					connectionsEditorPanel.save(); // Save surrounding maps
+					PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}
 				saveROM();
 			}
 		});
@@ -1751,6 +1771,8 @@ public class MainGUI extends JFrame
 
 	JPanel mimePanel;// Mr. Mime 2 dirty 4 mii
 	private JPanel panel_4;
+	private JMenu mnPatches;
+	private JMenuItem mntmDaynightPokemon;
 
 	void CreateMimeTab()
 	{

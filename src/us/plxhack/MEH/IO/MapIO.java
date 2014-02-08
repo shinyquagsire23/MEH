@@ -14,6 +14,7 @@ import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import us.plxhack.MEH.Plugins.PluginManager;
+import us.plxhack.MEH.UI.DNPokePatcher;
 import us.plxhack.MEH.UI.MainGUI;
 
 public class MapIO
@@ -183,5 +184,10 @@ public class MapIO
 	public static void repaintTileEditorPanel()
 	{
 		MainGUI.tileEditorPanel.repaint();
+	}
+
+	public static void patchDNPokemon()
+	{
+		new DNPokePatcher().setVisible(true);
 	}
 }
