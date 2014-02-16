@@ -15,6 +15,8 @@ public class Main
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		System.setProperty("sun.java2d.opengl","True");
 		System.setProperty("sun.java2d.accthreshold","0");
+		System.setProperty("apple.laf.useScreenMenuBar","true");
+		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "MEH");
 		JFrame window = new MainGUI();
 		window.setSize(1000, 600);
 		window.setTitle("Map Editor of Happiness - No ROM Loaded");
