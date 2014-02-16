@@ -602,6 +602,7 @@ public class MainGUI extends JFrame
 		panelButtons.add(horizontalStrut_1);
 
 		JButton btnNewMap = new JButton("");
+        btnNewMap.setToolTipText("New Map (Not implemented)");
 		btnNewMap.addActionListener(new ActionListener()
 		{
 
@@ -646,6 +647,7 @@ public class MainGUI extends JFrame
 		panelButtons.add(btnNewMap);
 
 		JButton btnImportMap = new JButton("");
+        btnImportMap.setToolTipText("Import Map (Not implemented)");
 		btnImportMap.addActionListener(new ActionListener()
 		{
 
