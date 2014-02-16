@@ -122,7 +122,6 @@ public class EventEditorPanel extends JPanel
 
 			public void mouseMoved(MouseEvent e)
 			{
-
 			}
 
 		});
