@@ -1,9 +1,6 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -91,81 +88,66 @@ public class EventEditorPanel extends JPanel
 		}
 	}
 
-	public EventEditorPanel()
-	{
+	public EventEditorPanel() {
 		selectedEvent = null;
 
-		try
-		{
+		try {
 			imgTrigger = ImageIO.read(MainGUI.class.getResource("/resources/trigger.png").openStream());
 			imgWarp = ImageIO.read(MainGUI.class.getResource("/resources/warp.png").openStream());
 			imgSign = ImageIO.read(MainGUI.class.getResource("/resources/sign.png").openStream());
 			imgNPC = ImageIO.read(MainGUI.class.getResource("/resources/npc.png").openStream());
 		}
-		catch (IOException e2)
-		{
+		catch (IOException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
-		this.addMouseMotionListener(new MouseMotionListener()
-		{
+		this.addMouseMotionListener(new MouseMotionListener() {
 
-			public void mouseDragged(MouseEvent e)
-			{
-				if(selectedEvent != null)
-				{
+			public void mouseDragged(MouseEvent e) {
+				if(selectedEvent != null) {
 					int x = (e.getX() / 16);
 					int y = (e.getY() / 16);
 					moveEvent(x,y);
 				}
 			}
 
-			public void mouseMoved(MouseEvent e)
-			{
-
+			public void mouseMoved(MouseEvent e) {
 			}
 
 		});
 
-		this.addMouseListener(new MouseListener()
-		{
+		this.addMouseListener(new MouseListener() {
 
 			@SuppressWarnings("unused")
-			public void mouseClicked(MouseEvent e)
-			{
+			public void mouseClicked(MouseEvent e) {
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
 
-				if (x > map.getMapData().mapWidth || y > map.getMapData().mapHeight)
-				{
+				if (x > map.getMapData().mapWidth || y > map.getMapData().mapHeight) {
 					return;
 				}
 				Grab(e);
 
 				System.out.println(e.getButton());
-				if (e.getButton() == MouseEvent.BUTTON1 && selectedEvent != null)
-				{
+				if (e.getButton() == MouseEvent.BUTTON1 && selectedEvent != null) {
 
 					MainGUI.panel_5.removeAll();
 					// If there's two events on tile, we'll handle that later
 					// with some kind of picker
-					switch (selectedEvent)
-					{
+					switch (selectedEvent) {
 						case NPC:
 							MainGUI.panel_5.add(new NPCPane(map.mapNPCManager, IndexNPC));
 
 							break;
 						case SIGN:
-							if (e.getClickCount() > 1 && IndexSign >= 0)
-							{
+							if (e.getClickCount() > 1 && IndexSign >= 0) {
 								MapIO.openScript(BitConverter.shortenPointer(map.mapSignManager.mapSigns.get(IndexSign).pScript));
 							}
 							else if (IndexSign >= 0)
 								MainGUI.panel_5.add(new SignPanel(map.mapSignManager, IndexSign));
 							break;
 						case WARP:
-							if (e.getClickCount() > 1 && IndexExit >= 0)
-							{
+							if (e.getClickCount() > 1 && IndexExit >= 0) {
 								// Load map number
 								MapIO.loadMap(map.mapExitManager.mapExits.get(IndexExit).bBank & 0xFF, map.mapExitManager.mapExits.get(IndexExit).bMap & 0xFF);
 							}
@@ -184,10 +166,8 @@ public class EventEditorPanel extends JPanel
 					Redraw = true;
 					repaint();
 				}
-				else if (e.getButton() == 3)
-				{
-					switch (selectedEvent)
-					{
+				else if (e.getButton() == 3) {
+					switch (selectedEvent) {
 						case NPC:
 							MainGUI.showEventPopUp(x, y, selectedEvent, IndexNPC);
 							break;
@@ -204,59 +184,48 @@ public class EventEditorPanel extends JPanel
 				}
 			}
 
-			public void mousePressed(MouseEvent e)
-			{
+			public void mousePressed(MouseEvent e) {
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
 
-				if (x > map.getMapData().mapWidth || y > map.getMapData().mapHeight)
-				{
+				if (x > map.getMapData().mapWidth || y > map.getMapData().mapHeight) {
 					return;
 				}
 
 				Grab(e);
 
-				if (e.getButton() == MouseEvent.BUTTON1)
-				{
+				if (e.getButton() == MouseEvent.BUTTON1) {
 					moveSrcX = x;
 					moveSrcY = y;
 
 				}
+			}
+
+			public void mouseExited(MouseEvent e) {
 
 			}
 
-			public void mouseExited(MouseEvent e)
-			{
+			public void mouseEntered(MouseEvent e) {
 
 			}
 
-			public void mouseEntered(MouseEvent e)
-			{
-
-			}
-
-			public void mouseReleased(MouseEvent e)
-			{
+			public void mouseReleased(MouseEvent e) {
 				int x = (e.getX() / 16);
 				int y = (e.getY() / 16);
 				moveEvent(x,y);
 				selectedEvent = null;
 			}
-
 		});
 	}
 	
-	public void moveEvent(int x, int y)
-	{
+	public void moveEvent(int x, int y) {
 		int srcX = moveSrcX;
 		int srcY = moveSrcY;
 		EventType s = selectedEvent;
-		if (srcX != x || srcY != y)
-		{
-			try
-			{
-				switch (s)
-				{// -1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is
+		if (srcX != x || srcY != y) {
+			try {
+				switch (s) {
+				    // -1 is nothing, 0 is NPC, 1 is Sign, 2 is Exit, 3 is
 					// Trigger)
 					case NPC:
 						map.mapNPCManager.mapNPCs.get(IndexNPC).bX = (byte) x;
@@ -277,8 +246,7 @@ public class EventEditorPanel extends JPanel
 				}
 				;
 			}
-			catch (Exception e1)
-			{
+			catch (Exception e1) {
 				System.out.println(e1.getMessage());
 			}
 			DrawMap();
@@ -286,20 +254,17 @@ public class EventEditorPanel extends JPanel
 		}
 	}
 
-	public void setGlobalTileset(Tileset global)
-	{
+	public void setGlobalTileset(Tileset global) {
 		globalTiles = global;
 		blockRenderer.setGlobalTileset(global);
 	}
 
-	public void setLocalTileset(Tileset local)
-	{
+	public void setLocalTileset(Tileset local) {
 		localTiles = local;
 		blockRenderer.setLocalTileset(local);
 	}
 
-	public void setMap(Map m)
-	{
+	public void setMap(Map m) {
 		map = m;
 		Dimension size = new Dimension();
 		size.setSize((int) (m.getMapData().mapWidth + 1) * 16, (int) (m.getMapData().mapHeight + 1) * 16);
@@ -310,29 +275,21 @@ public class EventEditorPanel extends JPanel
 	private Graphics gcBuff;
 	private Image imgBuffer = null;
 
-	public void DrawMap()
-	{
-		try
-		{
-
+	public void DrawMap() {
+		try {
 			imgBuffer = createImage((int) map.getMapData().mapWidth * 16, (int) map.getMapData().mapHeight * 16);
 			gcBuff = imgBuffer.getGraphics();
 
 			gcBuff.drawImage(MapEditorPanel.imgBuffer, 0, 0, this);
+
 			DrawSigns();
 			DrawExits();
 			DrawNPCs();
 			DrawTriggers();
-
 		}
-		catch (Exception e)
-		{
-
-			int a = 1;
-			a = 1;
-
+		catch (Exception e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	void DrawText(String Text, int x, int y)
