@@ -71,15 +71,15 @@ public class MapEditorPanel extends JPanel {
 				System.out.println(x + " " + y);
 
 				if (e.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK)  {
-					for(int DrawX=0;DrawX<bufferWidth;DrawX++) {
-						for(int DrawY=0;DrawY<bufferHeight;DrawY++) {
+					for(int DrawX=0; DrawX < bufferWidth; DrawX++) {
+						for(int DrawY = 0; DrawY < bufferHeight; DrawY++) {
 							//Tiles multi-select will grab both the tiles and the meta, 
 							//while movement editing will only select metas.
 							if(currentMode == EditMode.TILES) {
-								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
+								map.getMapTileData().getTile(x + DrawX, y + DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
 								if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
-									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
-								drawTile(x+DrawX,y+DrawY);
+									map.getMapTileData().getTile(x + DrawX, y + DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
+								drawTile(x + DrawX,y + DrawY);
 							}
 							else if(currentMode == EditMode.MOVEMENT) {
 								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
@@ -93,8 +93,9 @@ public class MapEditorPanel extends JPanel {
 				}
 				else {
 					calculateSelectBox(e);
-					repaint();
 				}
+                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+                repaint();
 			}
 
 			public void mouseMoved(MouseEvent e) {
@@ -106,6 +107,7 @@ public class MapEditorPanel extends JPanel {
 					mouseTracker.x = (int)(map.getMapData().mapWidth * 16) - (bufferWidth * 8);
 				if(mouseTracker.y > map.getMapData().mapHeight * 16)
 					mouseTracker.y = (int)(map.getMapData().mapHeight * 16) - (bufferHeight * 8);
+                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
 				repaint();
 			}
 		});
@@ -140,11 +142,8 @@ public class MapEditorPanel extends JPanel {
 							}
 						}
 					}
-
 					map.isEdited = true;
 					//DrawMap();
-
-					repaint();
 				}
 				else if(e.getButton() == 3) {
 					if(currentMode == EditMode.TILES) {
@@ -158,6 +157,8 @@ public class MapEditorPanel extends JPanel {
 					
 					MapIO.repaintTileEditorPanel();
 				}
+                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+                repaint();
 			}
 
 			public void mousePressed(MouseEvent e) {
@@ -168,22 +169,25 @@ public class MapEditorPanel extends JPanel {
 					mouseTracker.x=e.getX() - (bufferWidth * 8);
 					mouseTracker.y=e.getY() - (bufferHeight * 8);
 				}
+                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+                repaint();
 			}
 
 			public void mouseExited(MouseEvent e) {
-
+                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+                repaint();
 			}
 
 			
 			public void mouseEntered(MouseEvent e) {
-
+                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+                repaint();
 			}
 
 			
 			public void mouseReleased(MouseEvent e) {
 				if(e.getButton() == 3) {
 					calculateSelectBox(e);
-
 					//Fill the tile buffer
 					selectBuffer = new MapTile[selectBox.width / 16][selectBox.height / 16];
 					bufferWidth = selectBox.width / 16;
@@ -192,6 +196,8 @@ public class MapEditorPanel extends JPanel {
 						for(int y = 0; y < bufferHeight; y++)
 							selectBuffer[x][y] = (MapTile)map.getMapTileData().getTile(selectBox.x / 16 + x, selectBox.y / 16 + y).clone();
 				}
+                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+                repaint();
 			}
 		});
 	}
@@ -203,11 +209,11 @@ public class MapEditorPanel extends JPanel {
 
 		//If our selection is negative, adjust it to be positive 
 		//starting from the position the mouse was released
-		if(selectBox.width < 0) {
+		if (selectBox.width < 0) {
 			selectBox.x = e.getX();
 			selectBox.width = Math.abs(selectBox.width);
 		}
-		if(selectBox.height < 0) {
+		if (selectBox.height < 0) {
 			selectBox.y = e.getY();
 			selectBox.height = Math.abs(selectBox.height);
 		}

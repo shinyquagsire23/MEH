@@ -46,7 +46,7 @@ public class MapIO
 
 	public static void loadMapFromPointer(long offs, boolean justPointer)
 	{
-		MainGUI.lblInfo.setText("Loading map...");
+		MainGUI.lblInfo.setText("Loading Map...");
 		final long offset = offs;
 
 		if (!justPointer)
@@ -97,12 +97,10 @@ public class MapIO
 				MainGUI.borderTileEditor.repaint();
 				MainGUI.connectionsEditorPanel.loadConnections(loadedMap);
 				MainGUI.connectionsEditorPanel.repaint();
-				try
-				{
+				try {
 					wildData = (WildData) WildDataCache.getWildData(currentBank, currentMap).clone();
 				}
-				catch (CloneNotSupportedException e)
-				{
+				catch (CloneNotSupportedException e) {
 					e.printStackTrace();
 				}
 				
@@ -111,13 +109,14 @@ public class MapIO
 				MainGUI.mapEditorPanel.repaint();
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
-				MainGUI.lblInfo.setText("Done! Finished in " + (double) (time / 1000) + " seconds!");
+				//MainGUI.lblInfo.setText("Done! Finished in " + (double) (time / 1000) + " seconds!");
 				doneLoading = true;
 
 				PluginManager.fireMapLoad(selectedBank, selectedMap);
 
 			}
 		}.start();
+        MainGUI.lblInfo.setText("Map Loaded.");
 	}
 
 	public static String[] pokemonNames;
@@ -171,56 +170,48 @@ public class MapIO
 			}
 		}
 
-		try
-		{
+		try {
 			Runtime r = Runtime.getRuntime();
 			String s = (DataStore.mehSettingCallScriptEditor.toLowerCase().endsWith(".jar") ? "java -jar " : "") + DataStore.mehSettingCallScriptEditor + " \"" + ROMManager.currentROM.input_filepath.replace("\"", "") + "\" 0x" + String.format("%x", scriptOffset);
 			r.exec(s);
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "It seems that your script editor has gone missing. Look around for it and try it again. I'm sure it'll work eventually.");
 			e.printStackTrace();
 		}
 	}
 
-	public static void addStringArray(JComboBox b, String[] strs)
-	{
+	public static void addStringArray(JComboBox b, String[] strs) {
 		b.removeAllItems();
 		for (String s : strs)
 			b.addItem(s);
 		b.repaint();
 	}
 	
-	public static void repaintTileEditorPanel()
-	{
+	public static void repaintTileEditorPanel() {
 		MainGUI.tileEditorPanel.repaint();
 	}
 
-	public static void patchDNPokemon()
-	{
+	public static void patchDNPokemon() {
 		DNPokePatcher n = new DNPokePatcher();
 		n.setVisible(true);
 	}
 
-	public static void saveMap()
-	{
+	public static void saveMap() {
 		MapIO.loadedMap.save();
 		MainGUI.connectionsEditorPanel.save(); // Save surrounding maps
 		WildDataCache.setWildData(currentBank, currentMap, wildData);
 		PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);
 	}
 	
-	public static void saveROM()
-	{
+	public static void saveROM() {
 		PluginManager.fireROMSave();
 		
 		WildDataCache.save();
 		ROMManager.getActiveROM().commitChangesToROMFile();
 	}
 	
-	public static void saveAll()
-	{
+	public static void saveAll() {
 		saveMap();
 		saveROM();
 	}
