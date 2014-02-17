@@ -131,12 +131,12 @@ public class EventEditorPanel extends JPanel
 				System.out.println(e.getButton());
 				if (e.getButton() == MouseEvent.BUTTON1 && selectedEvent != null) {
 
-					MainGUI.panel_5.removeAll();
+					MainGUI.eventScrollPanel.removeAll();
 					// If there's two events on tile, we'll handle that later
 					// with some kind of picker
 					switch (selectedEvent) {
 						case NPC:
-							MainGUI.panel_5.add(new NPCPane(map.mapNPCManager, IndexNPC));
+							MainGUI.eventScrollPanel.add(new NPCPane(map.mapNPCManager, IndexNPC));
 
 							break;
 						case SIGN:
@@ -144,7 +144,7 @@ public class EventEditorPanel extends JPanel
 								MapIO.openScript(BitConverter.shortenPointer(map.mapSignManager.mapSigns.get(IndexSign).pScript));
 							}
 							else if (IndexSign >= 0)
-								MainGUI.panel_5.add(new SignPanel(map.mapSignManager, IndexSign));
+								MainGUI.eventScrollPanel.add(new SignPanel(map.mapSignManager, IndexSign));
 							break;
 						case WARP:
 							if (e.getClickCount() > 1 && IndexExit >= 0) {
@@ -152,17 +152,17 @@ public class EventEditorPanel extends JPanel
 								MapIO.loadMap(map.mapExitManager.mapExits.get(IndexExit).bBank & 0xFF, map.mapExitManager.mapExits.get(IndexExit).bMap & 0xFF);
 							}
 							else if (IndexExit >= 0)
-								MainGUI.panel_5.add(new ExitPanel(map.mapExitManager, IndexExit));
+								MainGUI.eventScrollPanel.add(new ExitPanel(map.mapExitManager, IndexExit));
 							break;
 						case TRIGGER:
 
-							MainGUI.panel_5.add(new TriggerPanel(map.mapTriggerManager, IndexTriggers));
+							MainGUI.eventScrollPanel.add(new TriggerPanel(map.mapTriggerManager, IndexTriggers));
 							break;
 
 					}
 
-					MainGUI.panel_5.revalidate();
-					MainGUI.panel_5.repaint();
+					MainGUI.eventScrollPanel.revalidate();
+					MainGUI.eventScrollPanel.repaint();
 					Redraw = true;
 					repaint();
 				}

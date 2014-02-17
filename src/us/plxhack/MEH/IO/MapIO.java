@@ -46,11 +46,10 @@ public class MapIO
 
 	public static void loadMapFromPointer(long offs, boolean justPointer)
 	{
-		MainGUI.lblInfo.setText("Loading Map...");
+		MainGUI.setStatus("Loading Map...");
 		final long offset = offs;
 
-		if (!justPointer)
-		{
+		if (!justPointer) {
 			currentBank = -1;
 			currentMap = -1;
 		}
@@ -109,14 +108,14 @@ public class MapIO
 				MainGUI.mapEditorPanel.repaint();
 				Date eD = new Date();
 				long time = eD.getTime() - d.getTime();
-				//MainGUI.lblInfo.setText("Done! Finished in " + (double) (time / 1000) + " seconds!");
+				//MainGUI.setStatus("Done! Finished in " + (double) (time / 1000) + " seconds!");
 				doneLoading = true;
 
 				PluginManager.fireMapLoad(selectedBank, selectedMap);
 
 			}
 		}.start();
-        MainGUI.lblInfo.setText("Map Loaded.");
+        MainGUI.setStatus("Map Loaded.");
 	}
 
 	public static String[] pokemonNames;
