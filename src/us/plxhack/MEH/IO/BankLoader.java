@@ -144,7 +144,7 @@ public class BankLoader extends Thread implements Runnable
 		banksLoaded = true;
 		
 		Date eD = new Date();
-		setStatus("Banks Loaded in " + (double)(eD.getTime() - d.getTime()) + "ms!");
+		setStatus("Banks Loaded in " + (double)(eD.getTime() - d.getTime()) + "ms.");
 	}
 
 	public void setStatus(String status)

@@ -93,6 +93,8 @@ public class MainGUI extends JFrame
 	public int initEditorPanePos = -1;
 
 	public static JLabel lblInfo;
+    public static JLabel lblX;
+    public static JLabel lblY;
 	public JTree mapBanks;
 	
 	private static int eventIndex;
@@ -320,7 +322,7 @@ public class MainGUI extends JFrame
 					}
 					catch (Exception e1)
 					{
-						MainGUI.lblInfo.setText("Script failed to load, please check to see if " + DataStore.mehSettingCallScriptEditor + " exists");
+						lblInfo.setText("Script failed to load, please check to see if " + DataStore.mehSettingCallScriptEditor + " exists");
 					}
 				}
 			}
@@ -1924,21 +1926,22 @@ public class MainGUI extends JFrame
 		splitPane.setDividerLocation(0.2);
 	}
 
-	void CreateStatusBar()
-	{
+	void CreateStatusBar() {
 		JPanel panel_2 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		panel_2.setPreferredSize(new Dimension(10, 24));
 		getContentPane().add(panel_2, BorderLayout.SOUTH);
 
-		lblInfo = new JLabel("No ROM Loaded!");
+		lblInfo = new JLabel("No ROM Loaded.");
+        lblX = new JLabel("X: 0");
+        lblY = new JLabel("Y: 0");
 		panel_2.add(lblInfo);
+        panel_2.add(lblX);
+        panel_2.add(lblY);
 	}
 
-	public void CreatePermissions()
-	{
-
+	public void CreatePermissions() {
 		JPanel splitm = new JPanel();
 		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		splitm.setPreferredSize(new Dimension(4, 10));
@@ -1951,8 +1954,7 @@ public class MainGUI extends JFrame
 
 	}
 
-	public MainGUI()
-	{
+	public MainGUI() {
 		setPreferredSize(new Dimension(800, 1800));
 		addWindowListener(new WindowAdapter()
 		{
@@ -1965,6 +1967,7 @@ public class MainGUI extends JFrame
 				System.exit(0);
 			}
 		});
+
 		CreateMenus();
 		CreateStatusBar();
 
@@ -1975,12 +1978,10 @@ public class MainGUI extends JFrame
 		CreateTabbedPanels();
 
 		BufferedImage mime = null;
-		try
-		{
+		try {
 			mime = ImageIO.read(MainGUI.class.getResourceAsStream("/resources/mime.jpg"));
 		}
-		catch (IOException e1)
-		{
+		catch (IOException e1) {
 			e1.printStackTrace();
 		}
 		ImagePanel mimePic = new ImagePanel(mime);
@@ -1995,8 +1996,7 @@ public class MainGUI extends JFrame
 			{
 				if (!MapIO.doneLoading)
 					return;
-				try
-				{
+				try {
 					int x = (Integer) spnWidth.getValue();
 					int y = (Integer) spnHeight.getValue();
 					MapIO.loadedMap.getMapTileData().resize(x, y);
@@ -2005,8 +2005,7 @@ public class MainGUI extends JFrame
 					connectionsEditorPanel.loadConnections(MapIO.loadedMap);
 					mapEditorPanel.repaint();
 				}
-				catch (Exception ex)
-				{
+				catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
@@ -2024,9 +2023,8 @@ public class MainGUI extends JFrame
 			{
 				if (!MapIO.doneLoading)
 					return;
-				try
-				{
-					int x = (Integer) spnWidth.getValue();
+				try {
+                    int x = (Integer) spnWidth.getValue();
 					int y = (Integer) spnHeight.getValue();
 					MapIO.loadedMap.getMapTileData().resize(x, y);
 					mapEditorPanel.Redraw = true;
@@ -2034,12 +2032,12 @@ public class MainGUI extends JFrame
 					connectionsEditorPanel.loadConnections(MapIO.loadedMap);
 					mapEditorPanel.repaint();
 				}
-				catch (Exception ex)
-				{
+				catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
 		});
+
 		panel_1.add(spnHeight);
 
 		connectionsTabPanel = new JPanel();
@@ -2436,4 +2434,10 @@ public class MainGUI extends JFrame
 		eventType = event;
 		eventIndex = index;
 	}
+
+    public static void setMouseCoordinates(int x, int y) {
+        lblX.setText("X: " + x);
+        lblY.setText("Y: " + y);
+    }
+
 }
