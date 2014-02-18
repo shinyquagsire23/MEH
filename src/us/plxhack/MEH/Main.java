@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import javafx.application.Application;
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.MainGUI;
