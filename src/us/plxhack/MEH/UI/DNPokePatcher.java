@@ -214,7 +214,7 @@ public class DNPokePatcher extends JFrame
 				
 				if(patchROM(freespace, status))
 				{
-					lblError.setForeground(Color.green);
+					lblError.setForeground(MainGUI.uiSettings.cursorColor);
 					lblError.setText("<html><center>Success!</center></html>");
 					btnCancel.setVisible(false);
 					btnPatch.setText("Close");

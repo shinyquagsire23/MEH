@@ -230,10 +230,10 @@ public class PermissionTilePanel extends JPanel
 			}
 			g.drawImage(imgBuffer, 0, 0, this);
 			
-			g.setColor(Color.red);
+			g.setColor(MainGUI.uiSettings.markerColor);
 			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
 			
-			g.setColor(Color.GREEN);
+			g.setColor(MainGUI.uiSettings.cursorColor);
 			if( mouseTracker.width <0)
 				mouseTracker.x-=Math.abs( mouseTracker.width);
 			if( mouseTracker.height <0)
