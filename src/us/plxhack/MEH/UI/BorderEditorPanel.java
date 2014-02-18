@@ -32,19 +32,16 @@ public class BorderEditorPanel extends JPanel
 	private int mouseX = 0;
 	private int mouseY = 0;
 
-	public BorderEditorPanel() 
-	{
-
-		this.addMouseMotionListener(new MouseMotionListener()
-		{
-
-			public void mouseDragged(MouseEvent e)
-			{
+	public BorderEditorPanel() {
+		this.addMouseMotionListener(new MouseMotionListener() {
+			public void mouseDragged(MouseEvent e) {
 				int x = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
 				int y = ((e.getY() - 20) / 16);
 
-				if (e.getModifiersEx() == 1024) 
-				{
+                mouseX = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
+                mouseY = ((e.getY() - 20) / 16);
+
+				if (e.getModifiersEx() == 1024) {
 					int bufWidth = (MapEditorPanel.bufferWidth > map.getMapData().borderWidth ? map.getMapData().borderWidth : MapEditorPanel.bufferWidth);
 					int bufHeight = (MapEditorPanel.bufferHeight > map.getMapData().borderHeight ? map.getMapData().borderHeight : MapEditorPanel.bufferHeight);
 					for(int DrawX=0; DrawX < bufWidth; DrawX++)
@@ -73,27 +70,21 @@ public class BorderEditorPanel extends JPanel
 							}
 						}
 					}
-
-
 					map.isEdited = true;
-					repaint();
 				}
-				else
-				{
+				else {
 					MapEditorPanel.calculateSelectBox(e);
 					
 					if(MapEditorPanel.selectBox.width > map.getMapData().borderWidth * 16)
 						MapEditorPanel.selectBox.width = map.getMapData().borderWidth * 16;
 					if(MapEditorPanel.selectBox.height > map.getMapData().borderHeight * 16)
 						MapEditorPanel.selectBox.height = map.getMapData().borderHeight * 16;
-					
-					repaint();
 				}
+                repaint();
 			}
 
-			public void mouseMoved(MouseEvent e)
-			{
-				if(map==null) return;
+			public void mouseMoved(MouseEvent e) {
+				if(map == null) return;
 				mouseX = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
 				mouseY = ((e.getY() - 20) / 16);
 				
@@ -109,7 +100,6 @@ public class BorderEditorPanel extends JPanel
 
 		this.addMouseListener(new MouseListener()
 		{
-
 			public void mouseClicked(MouseEvent e)
 			{
 				int x = ((e.getX() - ((getWidth() / 2) - (map.getMapData().borderWidth * 8))) / 16);
@@ -248,12 +238,14 @@ public class BorderEditorPanel extends JPanel
 					}
 				}
 			}
-			
-			g.setColor(Color.GREEN);
-			try
-			{
+
+			g.setColor(MainGUI.uiSettings.cursorColor);
+			try {
 				g.drawRect((this.getWidth() / 2) - (map.getMapData().borderWidth * 8) + (int)(((mouseX) % map.getMapData().mapWidth) * 16), 20+(mouseY * 16),MapEditorPanel.selectBox.width-1,MapEditorPanel.selectBox.height-1);
-			}catch(Exception e){}
+			}
+            catch(Exception e) {
+
+            }
 		}
 		try
 		{

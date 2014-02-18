@@ -608,7 +608,7 @@ public class ConnectionsEditorPanel extends JPanel
 		
 		//TODO Make rectangles optional just to be on the user-preference-safe side
 		//TODO Draw rectangles for the visible range between tileset changes
-		g.setColor(Color.green);
+		g.setColor(MainGUI.uiSettings.cursorColor);
 		try
 		{
 			for(int i = 0; i < upImgS.length;i++)
@@ -655,7 +655,7 @@ public class ConnectionsEditorPanel extends JPanel
 		}
 		catch(Exception e)
 		{e.printStackTrace();}
-		g.setColor(Color.red);
+		g.setColor(MainGUI.uiSettings.markerColor);
 		drawRect(g, centerRect);
 	}
 	
