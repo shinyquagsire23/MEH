@@ -55,6 +55,10 @@ public class TileEditorPanel extends JPanel {
             public void mouseDragged(MouseEvent e) {
 				int b1 = InputEvent.BUTTON1_DOWN_MASK;
 				int b2 = InputEvent.BUTTON2_DOWN_MASK;
+                mouseTracker.x = e.getX();
+                mouseTracker.y = e.getY();
+                baseSelectedTile = (e.getX() / 16) + ((e.getY() / 16) * editorWidth);
+                applySelectedTile();
 				if ((e.getModifiersEx() & (b1 | b2)) != b1) {
 					MapEditorPanel.calculateSelectBox(e);
 				}
@@ -64,13 +68,11 @@ public class TileEditorPanel extends JPanel {
 			public void mouseMoved(MouseEvent e) {
 				mouseTracker.x = e.getX();
 				mouseTracker.y = e.getY();
-
 				repaint();
 			}
 		});
 
 		this.addMouseListener(new MouseListener() {
-			
 			public void mouseClicked(MouseEvent e) {
 				int x = 0;
 				int y = 0;
@@ -86,19 +88,8 @@ public class TileEditorPanel extends JPanel {
 					srcX = x;
 					srcY = y;
 					baseSelectedTile = x + (y * editorWidth);
-					MapEditorPanel.selectBuffer = new MapTile[1][1];
-					MapEditorPanel.selectBuffer[0][0] = new MapTile(baseSelectedTile,-1); //TODO Default movement perms
-					MapEditorPanel.bufferWidth = 1;
-					MapEditorPanel.bufferHeight = 1;
-					MapEditorPanel.selectBox.width = 16;
-					MapEditorPanel.selectBox.height = 16;
-					String k = "Current Tile: ";
-					k += String.format("0x%8s",
-							Integer.toHexString(baseSelectedTile))
-							.replace(' ', '0');
-					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+                    applySelectedTile();
 				}
-
                 repaint();
 			}
 
@@ -119,7 +110,8 @@ public class TileEditorPanel extends JPanel {
 			}
 
 			public void mouseReleased(MouseEvent e) {
-				if(e.getButton() == 3) {
+                baseSelectedTile = (e.getX() / 16) + ((e.getY() / 16) * editorWidth);
+				if (e.getButton() == 3) {
 					MapEditorPanel.calculateSelectBox(e);
 
 					//Fill the tile buffer
@@ -130,6 +122,7 @@ public class TileEditorPanel extends JPanel {
 						for(int y = 0; y < MapEditorPanel.bufferHeight; y++)
 							MapEditorPanel.selectBuffer[x][y] = new MapTile(baseSelectedTile = x + (y * editorWidth), 0xC); //TODO implement movement perms
 				}
+                applySelectedTile();
                 repaint();
 			}
 		});
@@ -190,10 +183,10 @@ public class TileEditorPanel extends JPanel {
 				TileEditorPanel.Redraw=false;
 			}
 			g.drawImage(imgBuffer, 0, 0, this);
-			g.setColor(Color.red);
+			g.setColor(MainGUI.uiSettings.markerColor);
 			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
 			
-			g.setColor(Color.GREEN);
+			g.setColor(MainGUI.uiSettings.cursorColor);
 			if( mouseTracker.width <0)
 				mouseTracker.x-=Math.abs( mouseTracker.width);
 			if( mouseTracker.height <0)
@@ -214,4 +207,18 @@ public class TileEditorPanel extends JPanel {
 		globalTiles = null;
 		localTiles = null;
 	}
+
+    public void applySelectedTile() {
+        MapEditorPanel.selectBuffer = new MapTile[1][1];
+        MapEditorPanel.selectBuffer[0][0] = new MapTile(baseSelectedTile,-1); //TODO Default movement perms
+        MapEditorPanel.bufferWidth = 1;
+        MapEditorPanel.bufferHeight = 1;
+        MapEditorPanel.selectBox.width = 16;
+        MapEditorPanel.selectBox.height = 16;
+        String k = "Current Tile: ";
+        k += String.format("0x%8s",
+                Integer.toHexString(baseSelectedTile))
+                .replace(' ', '0');
+        MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+    }
 }
