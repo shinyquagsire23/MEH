@@ -15,12 +15,18 @@ import javax.swing.tree.*;
 
 import org.zzl.minegaming.GBAUtils.*;
 
+import us.plxhack.MEH.Globals.UISettings;
+import us.plxhack.MEH.Globals.Version;
 import us.plxhack.MEH.IO.*;
 import us.plxhack.MEH.MapElements.*;
 import us.plxhack.MEH.Plugins.*;
 import us.plxhack.MEH.Structures.*;
 
 public class MainGUI extends JFrame {
+    public static  UISettings uiSettings;
+
+    public static JFrame frmAbout;
+
 	public int paneSize = 0;
 	public int initEditorPanePos = -1;
 
@@ -53,7 +59,9 @@ public class MainGUI extends JFrame {
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
 	private JMenuItem mnNewMap;
-	private PermissionTilePanel permissionTilePanel;
+    private JMenu mnHelp;
+    private JMenuItem mnAbout;
+    private PermissionTilePanel permissionTilePanel;
 	private JScrollPane movementScrollPane;
 	private JPanel connectionsTabPanel;
 	private JPanel connectinonsInfoPanel;
@@ -175,7 +183,7 @@ public class MainGUI extends JFrame {
 
 	void CreateToolbar() {
 		JToolBar toolBar = new JToolBar();
-		lblTileVal = new JLabel("Current Tile: 0x0000");
+		lblTileVal = new JLabel("Current Tile: 0x0");
 		toolBar.add(lblTileVal);
 		editorPanel.add(toolBar, BorderLayout.NORTH);
 		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -411,9 +419,18 @@ public class MainGUI extends JFrame {
 			}
 		});
 
-		JMenu mnHelp = new JMenu("Help");
-        mnHelp.addActionListener(new ActionListener() {
+        mnHelp = new JMenu("Help");
+
+        mnAbout = new JMenuItem("About");
+        mnAbout.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                String developerLines = "";
+                for (int i = 0; i < Version.Contributors.length; i++)
+                    developerLines += Version.Contributors[i] + '\n';
+                JOptionPane.showMessageDialog(new JFrame(),
+                        "MEH - Map Editor of Happiness v" + Version.RequestApplicationBuild() + "\n\nDevelopers:\n" + developerLines,
+                        "About",
+                        JOptionPane.PLAIN_MESSAGE);
             }
         });
 
@@ -430,6 +447,7 @@ public class MainGUI extends JFrame {
         mnTools.add(mnPatches);
         mnPatches.add(mntmDaynightPokemon);
         menuBar.add(mnHelp);
+        mnHelp.add(mnAbout);
 	}
 
 	void CreateButtons() {
@@ -1580,6 +1598,8 @@ public class MainGUI extends JFrame {
 				System.exit(0);
 			}
 		});
+
+        uiSettings = new UISettings();
 
 		CreateMenus();
 		CreateStatusBar();

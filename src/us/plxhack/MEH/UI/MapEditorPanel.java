@@ -360,7 +360,7 @@ public class MapEditorPanel extends JPanel {
 				}
 			}
 
-			g.setColor(Color.GREEN);
+			g.setColor(MainGUI.uiSettings.cursorColor);
 			if (mouseTracker.width < 0)
 				mouseTracker.x -= Math.abs(mouseTracker.width);
 			if (mouseTracker.height < 0)
