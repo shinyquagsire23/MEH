@@ -108,6 +108,9 @@ public class MapEditorPanel extends JPanel {
 				if(mouseTracker.y > map.getMapData().mapHeight * 16)
 					mouseTracker.y = (int)(map.getMapData().mapHeight * 16) - (bufferHeight * 8);
                 MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+                
+                selectBox.x = (mouseTracker.x / 16) * 16;
+                selectBox.y = (mouseTracker.y / 16) * 16;
 				repaint();
 			}
 		});
@@ -365,10 +368,13 @@ public class MapEditorPanel extends JPanel {
 				mouseTracker.x -= Math.abs(mouseTracker.width);
 			if (mouseTracker.height < 0)
 				mouseTracker.y -= Math.abs(mouseTracker.height);
-			try {
-			g.drawRect((int)(((mouseTracker.x / 16) % map.getMapData().mapWidth) * 16),(mouseTracker.y / 16) * 16,selectBox.width-1,selectBox.height-1);
+			try 
+			{
+				//g.drawRect((int)(((mouseTracker.x / 16) % map.getMapData().mapWidth) * 16),(mouseTracker.y / 16) * 16,selectBox.width-1,selectBox.height-1);
+				g.drawRect(selectBox.x,selectBox.y,selectBox.width-1,selectBox.height-1);
 			}
-            catch(Exception e) {
+            catch(Exception e) 
+            {
                 e.printStackTrace();
             }
 		}
