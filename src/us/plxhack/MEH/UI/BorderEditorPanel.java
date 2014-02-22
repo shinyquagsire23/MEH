@@ -93,6 +93,11 @@ public class BorderEditorPanel extends JPanel
 				if(mouseY > map.getMapData().borderHeight - 1)
 					mouseY = map.getMapData().borderHeight - 1;
 				
+				if(mouseX < 0)
+					mouseX = 0;
+				if(mouseY < 0)
+					mouseY = 0;
+				
 				repaint();
 			}
 
