@@ -124,8 +124,8 @@ public class MapEditorPanel extends JPanel {
 		this.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
-				int x = selectBox.x / 16;//(mouseTracker.x / 16);
-				int y = selectBox.y / 16;//(mouseTracker.y / 16);
+				int x = selectBox.x / 16;
+				int y = selectBox.y / 16;
 				if (map == null)
                     return;
 
@@ -366,6 +366,15 @@ public class MapEditorPanel extends JPanel {
 						x++;
 					}
 					x = 0;
+				}
+			}
+			
+			if(renderTileset)
+			{
+				for(int i = 0; i < 13; i++)
+				{
+					g.drawImage(globalTiles.getTileSet(i),i*128,0,this);
+					g.drawImage(localTiles.getTileSet(i),i*128,DataStore.MainTSHeight + 8,this);
 				}
 			}
 
