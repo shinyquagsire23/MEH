@@ -224,26 +224,31 @@ public class PermissionTilePanel extends JPanel
 	{
 		super.paintComponent(g);
 		
-			if(PermissionTilePanel.Redraw==true){
-				DrawTileset();
-				PermissionTilePanel.Redraw=false;
-			}
-			g.drawImage(imgBuffer, 0, 0, this);
-			
-			g.setColor(MainGUI.uiSettings.markerColor);
-			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
-			
-			g.setColor(MainGUI.uiSettings.cursorColor);
-			if( mouseTracker.width <0)
-				mouseTracker.x-=Math.abs( mouseTracker.width);
-			if( mouseTracker.height <0)
-				mouseTracker.y-=Math.abs( mouseTracker.height);
-			g.drawRect(((mouseTracker.x / 16) % editorWidth) * 16,(mouseTracker.y / 16) * 16,MapEditorPanel.selectBox.width-1,MapEditorPanel.selectBox.height-1);
+		if(MainGUI.uiSettings == null)
+			return;
+
+		if (PermissionTilePanel.Redraw == true)
+		{
+			DrawTileset();
+			PermissionTilePanel.Redraw = false;
+		}
+		g.drawImage(imgBuffer, 0, 0, this);
+
+		g.setColor(MainGUI.uiSettings.markerColor);
+		g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
+
+		g.setColor(MainGUI.uiSettings.cursorColor);
+		if (mouseTracker.width < 0)
+			mouseTracker.x -= Math.abs(mouseTracker.width);
+		if (mouseTracker.height < 0)
+			mouseTracker.y -= Math.abs(mouseTracker.height);
+		g.drawRect(((mouseTracker.x / 16) % editorWidth) * 16, (mouseTracker.y / 16) * 16, MapEditorPanel.selectBox.width - 1, MapEditorPanel.selectBox.height - 1);
 		try
 		{
-			//best error image.
-			//I'll always remember you Smeargle <3
-			//g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")), 100, 240,null);
+			// best error image.
+			// I'll always remember you Smeargle <3
+			// g.drawImage(ImageIO.read(MainGUI.class.getResourceAsStream("/resources/smeargle.png")),
+			// 100, 240,null);
 		}
 		catch (Exception e)
 		{
