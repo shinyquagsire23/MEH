@@ -103,14 +103,20 @@ public class MapEditorPanel extends JPanel {
 					return;
 				mouseTracker.x = e.getX();
 				mouseTracker.y = e.getY();
+
 				if(mouseTracker.x > map.getMapData().mapWidth * 16)
 					mouseTracker.x = (int)(map.getMapData().mapWidth * 16) - (bufferWidth * 8);
 				if(mouseTracker.y > map.getMapData().mapHeight * 16)
 					mouseTracker.y = (int)(map.getMapData().mapHeight * 16) - (bufferHeight * 8);
                 MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
                 
-                selectBox.x = (mouseTracker.x / 16) * 16;
-                selectBox.y = (mouseTracker.y / 16) * 16;
+                selectBox.x = ((mouseTracker.x / 16) * 16);
+                selectBox.y = ((mouseTracker.y / 16) * 16);
+                
+                if(selectBox.width > 16)
+                	selectBox.x -= selectBox.width / 2;
+                if(selectBox.height > 16)
+                	selectBox.y -= selectBox.height / 2;
 				repaint();
 			}
 		});
@@ -118,8 +124,8 @@ public class MapEditorPanel extends JPanel {
 		this.addMouseListener(new MouseListener() {
 
 			public void mouseClicked(MouseEvent e) {
-				int x = (mouseTracker.x / 16);
-				int y = (mouseTracker.y / 16);
+				int x = selectBox.x / 16;//(mouseTracker.x / 16);
+				int y = selectBox.y / 16;//(mouseTracker.y / 16);
 				if (map == null)
                     return;
 
