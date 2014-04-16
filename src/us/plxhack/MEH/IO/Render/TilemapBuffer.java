@@ -1,18 +1,18 @@
 package us.plxhack.MEH.IO.Render;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
+import org.zzl.minegaming.GBAUtils.GBAImage;
+import org.zzl.minegaming.GBAUtils.GBAImageType;
+import org.zzl.minegaming.GBAUtils.GBARom;
+import org.zzl.minegaming.GBAUtils.Palette;
 
-import org.zzl.minegaming.GBAUtils.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class TilemapBuffer {
 	public GBAImageType myType;
     public  Graphics gcBuff;
 	public  Image imgBuffer;
-	public  GBAImage rawImage;
+	public GBAImage rawImage;
 	private BufferedImage bi;
 	private byte[] dcmpTilemap;
 	private BufferedImage[] mybi;

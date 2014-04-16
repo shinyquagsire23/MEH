@@ -1,7 +1,6 @@
 package us.plxhack.MEH.MapElements;
 
 import org.zzl.minegaming.GBAUtils.GBARom;
-import org.zzl.minegaming.GBAUtils.ISaveable;
 
 public class WildDataHeader implements Cloneable
 {

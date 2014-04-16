@@ -1,25 +1,19 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
+import org.zzl.minegaming.GBAUtils.BitConverter;
+import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.Structures.MapTile;
+import us.plxhack.MEH.Structures.PermissionTileMode;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-
-import org.zzl.minegaming.GBAUtils.BitConverter;
-
-import us.plxhack.MEH.IO.Tileset;
-import us.plxhack.MEH.Structures.MapTile;
-import us.plxhack.MEH.Structures.PermissionTileMode;
 
 public class PermissionTilePanel extends JPanel
 {

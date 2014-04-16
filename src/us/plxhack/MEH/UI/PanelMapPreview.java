@@ -1,14 +1,11 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.Graphics;
-import java.awt.Image;
-
-import javax.swing.JPanel;
-
 import org.zzl.minegaming.GBAUtils.ROMManager;
-
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.IO.Map;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class PanelMapPreview extends JPanel
 {

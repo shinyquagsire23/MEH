@@ -1,18 +1,13 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
-
 import org.zzl.minegaming.GBAUtils.BitConverter;
-
 import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.MapElements.SpritesSignManager;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SignPanel extends JPanel {
 	private JTextField textField;

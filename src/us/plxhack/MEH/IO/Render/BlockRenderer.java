@@ -1,14 +1,10 @@
 package us.plxhack.MEH.IO.Render;
 
-import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-
 import org.zzl.minegaming.GBAUtils.DataStore;
-
 import us.plxhack.MEH.IO.Tileset;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class BlockRenderer extends Component
 {

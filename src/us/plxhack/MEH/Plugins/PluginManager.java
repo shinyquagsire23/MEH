@@ -1,18 +1,16 @@
 package us.plxhack.MEH.Plugins;
 
-import java.awt.Dimension;
+import org.zzl.minegaming.GBAUtils.ROMManager;
+import us.plxhack.MEH.UI.MainGUI;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-
-import javax.swing.JButton;
-
-import org.zzl.minegaming.GBAUtils.ROMManager;
-
-import us.plxhack.MEH.UI.MainGUI;
 
 public class PluginManager
 {

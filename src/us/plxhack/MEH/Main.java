@@ -1,12 +1,10 @@
 package us.plxhack.MEH;
 
-import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.MainGUI;
+
+import javax.swing.*;
 
 public class Main {
 	public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
