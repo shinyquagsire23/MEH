@@ -1,25 +1,20 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import org.zzl.minegaming.GBAUtils.BitConverter;
+import org.zzl.minegaming.GBAUtils.DataStore;
+import us.plxhack.MEH.IO.BorderMap;
+import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.Render.BlockRenderer;
+import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.Structures.EditMode;
+import us.plxhack.MEH.Structures.MapTile;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-
-import org.zzl.minegaming.GBAUtils.BitConverter;
-import org.zzl.minegaming.GBAUtils.DataStore;
-
-import us.plxhack.MEH.IO.BorderMap;
-import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.IO.Tileset;
-import us.plxhack.MEH.IO.Render.BlockRenderer;
-import us.plxhack.MEH.Structures.EditMode;
-import us.plxhack.MEH.Structures.MapTile;
 
 public class BorderEditorPanel extends JPanel
 {

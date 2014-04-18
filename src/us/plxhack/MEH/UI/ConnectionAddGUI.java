@@ -1,24 +1,17 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import org.zzl.minegaming.GBAUtils.DataStore;
+import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.Structures.ConnectionType;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.zzl.minegaming.GBAUtils.DataStore;
-
-import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.Structures.ConnectionType;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ConnectionAddGUI extends JFrame
 {

@@ -1,12 +1,9 @@
 package us.plxhack.MEH.IO.Render;
 
-import java.awt.Image;
-import java.util.ArrayList;
-
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
-import us.plxhack.MEH.MapElements.SpriteNPC;
+import java.awt.*;
 
 public class OverworldSpritesManager extends Thread implements Runnable
 {

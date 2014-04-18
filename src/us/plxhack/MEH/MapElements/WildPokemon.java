@@ -1,6 +1,5 @@
 package us.plxhack.MEH.MapElements;
 
-import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 

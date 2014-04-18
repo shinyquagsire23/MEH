@@ -1,17 +1,10 @@
 package us.plxhack.MEH.IO;
 
-import java.awt.Graphics2D;
-import java.awt.Point;
+import org.zzl.minegaming.GBAUtils.*;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-
-import org.zzl.minegaming.GBAUtils.BitConverter;
-import org.zzl.minegaming.GBAUtils.DataStore;
-import org.zzl.minegaming.GBAUtils.GBAImage;
-import org.zzl.minegaming.GBAUtils.GBAImageType;
-import org.zzl.minegaming.GBAUtils.GBARom;
-import org.zzl.minegaming.GBAUtils.Lz77;
-import org.zzl.minegaming.GBAUtils.Palette;
 
 public class Tileset
 {

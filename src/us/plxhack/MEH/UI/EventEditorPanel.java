@@ -1,28 +1,25 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.JPanel;
-
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
-import org.zzl.minegaming.GBAUtils.ROMManager;
-
 import us.plxhack.MEH.IO.Map;
 import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
+import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.MapElements.SpriteExit;
 import us.plxhack.MEH.MapElements.SpriteNPC;
 import us.plxhack.MEH.MapElements.SpriteSign;
 import us.plxhack.MEH.MapElements.Trigger;
 import us.plxhack.MEH.Structures.EventType;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 
 public class EventEditorPanel extends JPanel
 {

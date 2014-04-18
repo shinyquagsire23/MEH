@@ -1,26 +1,18 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-import javax.swing.JViewport;
-
 import org.zzl.minegaming.GBAUtils.ROMManager;
-
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.IO.Connection;
 import us.plxhack.MEH.IO.Map;
 import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.Structures.ConnectionType;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.image.BufferedImage;
 
 public class ConnectionsEditorPanel extends JPanel
 {

@@ -1,26 +1,36 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.beans.*;
-import java.io.*;
-import java.util.Date;
+import org.zzl.minegaming.GBAUtils.*;
+import us.plxhack.MEH.Globals.UISettings;
+import us.plxhack.MEH.Globals.Version;
+import us.plxhack.MEH.IO.BankLoader;
+import us.plxhack.MEH.IO.MapIO;
+import us.plxhack.MEH.IO.TilesetCache;
+import us.plxhack.MEH.MapElements.WildDataCache;
+import us.plxhack.MEH.MapElements.WildDataType;
+import us.plxhack.MEH.Plugins.Plugin;
+import us.plxhack.MEH.Plugins.PluginManager;
+import us.plxhack.MEH.Structures.ConnectionType;
+import us.plxhack.MEH.Structures.EditMode;
+import us.plxhack.MEH.Structures.EventType;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
-
-import org.zzl.minegaming.GBAUtils.*;
-
-import us.plxhack.MEH.Globals.UISettings;
-import us.plxhack.MEH.Globals.Version;
-import us.plxhack.MEH.IO.*;
-import us.plxhack.MEH.MapElements.*;
-import us.plxhack.MEH.Plugins.*;
-import us.plxhack.MEH.Structures.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 
 public class MainGUI extends JFrame {
     public static  UISettings uiSettings;
@@ -33,7 +43,7 @@ public class MainGUI extends JFrame {
 	public static JLabel lblInfo;
     public static JLabel lblX;
     public static JLabel lblY;
-	public JTree mapBanks;
+	public static JTree mapBanks;
 	
 	private static int eventIndex;
 	private static EventType eventType;
@@ -1766,6 +1776,7 @@ public class MainGUI extends JFrame {
 					MapIO.selectedMap = Integer.parseInt(s.split("\\.")[1]);
 				}
 				catch (Exception ex) {
+                    ex.printStackTrace();
 				}
 			}
 		});
@@ -1773,8 +1784,11 @@ public class MainGUI extends JFrame {
 		mapBanks.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
+                    // Find a more streamlined way to detect that a node was not expanded
 					if (e.getClickCount() == 2) {
-						MapIO.loadMap();
+                        if (mapBanks.getModel().getIndexOfChild(mapBanks.getModel().getRoot(), mapBanks.getSelectionPath().getLastPathComponent()) == -1) {
+                            MapIO.loadMap();
+                        }
 					}
 				}
 			}
@@ -1787,6 +1801,16 @@ public class MainGUI extends JFrame {
 		mapPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		mapPanelFrame.add(mapPane);
 	}
+
+    public static void updateTree() {
+        Object root = mapBanks.getModel().getRoot();
+        Object folder = mapBanks.getModel().getChild(root, MapIO.selectedBank);
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode)(mapBanks.getModel().getChild(folder, MapIO.selectedMap));
+        TreePath path = new TreePath(node.getPath());
+        mapBanks.setSelectionPath(path);
+        //mapBanks.setExpandsSelectedPaths(true);
+        mapBanks.scrollPathToVisible(path);
+    }
 
 	private static void addPopup(Component component, final JPopupMenu popup) {
 		component.addMouseListener(new MouseAdapter() {

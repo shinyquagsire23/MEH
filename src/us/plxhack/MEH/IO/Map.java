@@ -1,25 +1,18 @@
 package us.plxhack.MEH.IO;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-
 import us.plxhack.MEH.IO.Render.OverworldSprites;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
-import us.plxhack.MEH.MapElements.HeaderSprites;
-import us.plxhack.MEH.MapElements.SpritesExitManager;
-import us.plxhack.MEH.MapElements.SpritesNPCManager;
-import us.plxhack.MEH.MapElements.SpritesSignManager;
-import us.plxhack.MEH.MapElements.TriggerManager;
+import us.plxhack.MEH.MapElements.*;
 import us.plxhack.MEH.UI.MainGUI;
 import us.plxhack.MEH.UI.MapEditorPanel;
 import us.plxhack.MEH.UI.TileEditorPanel;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 
 public class Map implements ISaveable
