@@ -26,7 +26,16 @@ public class TilesetCache
 	public static Tileset get(int offset)
 	{
 		if(cache.containsKey(offset))
-			return cache.get(offset);
+		{
+			Tileset t = cache.get(offset);
+			if(t.modified)
+			{
+				t.loadData(offset);
+				t.renderTiles(offset);
+				t.modified = false;
+			}
+			return t;
+		}
 		else
 		{
 			Tileset t =  new Tileset(ROMManager.getActiveROM(), offset);
@@ -40,6 +49,11 @@ public class TilesetCache
 		cache = new HashMap<Integer, Tileset>();
 	}
 
+	public static void saveAllTilesets()
+	{
+		for(Tileset t : cache.values())
+			t.save();
+	}
 	
 	public static void switchTileset(Map loadedMap)
 	{

@@ -28,26 +28,38 @@ public class Tileset
 	private HashMap<Integer,BufferedImage>[] customRenderedTiles;
 	private final byte[] localTSLZHeader = new byte[] { 10, 80, 9, 00, 32, 00, 00 };
 	private final byte[] globalTSLZHeader = new byte[] { 10, 80, 9, 00, 32, 00, 00 };
+	
+	public boolean modified = false;
 
 
 	@SuppressWarnings("unchecked")
 	public Tileset(GBARom rom, int offset)
 	{
 		this.rom = rom;
+		loadData(offset);
+		numBlocks = 1024; //(tilesetHeader.isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
+		renderTiles(offset);	
+	}
+	
+	public void loadData(int offset)
+	{
 		tilesetHeader = new TilesetHeader(rom,offset);
-		int imageDataPtr = rom.getPointerAsInt(offset+0x4);
+	}
+	
+	public void renderGraphics()
+	{
+		int imageDataPtr = (int)tilesetHeader.pGFX;
 
 		if(tilesetHeader.isPrimary)
 			lastPrimary = this;
 		int[] uncompressedData = null;
-		byte b = rom.readByte(offset);
 
-		if(b == 1)
+		if(tilesetHeader.bCompressed == 1)
 			uncompressedData = Lz77.decompressLZ77(rom, imageDataPtr);
 		if(uncompressedData == null)
 		{
 			GBARom backup = (GBARom) rom.clone(); //Backup in case repairs fail
-			rom.writeBytes(offset, (tilesetHeader.isPrimary ? globalTSLZHeader : localTSLZHeader)); //Attempt to repair the LZ77 data
+			rom.writeBytes((int)tilesetHeader.pGFX, (tilesetHeader.isPrimary ? globalTSLZHeader : localTSLZHeader)); //Attempt to repair the LZ77 data
 			uncompressedData = Lz77.decompressLZ77(rom, imageDataPtr);
 			rom = (GBARom) backup.clone(); //TODO add dialog to allow repairs to be permanant
 			if(uncompressedData == null) //If repairs didn't go well, revert ROM and pull uncompressed data
@@ -55,7 +67,7 @@ public class Tileset
 				uncompressedData = BitConverter.ToInts(rom.readBytes(imageDataPtr, (tilesetHeader.isPrimary ? 128*DataStore.MainTSHeight : 128*DataStore.LocalTSHeight) / 2)); //TODO: Hardcoded to FR tileset sizes
 			}
 		}
-		numBlocks = 1024; //(tilesetHeader.isPrimary ? DataStore.MainTSBlocks : DataStore.LocalTSBlocks); //INI RSE=0x207 : 0x88, FR=0x280 : 0x56
+		
 		renderedTiles = new HashMap[tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13];
 		customRenderedTiles = new HashMap[13-DataStore.MainTSPalCount];
 		
@@ -63,18 +75,26 @@ public class Tileset
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
 		for(int i = 0; i < 13-DataStore.MainTSPalCount; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
-
+		
+		image = new GBAImage(uncompressedData,palettes[0],new Point(128,(tilesetHeader.isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));
+	}
+	
+	public void renderPalettes()
+	{
 		palettes = new Palette[13];
 		bi = new BufferedImage[13];
 		
 		for(int i = 0; i < (tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13); i++)
 		{
-			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(rom.getPointerAsInt(offset+0x8)+(32*i),32));
+			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(((int)tilesetHeader.pPalettes)+(32*i),32));
 		}
 		palettesFromROM = palettes.clone();
-		
-		
-		image = new GBAImage(uncompressedData,palettes[0],new Point(128,(tilesetHeader.isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));	
+	}
+	
+	public void renderTiles(int offset)
+	{
+		renderPalettes();
+		renderGraphics();
 	}
 	
 	public void startTileThreads()
@@ -237,7 +257,12 @@ public class Tileset
 	{
 		return bi[palette];
 	}
-
+	
+	public BufferedImage getIndexedTileSet(int palette)
+	{
+		return image.getIndexedImage(palettes[palette], true);
+	}
+	
 	public TilesetHeader getTilesetHeader()
 	{
 		return tilesetHeader;
@@ -276,5 +301,15 @@ public class Tileset
 			}
 		}
 		
+	}
+
+	public void save()
+	{
+		for(int i = 0; i < (tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13); i++)
+		{
+			rom.Seek(((int)tilesetHeader.pPalettes)+(32*i));
+			palettes[i].save(rom);
+		}
+		tilesetHeader.save();
 	}
 }

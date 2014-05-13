@@ -71,23 +71,9 @@ public class MapEditorPanel extends JPanel {
 				System.out.println(x + " " + y);
 
 				if (e.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK)  {
-					for(int DrawX=0; DrawX < bufferWidth; DrawX++) {
-						for(int DrawY = 0; DrawY < bufferHeight; DrawY++) {
-							//Tiles multi-select will grab both the tiles and the meta, 
-							//while movement editing will only select metas.
-							if(currentMode == EditMode.TILES) {
-								map.getMapTileData().getTile(x + DrawX, y + DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
-								if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
-									map.getMapTileData().getTile(x + DrawX, y + DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
-								drawTile(x + DrawX,y + DrawY);
-							}
-							else if(currentMode == EditMode.MOVEMENT) {
-								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
-								drawTile(x+DrawX,y+DrawY);
-							}
-						}
-					}
-
+					
+					drawTiles(x, y);
+					moveSelectRect(e);
 					map.isEdited = true;
 					MapIO.repaintTileEditorPanel();
 				}
@@ -101,22 +87,7 @@ public class MapEditorPanel extends JPanel {
 			public void mouseMoved(MouseEvent e) {
 				if(map == null)
 					return;
-				mouseTracker.x = e.getX();
-				mouseTracker.y = e.getY();
-
-				if(mouseTracker.x > map.getMapData().mapWidth * 16)
-					mouseTracker.x = (int)(map.getMapData().mapWidth * 16) - (bufferWidth * 8);
-				if(mouseTracker.y > map.getMapData().mapHeight * 16)
-					mouseTracker.y = (int)(map.getMapData().mapHeight * 16) - (bufferHeight * 8);
-                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
-                
-                selectBox.x = ((mouseTracker.x / 16) * 16);
-                selectBox.y = ((mouseTracker.y / 16) * 16);
-                
-                if(selectBox.width > 16)
-                	selectBox.x -= selectBox.width / 2;
-                if(selectBox.height > 16)
-                	selectBox.y -= selectBox.height / 2;
+				moveSelectRect(e);
 				repaint();
 			}
 		});
@@ -135,33 +106,19 @@ public class MapEditorPanel extends JPanel {
 				System.out.println(e.getButton());
 
 				if(e.getButton() == 1) {
-					for(int DrawX=0;DrawX<bufferWidth;DrawX++) {
-						for(int DrawY=0;DrawY<bufferHeight;DrawY++) {
-							//Tiles multi-select will grab both the tiles and the meta, 
-							//while movement editing will only select metas.
-							if(currentMode == EditMode.TILES) {
-								map.getMapTileData().getTile(x+DrawX, y+DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
-								if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
-									map.getMapTileData().getTile(x+DrawX, y+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
-								drawTile(x + DrawX, y + DrawY);
-							}
-							else if(currentMode == EditMode.MOVEMENT) {
-								map.getMapTileData().getTile(x + DrawX, y + DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
-								drawTile(x + DrawX,y + DrawY);
-							}
-						}
-					}
+					
+					drawTiles(x, y);
 					map.isEdited = true;
 					//DrawMap();
 				}
 				else if(e.getButton() == 3) {
 					if(currentMode == EditMode.TILES) {
-						TileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
-						MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+						MainGUI.tileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
+						MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
 					}
 					else if(currentMode == EditMode.MOVEMENT) {
 						PermissionTilePanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getMeta();
-						MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+						MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
 					}
 					
 					MapIO.repaintTileEditorPanel();
@@ -209,6 +166,50 @@ public class MapEditorPanel extends JPanel {
                 repaint();
 			}
 		});
+	}
+
+	public void moveSelectRect(MouseEvent e)
+	{
+		mouseTracker.x = e.getX();
+		mouseTracker.y = e.getY();
+
+		if(mouseTracker.x > map.getMapData().mapWidth * 16)
+			mouseTracker.x = (int)(map.getMapData().mapWidth * 16) - (bufferWidth * 8);
+		if(mouseTracker.y > map.getMapData().mapHeight * 16)
+			mouseTracker.y = (int)(map.getMapData().mapHeight * 16) - (bufferHeight * 8);
+        MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+        
+        selectBox.x = ((mouseTracker.x / 16) * 16);
+        selectBox.y = ((mouseTracker.y / 16) * 16);
+        
+        if(selectBox.width > 16)
+        	selectBox.x -= selectBox.width / 2;
+        if(selectBox.height > 16)
+        	selectBox.y -= selectBox.height / 2;
+	}
+	
+	public void drawTiles(int x, int y)
+	{
+		for(int DrawX=0; DrawX < bufferWidth; DrawX++) 
+		{
+			for(int DrawY = 0; DrawY < bufferHeight; DrawY++) 
+			{
+				//Tiles multi-select will grab both the tiles and the meta, 
+				//while movement editing will only select metas.
+				if(currentMode == EditMode.TILES) 
+				{
+					map.getMapTileData().getTile(selectBox.x/16 + DrawX, selectBox.y/16 + DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
+					if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
+						map.getMapTileData().getTile(selectBox.x/16 + DrawX, selectBox.y/16 + DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
+					drawTile(selectBox.x/16 + DrawX,selectBox.y/16 + DrawY);
+				}
+				else if(currentMode == EditMode.MOVEMENT) 
+				{
+					map.getMapTileData().getTile(selectBox.x/16+DrawX, selectBox.y/16+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
+					drawTile(selectBox.x/16+DrawX,selectBox.y/16+DrawY);
+				}
+			}
+		}
 	}
 
 	public static void calculateSelectBox(MouseEvent e) {
@@ -298,7 +299,7 @@ public class MapEditorPanel extends JPanel {
 		}
 		else if(m == EditMode.MOVEMENT) {
 			gcBuff = permImgBuffer.getGraphics();
-			int TileMeta=(MainGUI.mapEditorPanel.map.getMapTileData().getTile(x, y).getMeta());
+			int TileMeta=(map.getMapTileData().getTile(x, y).getMeta());
 			
 			//Clear the rectangle since transparency can draw ontop of itself
 			((Graphics2D)gcBuff).setBackground(new Color(255,255,255,0));

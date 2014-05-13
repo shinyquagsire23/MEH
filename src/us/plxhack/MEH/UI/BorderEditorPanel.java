@@ -146,8 +146,8 @@ public class BorderEditorPanel extends JPanel
 				}
 				else if(e.getButton() == 3)
 				{
-					TileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
-					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(TileEditorPanel.baseSelectedTile));
+					MainGUI.tileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
+					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
 					MapIO.repaintTileEditorPanel();
 				}
 			}

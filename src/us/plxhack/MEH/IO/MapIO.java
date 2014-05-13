@@ -18,6 +18,7 @@ import us.plxhack.MEH.MapElements.WildDataCache;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.DNPokePatcher;
 import us.plxhack.MEH.UI.MainGUI;
+import us.plxhack.MEH.UI.MapEditorPanel;
 
 public class MapIO
 {
@@ -99,8 +100,8 @@ public class MapIO
 				try {
 					wildData = (WildData) WildDataCache.getWildData(currentBank, currentMap).clone();
 				}
-				catch (CloneNotSupportedException e) {
-					e.printStackTrace();
+				catch (Exception e) {
+
 				}
 				
 				MainGUI.loadWildPokemon();
@@ -198,6 +199,8 @@ public class MapIO
 
 	public static void saveMap() {
 		MapIO.loadedMap.save();
+		TilesetCache.get(MapIO.loadedMap.getMapData().globalTileSetPtr).save();
+		TilesetCache.get(MapIO.loadedMap.getMapData().localTileSetPtr).save();
 		MainGUI.connectionsEditorPanel.save(); // Save surrounding maps
 		WildDataCache.setWildData(currentBank, currentMap, wildData);
 		PluginManager.fireMapSave(MapIO.currentBank, MapIO.currentMap);

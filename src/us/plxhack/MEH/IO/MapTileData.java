@@ -37,9 +37,36 @@ public class MapTileData implements ISaveable
 	
 	public MapTile getTile(int x, int y)
 	{
-			return mapTiles[x][y];
+		if(x < 0 && y < 0)
+			return mapTiles[0][0];
+		else if(x < 0)
+			return mapTiles[0][y];
+		else if(y < 0)
+			return mapTiles[x][0];
+		
+		if(x > mData.mapWidth && y > mData.mapHeight)
+			return mapTiles[(int)mData.mapWidth][(int)mData.mapHeight];
+		else if(x > mData.mapWidth)
+			return mapTiles[(int)mData.mapWidth][y];
+		else if(y > mData.mapHeight)
+			return mapTiles[x][(int)mData.mapHeight];
+		
+		return mapTiles[x][y];
 	}
 
+	public MapTile[][] getTiles(int x, int y, int width, int height)
+	{
+		MapTile[][] m = new MapTile[width][height];
+		for(int i = x; i < x + width; i++)
+		{
+			for(int j = y; j < y + width; j++)
+			{
+				m[i-x][j-y] = getTile(i,j);
+			}
+		}
+		return m;
+	}
+	
 	public int getSize()
 	{
 		return (int) ((mData.mapWidth * mData.mapHeight) * 2);

@@ -102,7 +102,7 @@ public class PermissionTilePanel extends JPanel
 					srcY=y;
 					baseSelectedTile = x + (y * editorWidth);
 					MapEditorPanel.selectBuffer = new MapTile[1][1];
-					MapEditorPanel.selectBuffer[0][0] = new MapTile(TileEditorPanel.baseSelectedTile,PermissionTilePanel.baseSelectedTile); //TODO implement movement perms
+					MapEditorPanel.selectBuffer[0][0] = new MapTile(MainGUI.tileEditorPanel.baseSelectedTile,PermissionTilePanel.baseSelectedTile); //TODO implement movement perms
 					MapEditorPanel.bufferWidth = 1;
 					MapEditorPanel.bufferHeight = 1;
 					MapEditorPanel.selectBox.width = 16;

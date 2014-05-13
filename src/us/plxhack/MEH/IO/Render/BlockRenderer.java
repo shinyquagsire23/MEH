@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 
+import us.plxhack.MEH.IO.Block;
+import us.plxhack.MEH.IO.Tile;
 import us.plxhack.MEH.IO.Tileset;
 
 public class BlockRenderer extends Component
@@ -35,6 +37,17 @@ public class BlockRenderer extends Component
     	this.local = local;
     }
 	
+    
+    public Tileset getGlobalTileset()
+    {
+    	return global;
+    }
+    
+    public Tileset getLocalTileset()
+    {
+    	return local;
+    }
+    
     public Image renderBlock(int blockNum)
     {
     	return renderBlock(blockNum, true);
@@ -43,52 +56,54 @@ public class BlockRenderer extends Component
 	public Image renderBlock(int blockNum, boolean transparency)
 	{
 		boolean isSecondaryBlock = false;
-		if(blockNum >= DataStore.MainTSBlocks)
+		if (blockNum >= DataStore.MainTSBlocks)
 		{
 			isSecondaryBlock = true;
 			blockNum -= DataStore.MainTSBlocks;
 		}
-		
+
 		int blockPointer = (int) ((isSecondaryBlock ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (blockNum * 16));
-		BufferedImage block = new BufferedImage(16,16,BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = (Graphics2D)block.getGraphics();
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+		BufferedImage block = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = (Graphics2D) block.getGraphics();
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 		int x = 0;
 		int y = 0;
 		int top = 0;
-		for(int i = 0; i < 16; i++)
+		for (int i = 0; i < 16; i++)
 		{
 			int orig = global.getROM().readWord(blockPointer + i);
 			int tileNum = global.getROM().readWord(blockPointer + i) & 0x3FF;
 			int palette = (global.getROM().readWord(blockPointer + i) & 0xF000) >> 12;
 			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
 			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
-			if(transparency && top == 0)
+			if (transparency && top == 0)
 			{
-				try{
-						g.setColor(global.getPalette()[palette].getIndex(0));
-				}catch(Exception e){
-					
+				try
+				{
+					g.setColor(global.getPalette()[palette].getIndex(0));
 				}
-				g.fillRect(x*8, y*8, 8, 8);
+				catch (Exception e)
+				{
+
+				}
+				g.fillRect(x * 8, y * 8, 8, 8);
 			}
 
-			if(tileNum < DataStore.MainTSSize)
+			if (tileNum < DataStore.MainTSSize)
 			{
-				g.drawImage(global.getTile(tileNum, palette,xFlip,yFlip),x*8,y*8,null);
+				g.drawImage(global.getTile(tileNum, palette, xFlip, yFlip), x * 8, y * 8, null);
 			}
 			else
 			{
-				g.drawImage(local.getTile(tileNum - DataStore.MainTSSize, palette, xFlip, yFlip),x*8,y*8,null);
+				g.drawImage(local.getTile(tileNum - DataStore.MainTSSize, palette, xFlip, yFlip), x * 8, y * 8, null);
 			}
 			x++;
-			if(x > 1)
+			if (x > 1)
 			{
 				x = 0;
 				y++;
 			}
-			if(y > 1)
+			if (y > 1)
 			{
 				x = 0;
 				y = 0;
@@ -97,5 +112,45 @@ public class BlockRenderer extends Component
 			i++;
 		}
 		return createImage(block.getSource());
+	}
+
+	public Block getBlock(int blockNum)
+	{
+		boolean isSecondaryBlock = false;
+		if (blockNum >= DataStore.MainTSBlocks)
+		{
+			isSecondaryBlock = true;
+			blockNum -= DataStore.MainTSBlocks;
+		}
+
+		int blockPointer = (int) ((isSecondaryBlock ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (blockNum * 16));
+		int x = 0;
+		int y = 0;
+		int top = 0;
+		Block b = new Block(blockNum, global.getROM());
+		for (int i = 0; i < 16; i++)
+		{
+			int orig = global.getROM().readWord(blockPointer + i);
+			int tileNum = global.getROM().readWord(blockPointer + i) & 0x3FF;
+			int palette = (global.getROM().readWord(blockPointer + i) & 0xF000) >> 12;
+			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
+			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
+
+			b.setTile(x+(top*2), y, new Tile(tileNum, palette, xFlip, yFlip));
+			x++;
+			if (x > 1)
+			{
+				x = 0;
+				y++;
+			}
+			if (y > 1)
+			{
+				x = 0;
+				y = 0;
+				top = 1;
+			}
+			i++;
+		}
+		return b;
 	}
 }

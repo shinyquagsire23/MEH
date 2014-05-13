@@ -180,6 +180,7 @@ public class MainGUI extends JFrame {
     JPanel mimePanel;// Mr. Mime 2 dirty 4 mii
     private JMenu mnPatches;
     private JMenuItem mntmDaynightPokemon;
+    private JButton btnBlockedit;
 
 	void CreateToolbar() {
 		JToolBar toolBar = new JToolBar();
@@ -561,6 +562,18 @@ public class MainGUI extends JFrame {
 		btnImportMap.setBorderPainted(false);
 		btnImportMap.setPreferredSize(new Dimension(48, 48));
 		panelButtons.add(btnImportMap);
+		
+		btnBlockedit = new JButton("BlockEdit");
+		btnBlockedit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new BlockEditor().show();
+			}
+		});
+		btnBlockedit.setToolTipText("Import Map (Not implemented)");
+		btnBlockedit.setPreferredSize(new Dimension(48, 48));
+		btnBlockedit.setFocusPainted(false);
+		btnBlockedit.setBorderPainted(false);
+		panelButtons.add(btnBlockedit);
 	}
 
 	void CreateWildPokemonPanel() {
@@ -1495,7 +1508,7 @@ public class MainGUI extends JFrame {
 		});
 		tabbedPane.setBorder(null);
 		panelTilesContainer.add(tabbedPane, BorderLayout.CENTER);
-		tileEditorPanel = new TileEditorPanel();
+		tileEditorPanel = new TileEditorPanel(true);
 
 		tileEditorPanel.setPreferredSize(new Dimension((TileEditorPanel.editorWidth) * 16 + 16, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300) / TileEditorPanel.editorWidth) * 16));
 		tileEditorPanel.setSize(tileEditorPanel.getPreferredSize());
@@ -2019,5 +2032,4 @@ public class MainGUI extends JFrame {
         lblX.setText("X: " + x);
         lblY.setText("Y: " + y);
     }
-
 }
