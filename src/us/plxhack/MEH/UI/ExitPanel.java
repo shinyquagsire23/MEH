@@ -1,20 +1,13 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.border.TitledBorder;
-
 import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.MapElements.SpritesExitManager;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ExitPanel extends JPanel {
 	int myIndex;

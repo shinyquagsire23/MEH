@@ -1,24 +1,20 @@
 package us.plxhack.MEH.IO;
 
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.Date;
-
-import javax.swing.JComboBox;
-import javax.swing.JOptionPane;
-
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
-
 import us.plxhack.MEH.MapElements.WildData;
 import us.plxhack.MEH.MapElements.WildDataCache;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.DNPokePatcher;
 import us.plxhack.MEH.UI.MainGUI;
 import us.plxhack.MEH.UI.MapEditorPanel;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.Date;
 
 public class MapIO
 {
@@ -31,7 +27,7 @@ public class MapIO
 	public static int currentMap = 0;
 	public static boolean doneLoading = false;
 	public static WildData wildData;
-	
+
 	public static void loadMap(int bank, int map)
 	{
 		selectedMap = map;
@@ -43,6 +39,7 @@ public class MapIO
 	{
 		long offset = BankLoader.maps[selectedBank].get(selectedMap);
 		loadMapFromPointer(offset, false);
+        MainGUI.updateTree();
 	}
 
 	public static void loadMapFromPointer(long offs, boolean justPointer)
@@ -63,7 +60,7 @@ public class MapIO
 				Date d = new Date();
 				doneLoading = false;
 				if (loadedMap != null)
-					TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles(); 
+					TilesetCache.get(loadedMap.getMapData().globalTileSetPtr).resetCustomTiles();
 
 				loadedMap = new Map(ROMManager.getActiveROM(), (int) (offset));
 				currentBank = selectedBank;
@@ -103,7 +100,7 @@ public class MapIO
 				catch (Exception e) {
 
 				}
-				
+
 				MainGUI.loadWildPokemon();
 
 				MainGUI.mapEditorPanel.repaint();
@@ -116,7 +113,7 @@ public class MapIO
 
 			}
 		}.start();
-        MainGUI.setStatus("Map Loaded.");
+        MainGUI.setStatus(MainGUI.mapBanks.getLastSelectedPathComponent().toString() + " Loaded.");
 	}
 
 	public static String[] pokemonNames;

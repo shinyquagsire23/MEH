@@ -1,13 +1,12 @@
 package us.plxhack.MEH.IO;
 
-import java.util.ArrayList;
-
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
-
 import us.plxhack.MEH.Structures.ConnectionType;
 import us.plxhack.MEH.UI.MainGUI;
+
+import java.util.ArrayList;
 
 public class ConnectionData
 {

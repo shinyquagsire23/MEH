@@ -1,11 +1,8 @@
 package us.plxhack.MEH.UI;
 
-import java.awt.Component;
-
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JTree;
+import javax.swing.*;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import java.awt.*;
 
 public class MapTreeRenderer extends DefaultTreeCellRenderer {
 	private static final long serialVersionUID = 4125843897499413188L;

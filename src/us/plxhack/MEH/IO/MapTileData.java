@@ -4,7 +4,6 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
-
 import us.plxhack.MEH.Structures.MapTile;
 
 public class MapTileData implements ISaveable

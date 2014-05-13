@@ -1,9 +1,9 @@
 package us.plxhack.MEH.Plugins;
 
-import javax.swing.ImageIcon;
-
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
+
+import javax.swing.*;
 
 public class Plugin
 {
