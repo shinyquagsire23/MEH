@@ -28,8 +28,8 @@ public class TilesetHeader implements ISaveable {
 		  pGFX = rom.getPointer();
 		  pPalettes = rom.getPointer();
 		  pBlocks = rom.getPointer();
-		  pBehavior = rom.getPointer();
 		  pAnimation = rom.getPointer();
+		  pBehavior = rom.getPointer();
 		  hdrSize=rom.internalOffset-offset;
 		  
 	  }
@@ -46,7 +46,7 @@ public class TilesetHeader implements ISaveable {
 		  rom.writePointer((int)pGFX);
 		  rom.writePointer((int)pPalettes);
 		  rom.writePointer((int)pBlocks);
-		  rom.writePointer((int)pBehavior);
 		  rom.writePointer((int)pAnimation);
+		  rom.writePointer((int)pBehavior);
 	  }
 }
