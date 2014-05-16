@@ -8,7 +8,6 @@ import us.plxhack.MEH.IO.Render.OverworldSprites;
 import us.plxhack.MEH.IO.Render.OverworldSpritesManager;
 import us.plxhack.MEH.MapElements.*;
 import us.plxhack.MEH.UI.MainGUI;
-import us.plxhack.MEH.UI.MapEditorPanel;
 import us.plxhack.MEH.UI.TileEditorPanel;
 
 import java.awt.*;
@@ -90,16 +89,16 @@ public class Map implements ISaveable
 	public static Image renderMap(Map map, boolean full)
 	{
 		TilesetCache.switchTileset(map);
-		MapEditorPanel.blockRenderer.setGlobalTileset(TilesetCache.get(map.getMapData().globalTileSetPtr));
-		MapEditorPanel.blockRenderer.setLocalTileset(TilesetCache.get(map.getMapData().localTileSetPtr));
+		MapIO.blockRenderer.setGlobalTileset(TilesetCache.get(map.getMapData().globalTileSetPtr));
+		MapIO.blockRenderer.setLocalTileset(TilesetCache.get(map.getMapData().localTileSetPtr));
 		
 		
 		BufferedImage imgBuffer = new BufferedImage(8,8, BufferedImage.TYPE_INT_ARGB);
 		Image tiles;
 		if(!full)
-			tiles = MainGUI.tileEditorPanel.RerenderSecondary(MainGUI.tileEditorPanel.imgBuffer);
+			tiles = MainGUI.tileEditorPanel.RerenderSecondary(TileEditorPanel.imgBuffer);
 		else
-			tiles = MainGUI.tileEditorPanel.RerenderTiles(MainGUI.tileEditorPanel.imgBuffer, 0);
+			tiles = MainGUI.tileEditorPanel.RerenderTiles(TileEditorPanel.imgBuffer, 0);
 		try
 		{		
 			imgBuffer = new BufferedImage((int) map.getMapData().mapWidth * 16,

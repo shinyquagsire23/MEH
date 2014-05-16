@@ -2,10 +2,13 @@ package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
+
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.Structures.MapTile;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -167,7 +170,7 @@ public class TileEditorPanel extends JPanel {
 			int y = (i / editorWidth) * 16;
 
 			try {
-				gcBuff.drawImage(MapEditorPanel.blockRenderer.renderBlock(i,true), x, y, this);
+				gcBuff.drawImage(MapIO.blockRenderer.renderBlock(i,true), x, y, this);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
@@ -229,7 +232,7 @@ public class TileEditorPanel extends JPanel {
     	}
     	else
     	{
-    		BlockEditor.blockEditorPanel.setBlock(MapEditorPanel.blockRenderer.getBlock(baseSelectedTile));
+    		BlockEditor.blockEditorPanel.setBlock(MapIO.blockRenderer.getBlock(baseSelectedTile));
     		BlockEditor.blockEditorPanel.repaint();
     		//BlockEditor.lblMeep.setText(String.format("0x%3s", Integer.toHexString(baseSelectedTile)).replace(' ', '0'));
     	}

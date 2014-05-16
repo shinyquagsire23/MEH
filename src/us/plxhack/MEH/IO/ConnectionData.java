@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class ConnectionData
 {
-	private long originalNum;
 	private int originalSize;
 	private GBARom rom;
 	private MapHeader mapHeader;
@@ -39,7 +38,6 @@ public class ConnectionData
 		}
 		
 		originalSize = getConnectionDataSize();
-		originalNum = pNumConnections;
 	}
 	
 	public void save()

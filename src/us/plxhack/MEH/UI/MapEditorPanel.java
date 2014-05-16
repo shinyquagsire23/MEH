@@ -4,7 +4,6 @@ import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import us.plxhack.MEH.IO.Map;
 import us.plxhack.MEH.IO.MapIO;
-import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.Structures.EditMode;
 import us.plxhack.MEH.Structures.MapTile;
@@ -30,7 +29,6 @@ public class MapEditorPanel extends JPanel {
 	private static final long serialVersionUID = -877213633894324075L;
 	private Tileset globalTiles;
 	private Tileset localTiles;
-	public static BlockRenderer blockRenderer = new BlockRenderer();
 	public Map map;
 	static Rectangle mouseTracker;
 	public static boolean Redraw = true;
@@ -237,12 +235,12 @@ public class MapEditorPanel extends JPanel {
 
 	public void setGlobalTileset(Tileset global) {
 		globalTiles = global;
-		blockRenderer.setGlobalTileset(global);
+		MapIO.blockRenderer.setGlobalTileset(global);
 	}
 
 	public void setLocalTileset(Tileset local) {
 		localTiles = local;
-		blockRenderer.setLocalTileset(local);
+		MapIO.blockRenderer.setLocalTileset(local);
 	}
 
 	public void setMap(Map m) {

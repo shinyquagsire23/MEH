@@ -2,14 +2,16 @@ package us.plxhack.MEH.IO;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.ROMManager;
+
+import us.plxhack.MEH.IO.Render.BlockRenderer;
 import us.plxhack.MEH.MapElements.WildData;
 import us.plxhack.MEH.MapElements.WildDataCache;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.DNPokePatcher;
 import us.plxhack.MEH.UI.MainGUI;
-import us.plxhack.MEH.UI.MapEditorPanel;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -27,6 +29,7 @@ public class MapIO
 	public static int currentMap = 0;
 	public static boolean doneLoading = false;
 	public static WildData wildData;
+	public static BlockRenderer blockRenderer = new BlockRenderer();
 
 	public static void loadMap(int bank, int map)
 	{

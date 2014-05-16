@@ -33,7 +33,6 @@ public class Connection
 		bBank = rom.readByte();
 		bMap = rom.readByte();
 		wFiller = rom.readWord();
-		int i = 0;
 	}
 	
 	public void save()

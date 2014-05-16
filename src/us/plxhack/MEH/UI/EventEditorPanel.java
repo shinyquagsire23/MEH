@@ -28,7 +28,7 @@ public class EventEditorPanel extends JPanel
 	private Tileset localTiles;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 	private Map map;
-	public static boolean Redraw = true;
+	public boolean Redraw = true;
 	public static boolean renderPalette = false;
 	public static boolean renderTileset = false;
 	public static NPCPane paneNPC;
@@ -338,10 +338,10 @@ public class EventEditorPanel extends JPanel
 		super.paintComponent(g);
 		if (globalTiles != null)
 		{
-			if (EventEditorPanel.Redraw)
+			if (Redraw)
 			{
 				DrawMap();
-				EventEditorPanel.Redraw = false;
+				Redraw = false;
 			}
 			g.drawImage(imgBuffer, 0, 0, this);
 

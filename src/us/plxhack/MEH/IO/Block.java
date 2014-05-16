@@ -3,9 +3,6 @@ package us.plxhack.MEH.IO;
 import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 
-import us.plxhack.MEH.UI.MainGUI;
-import us.plxhack.MEH.UI.TilesetPickerPanel;
-
 
 public class Block
 {
@@ -59,14 +56,12 @@ public class Block
 	
 	public void save()
 	{
-		int pBlocks = (int)MainGUI.mapEditorPanel.blockRenderer.getGlobalTileset().tilesetHeader.pBlocks;;
+		int pBlocks = (int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pBlocks;;
 		int blockNum = blockID;
-		boolean isSecondaryBlock = false;
 		if (blockNum >= DataStore.MainTSBlocks)
 		{
-			isSecondaryBlock = true;
 			blockNum -= DataStore.MainTSBlocks;
-			pBlocks = (int)MainGUI.mapEditorPanel.blockRenderer.getLocalTileset().tilesetHeader.pBlocks;
+			pBlocks = (int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pBlocks;
 		}
 		
 		pBlocks += (blockNum * 16);

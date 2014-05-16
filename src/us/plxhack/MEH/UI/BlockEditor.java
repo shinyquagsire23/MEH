@@ -57,6 +57,8 @@ import org.zzl.minegaming.GBAUtils.Lz77;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.ROMManager;
 
+import us.plxhack.MEH.IO.MapIO;
+
 public class BlockEditor extends JFrame
 {
 	TilesetPickerPanel tpp;
@@ -156,7 +158,7 @@ public class BlockEditor extends JFrame
 		scrollPaneTiles.getVerticalScrollBar().setUnitIncrement(16);
 		scrollPaneTiles.getHorizontalScrollBar().setUnitIncrement(16);
 		
-		tpp = new TilesetPickerPanel(MapEditorPanel.blockRenderer.getGlobalTileset(),MapEditorPanel.blockRenderer.getLocalTileset(), this);
+		tpp = new TilesetPickerPanel(MapIO.blockRenderer.getGlobalTileset(),MapIO.blockRenderer.getLocalTileset(), this);
 		tpp.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		tpp.setPreferredSize(new Dimension(256,1024));
 		
@@ -203,7 +205,7 @@ public class BlockEditor extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				BufferedImage b = MapEditorPanel.blockRenderer.getGlobalTileset().getIndexedTileSet(tpp.viewingPalette);
+				BufferedImage b = MapIO.blockRenderer.getGlobalTileset().getIndexedTileSet(tpp.viewingPalette);
 				FileDialog fd = new FileDialog(new Frame(), "Locate A Tileset", FileDialog.SAVE);
 				fd.setFilenameFilter(new FilenameFilter() {
 				    public boolean accept(File dir, String name) {
@@ -233,7 +235,7 @@ public class BlockEditor extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				BufferedImage b = MapEditorPanel.blockRenderer.getLocalTileset().getIndexedTileSet(tpp.viewingPalette);
+				BufferedImage b = MapIO.blockRenderer.getLocalTileset().getIndexedTileSet(tpp.viewingPalette);
 				FileDialog fd = new FileDialog(new Frame(), "Locate A Tileset", FileDialog.SAVE);
 				fd.setFilenameFilter(new FilenameFilter() {
 				    public boolean accept(File dir, String name) {
@@ -293,7 +295,7 @@ public class BlockEditor extends JFrame
 					
 					
 					//Import and edit the palette
-					Palette[] p = MapEditorPanel.blockRenderer.getGlobalTileset().getPalette();
+					Palette[] p = MapIO.blockRenderer.getGlobalTileset().getPalette();
 					
 					//We don't need to change the first color here.
 					reds[0] = p[tpp.viewingPalette].getReds()[0];
@@ -301,22 +303,22 @@ public class BlockEditor extends JFrame
 					blues[0] = p[tpp.viewingPalette].getBlues()[0];
 					
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapEditorPanel.blockRenderer.getGlobalTileset().setPalette(p);			
-					p = MapEditorPanel.blockRenderer.getLocalTileset().getPalette();
+					MapIO.blockRenderer.getGlobalTileset().setPalette(p);			
+					p = MapIO.blockRenderer.getLocalTileset().getPalette();
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapEditorPanel.blockRenderer.getLocalTileset().setPalette(p);
+					MapIO.blockRenderer.getLocalTileset().setPalette(p);
 					
 					GBAImage i = GBAImage.fromImage(tileset, p[tpp.viewingPalette]);
 					byte[] compData = Lz77.compressLZ77(i.getRaw());
 					int freespace = ROMManager.getActiveROM().findFreespace(compData.length);
 					ROMManager.currentROM.writeBytes(freespace, compData);
-					ROMManager.currentROM.floodBytes((int)MapEditorPanel.blockRenderer.getGlobalTileset().tilesetHeader.pGFX, 
+					ROMManager.currentROM.floodBytes((int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pGFX, 
 							DataStore.FreespaceByte, Lz77.getUncompressedSize(ROMManager.currentROM, 
-									(int)MapEditorPanel.blockRenderer.getGlobalTileset().tilesetHeader.pGFX));
+									(int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pGFX));
 										//TODO: Make removing old data optional
 					
-					MapEditorPanel.blockRenderer.getGlobalTileset().tilesetHeader.pGFX = freespace;
-					MapEditorPanel.blockRenderer.getGlobalTileset().tilesetHeader.bCompressed = 1;
+					MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pGFX = freespace;
+					MapIO.blockRenderer.getGlobalTileset().tilesetHeader.bCompressed = 1;
 					
 					rerenderTiles();
 				}
@@ -360,7 +362,7 @@ public class BlockEditor extends JFrame
 					
 					
 					//Import and edit the palette
-					Palette[] p = MapEditorPanel.blockRenderer.getLocalTileset().getPalette();
+					Palette[] p = MapIO.blockRenderer.getLocalTileset().getPalette();
 					
 					//We don't need to change the first color here.
 					reds[0] = p[tpp.viewingPalette].getReds()[0];
@@ -368,22 +370,22 @@ public class BlockEditor extends JFrame
 					blues[0] = p[tpp.viewingPalette].getBlues()[0];
 					
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapEditorPanel.blockRenderer.getGlobalTileset().setPalette(p);			
-					p = MapEditorPanel.blockRenderer.getLocalTileset().getPalette();
+					MapIO.blockRenderer.getGlobalTileset().setPalette(p);			
+					p = MapIO.blockRenderer.getLocalTileset().getPalette();
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapEditorPanel.blockRenderer.getLocalTileset().setPalette(p);
+					MapIO.blockRenderer.getLocalTileset().setPalette(p);
 					
 					GBAImage i = GBAImage.fromImage(tileset, p[tpp.viewingPalette]);
 					byte[] compData = Lz77.compressLZ77(i.getRaw());
 					int freespace = ROMManager.getActiveROM().findFreespace(compData.length);
 					ROMManager.currentROM.writeBytes(freespace, compData);
-					ROMManager.currentROM.floodBytes((int)MapEditorPanel.blockRenderer.getLocalTileset().tilesetHeader.pGFX, 
+					ROMManager.currentROM.floodBytes((int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pGFX, 
 							DataStore.FreespaceByte, Lz77.getUncompressedSize(ROMManager.currentROM, 
-									(int)MapEditorPanel.blockRenderer.getLocalTileset().tilesetHeader.pGFX));
+									(int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pGFX));
 										//TODO: Make removing old data optional
 					
-					MapEditorPanel.blockRenderer.getLocalTileset().tilesetHeader.pGFX = freespace;
-					MapEditorPanel.blockRenderer.getLocalTileset().tilesetHeader.bCompressed = 1;
+					MapIO.blockRenderer.getLocalTileset().tilesetHeader.pGFX = freespace;
+					MapIO.blockRenderer.getLocalTileset().tilesetHeader.bCompressed = 1;
 					
 					rerenderTiles();
 				}
@@ -399,10 +401,10 @@ public class BlockEditor extends JFrame
 	public void rerenderTiles()
 	{
 		//Rerender tiles
-		MapEditorPanel.blockRenderer.getGlobalTileset().renderGraphics();
-		MapEditorPanel.blockRenderer.getGlobalTileset().rerenderTileSet(tpp.viewingPalette);
-		MapEditorPanel.blockRenderer.getLocalTileset().renderGraphics();
-		MapEditorPanel.blockRenderer.getLocalTileset().rerenderTileSet(tpp.viewingPalette);
+		MapIO.blockRenderer.getGlobalTileset().renderGraphics();
+		MapIO.blockRenderer.getGlobalTileset().rerenderTileSet(tpp.viewingPalette);
+		MapIO.blockRenderer.getLocalTileset().renderGraphics();
+		MapIO.blockRenderer.getLocalTileset().rerenderTileSet(tpp.viewingPalette);
 		
 		//Refresh block picker
 		tileEditorPanel.RerenderTiles(tileEditorPanel.imgBuffer, 0);
