@@ -29,6 +29,7 @@ public class MapIO
 	public static int currentMap = 0;
 	public static boolean doneLoading = false;
 	public static WildData wildData;
+	public static boolean DEBUG = false;
 	public static BlockRenderer blockRenderer = new BlockRenderer();
 
 	public static void loadMap(int bank, int map)

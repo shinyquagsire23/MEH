@@ -191,6 +191,7 @@ public class MainGUI extends JFrame {
     private JMenu mnPatches;
     private JMenuItem mntmDaynightPokemon;
     private JButton btnBlockedit;
+    private JCheckBoxMenuItem mnEnableDebugging;
 
 	void CreateToolbar() {
 		JToolBar toolBar = new JToolBar();
@@ -457,10 +458,40 @@ public class MainGUI extends JFrame {
         menuBar.add(mnTools);
         mnTools.add(mnPatches);
         mnPatches.add(mntmDaynightPokemon);
+        
+        mnEnableDebugging = new JCheckBoxMenuItem("Enable Debugging");
+        mnEnableDebugging.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) 
+        	{
+        		MapIO.DEBUG = mnEnableDebugging.getState();
+        		if(MapIO.DEBUG)
+        		{
+        			panelButtons.add(btnImportMap);
+        			panelButtons.add(btnNewMap);
+        			validate();
+        		}
+        		else
+        		{
+        			try
+        			{
+        				panelButtons.remove(btnImportMap);
+        				panelButtons.remove(btnNewMap);
+        			}
+        			catch(Exception ex)
+        			{
+        				
+        			}
+        		}
+        	}
+        });
+        mnTools.add(mnEnableDebugging);
         menuBar.add(mnHelp);
         mnHelp.add(mnAbout);
 	}
 
+	JButton btnImportMap;
+	JButton btnNewMap;
+	
 	void CreateButtons() {
 		System.out.println("Resource path:" + MainGUI.class.getResource("."));
 		panelButtons = new JPanel();
@@ -521,7 +552,7 @@ public class MainGUI extends JFrame {
 		horizontalStrut_1.setForeground(Color.BLACK);
 		panelButtons.add(horizontalStrut_1);
 
-		JButton btnNewMap = new JButton("");
+		btnNewMap = new JButton("");
         btnNewMap.setToolTipText("New Map (Not implemented)");
 		btnNewMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -558,9 +589,8 @@ public class MainGUI extends JFrame {
 		btnNewMap.setFocusPainted(false);
 		btnNewMap.setBorderPainted(false);
 		btnNewMap.setPreferredSize(new Dimension(48, 48));
-		panelButtons.add(btnNewMap);
 
-		JButton btnImportMap = new JButton("");
+		btnImportMap = new JButton("");
         btnImportMap.setToolTipText("Import Map (Not implemented)");
 		btnImportMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -571,9 +601,14 @@ public class MainGUI extends JFrame {
 		btnImportMap.setFocusPainted(false);
 		btnImportMap.setBorderPainted(false);
 		btnImportMap.setPreferredSize(new Dimension(48, 48));
-		panelButtons.add(btnImportMap);
+		if(MapIO.DEBUG)
+		{
+			panelButtons.add(btnImportMap);
+			panelButtons.add(btnNewMap);
+		}
 		
-		btnBlockedit = new JButton("BlockEdit");
+		btnBlockedit = new JButton();
+		btnBlockedit.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/blockedit.png")));
 		btnBlockedit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new BlockEditor().show();
@@ -2056,4 +2091,12 @@ public class MainGUI extends JFrame {
         lblX.setText("X: " + x);
         lblY.setText("Y: " + y);
     }
+	private static class __Tmp {
+		private static void __tmp() {
+			  javax.swing.JPanel __wbp_panel = new javax.swing.JPanel();
+			  
+			  javax.swing.JMenuItem menuItem = new javax.swing.JMenuItem("New menu item");
+			  __wbp_panel.add(menuItem);
+		}
+	}
 }
