@@ -25,7 +25,7 @@ public class TileEditorPanel extends JPanel {
 	public Tileset globalTiles;
 	public Tileset localTiles;
 	private boolean isMouseDown = true;
-    private boolean Redraw = true;
+    private boolean Redraw = false;
     private boolean tiedToEditor = false;
 	Rectangle mouseTracker;
 
@@ -143,8 +143,12 @@ public class TileEditorPanel extends JPanel {
 	}
 	public static Graphics gcBuff;
 	public static Image imgBuffer = null;
+	@SuppressWarnings("deprecation")
 	public void DrawTileset() {
-		imgBuffer = RerenderTiles(imgBuffer, 0, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 1024), true);
+		imgBuffer = RerenderTiles(imgBuffer, 0, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 0x200), true);
+		//new org.zzl.minegaming.GBAUtils.PictureFrame(imgBuffer).show();
+		//Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSSize / editorWidth)*(DataStore.LocalTSSize / editorWidth) *16);
+		//imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	public Image RerenderSecondary(Image i) {
@@ -157,7 +161,7 @@ public class TileEditorPanel extends JPanel {
 	
 	public Image RerenderTiles(Image b, int startBlock, int endBlock, boolean completeRender) {
 		//startBlock = DataStore.MainTSBlocks;
-		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSSize / editorWidth)*(DataStore.LocalTSSize / editorWidth) *16);
+		Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSSize / editorWidth)*(DataStore.LocalTSSize / editorWidth)*16);
 		if(completeRender) {
 			if(DataStore.EngineVersion == 0)
 				d.height = 3048;
@@ -186,7 +190,7 @@ public class TileEditorPanel extends JPanel {
 				DrawTileset();
 				Redraw=false;
 			}
-			g.drawImage(imgBuffer, 0, 0, this);
+			g.drawImage(((BufferedImage)imgBuffer).getSubimage(0, 0, 128, 2048), 0, 0, this); //Weird fix for a weird bug. :/
 			g.setColor(MainGUI.uiSettings.markerColor);
 			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
 			

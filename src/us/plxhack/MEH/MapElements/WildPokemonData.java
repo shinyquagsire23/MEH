@@ -20,7 +20,7 @@ public class WildPokemonData implements ISaveable, Cloneable
 	{
 		this.rom = rom;
 		type = t;
-		if(rom.internalOffset > 0x1FFFFFF)
+		if(rom.internalOffset > 0x1FFFFFF || rom.internalOffset < 0x100)
 		{
 			return;
 		}

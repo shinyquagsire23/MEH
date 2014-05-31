@@ -114,6 +114,7 @@ public class Map implements ISaveable
 					int srcX=(TileID % TileEditorPanel.editorWidth) * 16;
 					int srcY = (TileID / TileEditorPanel.editorWidth) * 16;
 					gcBuff.drawImage(((BufferedImage)(tiles)).getSubimage(srcX, srcY, 16, 16), x * 16, y * 16, null);
+					//new org.zzl.minegaming.GBAUtils.PictureFrame(((BufferedImage)(tiles)).getSubimage(srcX, srcY, 16, 16)).show();
 				}
 			}
 		}

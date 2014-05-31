@@ -2,6 +2,7 @@ package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
+
 import us.plxhack.MEH.IO.Map;
 import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tileset;
@@ -9,6 +10,7 @@ import us.plxhack.MEH.Structures.EditMode;
 import us.plxhack.MEH.Structures.MapTile;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -271,7 +273,8 @@ public class MapEditorPanel extends JPanel {
 			}
 		}
 		catch (Exception e) {
-
+			if(MapIO.DEBUG)
+				e.printStackTrace();
 		}
 	}
 	
@@ -362,10 +365,11 @@ public class MapEditorPanel extends JPanel {
 			
 			if(renderTileset)
 			{
+				g.drawImage(MainGUI.tileEditorPanel.RerenderTiles(TileEditorPanel.imgBuffer, 255),0,0,this);
 				for(int i = 0; i < 13; i++)
 				{
-					g.drawImage(globalTiles.getTileSet(i),i*128,0,this);
-					g.drawImage(localTiles.getTileSet(i),i*128,DataStore.MainTSHeight + 8,this);
+					//g.drawImage(globalTiles.getTileSet(i),i*128,0,this);
+					//g.drawImage(localTiles.getTileSet(i),i*128,DataStore.MainTSHeight + 8,this);
 				}
 			}
 

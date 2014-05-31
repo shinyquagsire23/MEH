@@ -60,7 +60,8 @@ public class OverworldSprites {
 			for(int i = 0; i < 16; i++)
 			{
 				int ptr = rom.getPointerAsInt((int)DataStore.SpriteColors + (i * 8));
-				OverworldSprites.myPal[rom.readByte((int)DataStore.SpriteColors + (i * 8) + 4)] = new Palette(GBAImageType.c16, BitConverter.GrabBytes(rom.getData(), ptr,32));
+				int palNum = rom.readByte((int)DataStore.SpriteColors + (i * 8) + 4) & 0xF;
+				OverworldSprites.myPal[palNum] = new Palette(GBAImageType.c16, BitConverter.GrabBytes(rom.getData(), ptr,32));
 			}
 		  
 	

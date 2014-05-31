@@ -9,6 +9,10 @@ import javax.swing.*;
 public class Main {
 	public static void main(String args[]) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		//Override for window managers such as bspwm and i3 where they may not properly fetch the right L&F
+		if(System.getProperty("os.name").toLowerCase().contains("nix") || System.getProperty("os.name").toLowerCase().contains("nux") || System.getProperty("os.name").toLowerCase().contains("aix"))
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+		
 		System.setProperty("sun.java2d.opengl","True");
 		System.setProperty("sun.java2d.accthreshold","0");
         	System.setProperty("apple.laf.useScreenMenuBar","true");

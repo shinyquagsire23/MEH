@@ -479,7 +479,7 @@ public class MainGUI extends JFrame {
         			}
         			catch(Exception ex)
         			{
-        				
+        				ex.printStackTrace();
         			}
         		}
         	}
@@ -686,6 +686,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].bRatio = (byte) pkEncounter.getValue();
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -786,6 +788,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].bMinLV = (byte) i;
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -804,7 +808,9 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
 				}
 				catch (Exception ex) {
-					ex.printStackTrace();
+					System.out.println("Error loading wild pokemon data, data not found or nonexistant.");
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -835,6 +841,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].bMinLV = (byte) i;
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -852,6 +860,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][1].wNum = pkName2.getSelectedIndex();
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -883,6 +893,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].bMinLV = (byte) i;
 				}
 				catch (Exception ex){
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -900,6 +912,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][2].wNum = pkName3.getSelectedIndex();
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -930,6 +944,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].bMinLV = (byte) i;
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -947,6 +963,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][3].wNum = pkName4.getSelectedIndex();
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -977,6 +995,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].bMinLV = (byte) i;
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
@@ -994,6 +1014,8 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][4].wNum = pkName5.getSelectedIndex();
 				}
 				catch (Exception ex) {
+					if(MapIO.DEBUG)
+						ex.printStackTrace();
 				}
 			}
 		});
