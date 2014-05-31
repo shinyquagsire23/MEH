@@ -1,7 +1,10 @@
 package us.plxhack.MEH.IO.Render;
 
 import org.zzl.minegaming.GBAUtils.DataStore;
+import org.zzl.minegaming.GBAUtils.GBARom;
+
 import us.plxhack.MEH.IO.Block;
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tile;
 import us.plxhack.MEH.IO.Tileset;
 
@@ -51,6 +54,7 @@ public class BlockRenderer extends Component
     
 	public Image renderBlock(int blockNum, boolean transparency)
 	{
+		int origBlockNum = blockNum;
 		boolean isSecondaryBlock = false;
 		if (blockNum >= DataStore.MainTSBlocks)
 		{
@@ -65,7 +69,15 @@ public class BlockRenderer extends Component
 		int x = 0;
 		int y = 0;
 		int top = 0;
-		for (int i = 0; i < 16; i++)
+		
+		boolean tripleTile = false;
+		if((getBehaviorByte(origBlockNum) >> 24 & 0x30) == 0x30)
+		{
+			tripleTile = true;
+			System.out.println("Rendering triple tile!");
+		}
+		
+		for (int i = 0; i < (tripleTile ? 24 : 16); i++)
 		{
 			int orig = global.getROM().readWord(blockPointer + i);
 			int tileNum = global.getROM().readWord(blockPointer + i) & 0x3FF;
@@ -124,7 +136,15 @@ public class BlockRenderer extends Component
 		int y = 0;
 		int top = 0;
 		Block b = new Block(blockNum, global.getROM());
-		for (int i = 0; i < 16; i++)
+		
+		boolean tripleTile = false;
+		if((b.backgroundMetaData >> 24 & 0x30) == 0x30)
+		{
+			tripleTile = true;
+			System.out.println("Rendering triple tile block!");
+		}
+		
+		for (int i = 0; i < (tripleTile ? 24 : 16); i++)
 		{
 			int orig = global.getROM().readWord(blockPointer + i);
 			int tileNum = global.getROM().readWord(blockPointer + i) & 0x3FF;
@@ -132,7 +152,8 @@ public class BlockRenderer extends Component
 			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
 			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
 
-			b.setTile(x+(top*2), y, new Tile(tileNum, palette, xFlip, yFlip));
+			if(i < 16)
+				b.setTile(x+(top*2), y, new Tile(tileNum, palette, xFlip, yFlip));
 			x++;
 			if (x > 1)
 			{
@@ -148,5 +169,20 @@ public class BlockRenderer extends Component
 			i++;
 		}
 		return b;
+	}
+	
+	public long getBehaviorByte(int blockID)
+	{
+		int pBehavior = (int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pBehavior;
+		int blockNum = blockID;
+		
+		if (blockNum >= DataStore.MainTSBlocks)
+		{
+			blockNum -= DataStore.MainTSBlocks;
+			pBehavior = (int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pBehavior;
+		}
+		global.getROM().Seek(pBehavior + (blockNum * 4));
+		long bytes = global.getROM().getPointer(true);
+		return bytes;
 	}
 }

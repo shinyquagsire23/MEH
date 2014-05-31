@@ -145,7 +145,7 @@ public class TileEditorPanel extends JPanel {
 	public static Image imgBuffer = null;
 	@SuppressWarnings("deprecation")
 	public void DrawTileset() {
-		imgBuffer = RerenderTiles(imgBuffer, 0, DataStore.MainTSBlocks+(DataStore.EngineVersion == 1 ? 0x11D : 0x200), true);
+		imgBuffer = RerenderTiles(imgBuffer, 0, DataStore.MainTSBlocks+0x200,true);//(DataStore.EngineVersion == 1 ? 0x11D : 0x200), true);
 		//new org.zzl.minegaming.GBAUtils.PictureFrame(imgBuffer).show();
 		//Dimension d = new Dimension(16*editorWidth,(DataStore.MainTSSize / editorWidth)*(DataStore.LocalTSSize / editorWidth) *16);
 		//imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
@@ -190,7 +190,20 @@ public class TileEditorPanel extends JPanel {
 				DrawTileset();
 				Redraw=false;
 			}
-			g.drawImage(((BufferedImage)imgBuffer).getSubimage(0, 0, 128, 2048), 0, 0, this); //Weird fix for a weird bug. :/
+			
+			try
+			{
+				g.drawImage(((BufferedImage)imgBuffer).getSubimage(0, 0, 128, 2048), 0, 0, this); //Weird fix for a weird bug. :/
+			}
+			catch(Exception e)
+			{
+				if(MapIO.DEBUG)
+					e.printStackTrace();
+				
+				if(imgBuffer != null)
+					System.out.println("Error rendering blockset! Enable debug mode for more specific errors.");
+			}
+			
 			g.setColor(MainGUI.uiSettings.markerColor);
 			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
 			
@@ -237,6 +250,8 @@ public class TileEditorPanel extends JPanel {
     	else
     	{
     		BlockEditor.blockEditorPanel.setBlock(MapIO.blockRenderer.getBlock(baseSelectedTile));
+    		long behavior = MapIO.blockRenderer.getBehaviorByte(baseSelectedTile);
+    		BlockEditor.lblBehavior.setText(Integer.toHexString((int)behavior));
     		BlockEditor.blockEditorPanel.repaint();
     		//BlockEditor.lblMeep.setText(String.format("0x%3s", Integer.toHexString(baseSelectedTile)).replace(' ', '0'));
     	}

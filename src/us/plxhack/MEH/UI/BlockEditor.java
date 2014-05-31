@@ -66,6 +66,7 @@ public class BlockEditor extends JFrame
 	JScrollPane scrollPaneTep;
 	JScrollPane scrollPaneTiles;
 	public static JLabel lblMeep;
+	static JLabel lblBehavior;
 	ImagePanel panelSelectedBlock;
 	public static BlockEditorPanel blockEditorPanel;
 	boolean xFlip = false;
@@ -187,6 +188,9 @@ public class BlockEditor extends JFrame
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setRightComponent(panel_4);
+		
+		lblBehavior = new JLabel("Behavior Bytes");
+		panel_4.add(lblBehavior);
 		
 		
 		this.setSize(565,330);

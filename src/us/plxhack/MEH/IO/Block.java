@@ -9,11 +9,18 @@ public class Block
 	public Tile tilesForeground[][];
 	public Tile tilesBackground[][];
 	public int blockID;
+	public long backgroundMetaData;
 	private GBARom rom;
 	
 	public Block(int blockID, GBARom rom)
 	{
+		this(blockID,MapIO.blockRenderer.getBehaviorByte(blockID),rom);
+	}
+	
+	public Block(int blockID, long bgBytes, GBARom rom)
+	{
 		this.blockID = blockID;
+		this.backgroundMetaData = bgBytes;
 		this.rom = rom;
 		tilesForeground = new Tile[2][2];
 		tilesBackground = new Tile[2][2];
@@ -54,14 +61,22 @@ public class Block
 		}
 	}
 	
+	public void setMetaData(int bytes)
+	{
+		backgroundMetaData = bytes;
+	}
+	
 	public void save()
 	{
-		int pBlocks = (int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pBlocks;;
+		int pBlocks = (int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pBlocks;
+		int pBehavior = (int)MapIO.blockRenderer.getGlobalTileset().tilesetHeader.pBehavior;
 		int blockNum = blockID;
+		
 		if (blockNum >= DataStore.MainTSBlocks)
 		{
 			blockNum -= DataStore.MainTSBlocks;
 			pBlocks = (int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pBlocks;
+			pBehavior = (int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pBehavior;
 		}
 		
 		pBlocks += (blockNum * 16);
@@ -92,5 +107,8 @@ public class Block
 				}
 			}
 		}
+		rom.Seek(pBehavior + (blockNum * 4));
+		rom.writePointer(backgroundMetaData);
 	}
+	
 }
