@@ -1,9 +1,11 @@
 package us.plxhack.MEH.UI;
 
 import org.zzl.minegaming.GBAUtils.*;
+
 import us.plxhack.MEH.Globals.UISettings;
 import us.plxhack.MEH.Globals.Version;
 import us.plxhack.MEH.IO.BankLoader;
+import us.plxhack.MEH.IO.Map;
 import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.TilesetCache;
 import us.plxhack.MEH.MapElements.WildDataCache;
@@ -24,12 +26,15 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class MainGUI extends JFrame {
@@ -410,6 +415,33 @@ public class MainGUI extends JFrame {
 		});
 
 		mnNewMap = new JMenuItem("Save Map to PNG...");
+		mnNewMap.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				FileDialog fd = new FileDialog(new Frame(), "Locate A Tileset", FileDialog.SAVE);
+				fd.setFilenameFilter(new FilenameFilter() {
+				    public boolean accept(File dir, String name) {
+				      return (name.toLowerCase().endsWith(".png"));
+				    }
+				});
+				fd.setFile(MapIO.currentBank + "-" + MapIO.selectedMap + "-" + BankLoader.mapNames.get((int)MapIO.loadedMap.mapHeader.bLabelID) + ".png");
+				fd.setDirectory(System.getProperty("user.home"));
+				fd.show();
+				String location = fd.getDirectory() + fd.getFile();
+				if(fd.getDirectory().equals("null"))
+					return;
+				
+				try
+				{
+					ImageIO.write((RenderedImage) Map.renderMap(MapIO.loadedMap, true), "png", new File(location));
+				}
+				catch (IOException e1)
+				{
+					e1.printStackTrace();
+				}
+			}
+		});
 
 		JMenu mnSettings = new JMenu("Settings");
 
