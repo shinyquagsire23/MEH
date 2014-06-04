@@ -68,6 +68,7 @@ public class BlockEditor extends JFrame
 	public static JLabel lblMeep;
 	static JLabel lblBehavior;
 	ImagePanel panelSelectedBlock;
+	ImagePanel panelThirdLayer;
 	public static BlockEditorPanel blockEditorPanel;
 	boolean xFlip = false;
 	boolean yFlip = false;
@@ -184,6 +185,12 @@ public class BlockEditor extends JFrame
 		blockEditorPanel.setPreferredSize(new Dimension(64, 32));
 		blockEditorPanel.setBounds(40, 12, 64, 32);
 		panel_3.add(blockEditorPanel);
+		
+		panelThirdLayer = new ImagePanel(null);
+		panelThirdLayer.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelThirdLayer.setPreferredSize(new Dimension(24,24));
+		panelThirdLayer.setBounds(103, 20, 24, 24);
+		panel_3.add(panelThirdLayer);
 		
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));

@@ -13,6 +13,13 @@ import java.awt.image.BufferedImage;
 
 public class BlockRenderer extends Component
 {
+	public enum TripleType
+	{
+		NONE,
+		LEGACY,
+		REFERENCE;
+	}
+	
 	private Tileset global;
 	private Tileset local;
 	public BlockRenderer(Tileset global, Tileset local)
@@ -70,15 +77,30 @@ public class BlockRenderer extends Component
 		int y = 0;
 		int top = 0;
 		
-		boolean tripleTile = false;
+		TripleType type = TripleType.NONE;
 		if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30 && DataStore.EngineVersion == 1) //Temporarily disabling triple tile support in RSE
-		{
-			tripleTile = true;
-			System.out.println("Rendering triple tile!");
-		}
+			type = TripleType.LEGACY;
+			
+		else if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1)
+			type = TripleType.REFERENCE;
 		
-		for (int i = 0; i < (tripleTile ? 24 : 16); i++)
+		if(type != TripleType.NONE)
+			System.out.println("Rendering triple tile! " + type.toString());
+		
+		for (int i = 0; i < (type != TripleType.NONE ? 24 : 16); i++)
 		{
+			if(type == TripleType.REFERENCE && i == 16)
+			{
+				int tripNum = (int) ((getBehaviorByte(origBlockNum) >> 14) & 0x3FF);
+				if (tripNum >= DataStore.MainTSBlocks)
+				{
+					isSecondaryBlock = true;
+					tripNum -= DataStore.MainTSBlocks;
+				}
+
+				blockPointer = (int) ((isSecondaryBlock ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (tripNum * 16)) + 8;
+				blockPointer -= i;
+			}
 			int orig = global.getROM().readWord(blockPointer + i);
 			int tileNum = global.getROM().readWord(blockPointer + i) & 0x3FF;
 			int palette = (global.getROM().readWord(blockPointer + i) & 0xF000) >> 12;
