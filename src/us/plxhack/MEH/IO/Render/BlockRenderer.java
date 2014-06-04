@@ -71,7 +71,7 @@ public class BlockRenderer extends Component
 		int top = 0;
 		
 		boolean tripleTile = false;
-		if((getBehaviorByte(origBlockNum) >> 24 & 0x30) == 0x30)
+		if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30 && DataStore.EngineVersion == 1) //Temporarily disabling triple tile support in RSE
 		{
 			tripleTile = true;
 			System.out.println("Rendering triple tile!");
@@ -181,8 +181,8 @@ public class BlockRenderer extends Component
 			blockNum -= DataStore.MainTSBlocks;
 			pBehavior = (int)MapIO.blockRenderer.getLocalTileset().tilesetHeader.pBehavior;
 		}
-		global.getROM().Seek(pBehavior + (blockNum * 4));
-		long bytes = global.getROM().getPointer(true);
+		global.getROM().Seek(pBehavior + (blockNum * (DataStore.EngineVersion == 1 ? 4 : 2)));
+		long bytes = DataStore.EngineVersion == 1 ? global.getROM().getPointer(true) : global.getROM().getPointer(true) & 0xFFFF;
 		return bytes;
 	}
 }
