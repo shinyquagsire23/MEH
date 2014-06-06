@@ -175,6 +175,32 @@ public class BlockEditorPanel extends JPanel
 	public void setBlock(Block b)
 	{
 		block = b;
+		if((MapIO.blockRenderer.getBehaviorByte(b.blockID) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1)
+		{
+			int tripNum = (int) ((MapIO.blockRenderer.getBehaviorByte(block.blockID) >> 14) & 0x3FF);
+			host.tripleEditorPanel.setBlock(MapIO.blockRenderer.getBlock(tripNum));
+		}
+	}
+	
+	public Block getBlock()
+	{
+		return block;
+	}
+	
+	public void setTriple(Block b)
+	{
+		host.tripleEditorPanel.setBlock(b);
+		
+		int id = b.blockID;
+		long behavior = block.backgroundMetaData;
+		behavior &= 0x8F003FFF;
+		if(id != 0)
+			behavior |= (id << 14) + (0x60 << 24);
+		else
+			behavior |= 0x20 << 24; //Default to 0x20 because if they had 0x10 previously they should not have been using triple tiles.
+		block.backgroundMetaData = behavior;
+		block.save();
+		host.rerenderTiles();
 	}
 
 	@Override

@@ -91,14 +91,15 @@ public class BlockRenderer extends Component
 		{
 			if(type == TripleType.REFERENCE && i == 16)
 			{
+				boolean second = false;
 				int tripNum = (int) ((getBehaviorByte(origBlockNum) >> 14) & 0x3FF);
 				if (tripNum >= DataStore.MainTSBlocks)
 				{
-					isSecondaryBlock = true;
+					second = true;
 					tripNum -= DataStore.MainTSBlocks;
 				}
 
-				blockPointer = (int) ((isSecondaryBlock ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (tripNum * 16)) + 8;
+				blockPointer = (int) ((second ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (tripNum * 16)) + 8;
 				blockPointer -= i;
 			}
 			int orig = global.getROM().readWord(blockPointer + i);
@@ -147,6 +148,7 @@ public class BlockRenderer extends Component
 	public Block getBlock(int blockNum)
 	{
 		boolean isSecondaryBlock = false;
+		int realBlockNum = blockNum;
 		if (blockNum >= DataStore.MainTSBlocks)
 		{
 			isSecondaryBlock = true;
@@ -157,7 +159,7 @@ public class BlockRenderer extends Component
 		int x = 0;
 		int y = 0;
 		int top = 0;
-		Block b = new Block(blockNum, global.getROM());
+		Block b = new Block(realBlockNum, global.getROM());
 		
 		boolean tripleTile = false;
 		if((b.backgroundMetaData >> 24 & 0x30) == 0x30)

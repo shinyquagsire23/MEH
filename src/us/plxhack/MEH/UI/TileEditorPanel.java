@@ -22,6 +22,7 @@ public class TileEditorPanel extends JPanel {
 	public int baseSelectedTile;	// Called it base in case of multiple tile
 	// selection in the future.
 	public static int editorWidth = 8; //Editor width in 16x16 tiles
+	public static boolean tripleSelectMode = false; //We really need events...
 	public Tileset globalTiles;
 	public Tileset localTiles;
 	private boolean isMouseDown = true;
@@ -87,7 +88,7 @@ public class TileEditorPanel extends JPanel {
 					srcX = x;
 					srcY = y;
 					baseSelectedTile = x + (y * editorWidth);
-                    applySelectedTile();
+                    //applySelectedTile();
 				}
                 repaint();
 			}
@@ -249,9 +250,19 @@ public class TileEditorPanel extends JPanel {
     	}
     	else
     	{
-    		BlockEditor.blockEditorPanel.setBlock(MapIO.blockRenderer.getBlock(baseSelectedTile));
-    		long behavior = MapIO.blockRenderer.getBehaviorByte(baseSelectedTile);
-    		BlockEditor.lblBehavior.setText(Integer.toHexString((int)behavior));
+    		if(!tripleSelectMode)
+    		{
+    			BlockEditor.blockEditorPanel.setBlock(MapIO.blockRenderer.getBlock(baseSelectedTile));
+    			long behavior = MapIO.blockRenderer.getBehaviorByte(baseSelectedTile);
+    			BlockEditor.lblBehavior.setText(Integer.toHexString((int)behavior));
+    		}
+    		else
+    		{
+    			BlockEditor.blockEditorPanel.setTriple(MapIO.blockRenderer.getBlock(baseSelectedTile));
+    			baseSelectedTile = BlockEditor.blockEditorPanel.getBlock().blockID;
+    			tripleSelectMode = false;
+    			this.repaint();
+    		}
     		BlockEditor.blockEditorPanel.repaint();
     		//BlockEditor.lblMeep.setText(String.format("0x%3s", Integer.toHexString(baseSelectedTile)).replace(' ', '0'));
     	}

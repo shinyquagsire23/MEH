@@ -491,6 +491,16 @@ public class MainGUI extends JFrame {
         mnTools.add(mnPatches);
         mnPatches.add(mntmDaynightPokemon);
         
+        mntmNewMenuItem = new JMenuItem("Triple-Layer Tiles (FR)");
+        mntmNewMenuItem.addActionListener(new ActionListener() 
+        {
+        	public void actionPerformed(ActionEvent e) 
+        	{
+        		new TripleTilePatcher().show();
+        	}
+        });
+        mnPatches.add(mntmNewMenuItem);
+        
         mnEnableDebugging = new JCheckBoxMenuItem("Enable Debugging");
         mnEnableDebugging.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) 
@@ -523,6 +533,7 @@ public class MainGUI extends JFrame {
 
 	JButton btnImportMap;
 	JButton btnNewMap;
+	private JMenuItem mntmNewMenuItem;
 	
 	void CreateButtons() {
 		System.out.println("Resource path:" + MainGUI.class.getResource("."));

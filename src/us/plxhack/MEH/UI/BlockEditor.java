@@ -31,6 +31,8 @@ import javax.swing.DefaultComboBoxModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.IndexColorModel;
 import java.io.File;
@@ -70,6 +72,7 @@ public class BlockEditor extends JFrame
 	ImagePanel panelSelectedBlock;
 	ImagePanel panelThirdLayer;
 	public static BlockEditorPanel blockEditorPanel;
+	public static TripleEditorPanel tripleEditorPanel;
 	boolean xFlip = false;
 	boolean yFlip = false;
 	TileEditorPanel tileEditorPanel;
@@ -186,11 +189,11 @@ public class BlockEditor extends JFrame
 		blockEditorPanel.setBounds(40, 12, 64, 32);
 		panel_3.add(blockEditorPanel);
 		
-		panelThirdLayer = new ImagePanel(null);
-		panelThirdLayer.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panelThirdLayer.setPreferredSize(new Dimension(24,24));
-		panelThirdLayer.setBounds(103, 20, 24, 24);
-		panel_3.add(panelThirdLayer);
+		tripleEditorPanel = new TripleEditorPanel(this);
+		tripleEditorPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		tripleEditorPanel.setPreferredSize(new Dimension(20,20));
+		tripleEditorPanel.setBounds(103, 24, 20, 20);
+		panel_3.add(tripleEditorPanel);
 		
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -428,5 +431,6 @@ public class BlockEditor extends JFrame
 		//Refresh block editor
 		tpp.setPalette(comboBox.getSelectedIndex());
 		blockEditorPanel.repaint();
+		tripleEditorPanel.repaint();
 	}
 }
