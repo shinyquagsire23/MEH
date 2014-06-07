@@ -1,9 +1,5 @@
 package us.plxhack.MEH;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.nio.file.Files;
-
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.MainGUI;
@@ -24,6 +20,8 @@ public class Main
 		System.setProperty("sun.java2d.accthreshold", "0");
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "MEH");
+		System.setProperty("awt.useSystemAAFontSettings","on");
+		System.setProperty("swing.aatext", "true");
 		JFrame window = new MainGUI();
 		window.setSize(1000, 600);
 		window.setTitle("Map Editor of Happiness - No ROM Loaded");

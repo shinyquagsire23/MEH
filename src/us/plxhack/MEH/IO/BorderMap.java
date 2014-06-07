@@ -29,6 +29,6 @@ public class BorderMap implements ISaveable
 	
 	public void save()
 	{
-		mapData.save();
+		mapTileData.save();
 	}
 }

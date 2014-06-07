@@ -200,6 +200,7 @@ public class MapIO
 
 	public static void saveMap() {
 		MapIO.loadedMap.save();
+		MapIO.borderMap.save();
 		TilesetCache.get(MapIO.loadedMap.getMapData().globalTileSetPtr).save();
 		TilesetCache.get(MapIO.loadedMap.getMapData().localTileSetPtr).save();
 		MainGUI.connectionsEditorPanel.save(); // Save surrounding maps

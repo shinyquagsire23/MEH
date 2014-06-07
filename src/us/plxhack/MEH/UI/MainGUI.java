@@ -201,6 +201,7 @@ public class MainGUI extends JFrame {
 	void CreateToolbar() {
 		JToolBar toolBar = new JToolBar();
 		lblTileVal = new JLabel("Current Tile: 0x0");
+		lblTileVal.setFont(new Font("Dialog", Font.BOLD, 10));
 		toolBar.add(lblTileVal);
 		editorPanel.add(toolBar, BorderLayout.NORTH);
 		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
