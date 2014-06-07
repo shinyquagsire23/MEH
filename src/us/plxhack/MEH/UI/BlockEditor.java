@@ -1,6 +1,9 @@
 package us.plxhack.MEH.UI;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,6 +25,8 @@ import java.awt.Dimension;
 
 import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Color;
@@ -31,6 +36,8 @@ import javax.swing.DefaultComboBoxModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -61,6 +68,13 @@ import org.zzl.minegaming.GBAUtils.ROMManager;
 
 import us.plxhack.MEH.IO.MapIO;
 
+import javax.swing.JRadioButton;
+import javax.swing.border.TitledBorder;
+
+import java.awt.FlowLayout;
+
+import javax.swing.JTextField;
+
 public class BlockEditor extends JFrame
 {
 	TilesetPickerPanel tpp;
@@ -68,7 +82,7 @@ public class BlockEditor extends JFrame
 	JScrollPane scrollPaneTep;
 	JScrollPane scrollPaneTiles;
 	public static JLabel lblMeep;
-	static JLabel lblBehavior;
+	//static JLabel lblBehavior;
 	ImagePanel panelSelectedBlock;
 	ImagePanel panelThirdLayer;
 	public static BlockEditorPanel blockEditorPanel;
@@ -76,6 +90,15 @@ public class BlockEditor extends JFrame
 	boolean xFlip = false;
 	boolean yFlip = false;
 	TileEditorPanel tileEditorPanel;
+	public static JTextField txtBehavior;
+	
+	private JRadioButton rdBgOver;
+	private JRadioButton rdBgUnder;
+	private JRadioButton rdBgTriple;
+	private JRadioButton rdBattleGrass;
+	private JRadioButton rdBattleWater;
+	private NoneSelectedButtonGroup battleGroup;
+	private JComboBox cmbBehaviors;
 	
 	public BlockEditor() 
 	{
@@ -198,12 +221,178 @@ public class BlockEditor extends JFrame
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel.setRightComponent(panel_4);
+		panel_4.setLayout(null);
 		
-		lblBehavior = new JLabel("Behavior Bytes");
-		panel_4.add(lblBehavior);
+		cmbBehaviors = new JComboBox();
+		cmbBehaviors.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
+			{
+				if(crappyWorkaround)
+					return;
+				
+				if(txtBehavior.getText().equals(""))
+					txtBehavior.setText("00000000");
+				
+				long behavior = Long.parseLong(txtBehavior.getText(), 16);
+				behavior &= (DataStore.EngineVersion == 1 ? 0xFFFFFE00 : 0xFFFFFF00);
+				behavior |= cmbBehaviors.getSelectedIndex() & (DataStore.EngineVersion == 1 ? 0x1FF : 0xFF);
+				txtBehavior.setText(String.format("%08X", behavior));
+			}
+		});
+		
+		String[] behaviorItems = new String[DataStore.EngineVersion == 0x1 ? 0x200 : 0x100];
+		behaviorItems[0] = "meep";
+		for(int i = 0; i < (DataStore.EngineVersion == 0x1 ? 0x200 : 0x100); i++)
+		{
+				behaviorItems[i] = DataStore.getBehaviorString(i);
+				
+				if(behaviorItems[i].equals(""))
+					behaviorItems[i] = Integer.toHexString(i).toUpperCase();
+		}
+		
+		cmbBehaviors.setModel(new DefaultComboBoxModel(behaviorItems));
+		cmbBehaviors.setBorder(new TitledBorder(null, "Block Behavior", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		cmbBehaviors.setBounds(6, 12, 138, 49);
+		panel_4.add(cmbBehaviors);
+		
+		JPanel panel_5 = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panel_5.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
+		panel_5.setBorder(new TitledBorder(null, "Wild Battles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_5.setBounds(6, 66, 138, 68);
+		panel_4.add(panel_5);
+		
+		battleGroup = new NoneSelectedButtonGroup();
+		
+		rdBattleGrass = new JRadioButton("Grass Battles");
+		rdBattleGrass.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if(txtBehavior.getText().equals(""))
+					txtBehavior.setText("00000000");
+				
+				long behavior = Long.parseLong(txtBehavior.getText(), 16);
+				behavior &= 0xF8FFFFFF;
+				behavior |= 0x01000000;
+				txtBehavior.setText(String.format("%08X", behavior));
+			}
+		});
+		rdBattleGrass.setPreferredSize(new Dimension(121, 16));
+		panel_5.add(rdBattleGrass);
+		battleGroup.add(rdBattleGrass);
+		
+		rdBattleWater = new JRadioButton("Water Battles");
+		rdBattleWater.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(txtBehavior.getText().equals(""))
+					txtBehavior.setText("00000000");
+				
+				long behavior = Long.parseLong(txtBehavior.getText(), 16);
+				behavior &= 0xF8FFFFFF;
+				behavior |= 0x02000000;
+				txtBehavior.setText(String.format("%08X", behavior));
+			}
+		});
+		rdBattleWater.setPreferredSize(new Dimension(124, 16));
+		panel_5.add(rdBattleWater);
+		battleGroup.add(rdBattleWater);
 		
 		
-		this.setSize(565,330);
+		JPanel panel_6 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_6.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		panel_6.setAlignmentX(Component.LEFT_ALIGNMENT);
+		panel_6.setBorder(new TitledBorder(null, "Layer Priority", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_6.setBounds(6, 140, 138, 92);
+		panel_4.add(panel_6);
+		
+		NoneSelectedButtonGroup bgPerms = new NoneSelectedButtonGroup();
+		
+		rdBgOver = new JRadioButton("Covers Player");
+		rdBgOver.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(txtBehavior.getText().equals(""))
+					txtBehavior.setText("00000000");
+				
+				long behavior = Long.parseLong(txtBehavior.getText(), 16);
+				behavior &= 0x8FFFFFFF;
+				behavior |= 0x00000000;
+				txtBehavior.setText(String.format("%08X", behavior));
+			}
+		});
+		rdBgOver.setSelected(true);
+		rdBgOver.setPreferredSize(new Dimension(107, 16));
+		panel_6.add(rdBgOver);
+		bgPerms.add(rdBgOver);
+		
+		rdBgUnder = new JRadioButton("Player Over");
+		rdBgUnder.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(txtBehavior.getText().equals(""))
+					txtBehavior.setText("00000000");
+				
+				long behavior = Long.parseLong(txtBehavior.getText(), 16);
+				behavior &= 0x8FFFFFFF;
+				behavior |= 0x20000000;
+				txtBehavior.setText(String.format("%08X", behavior));
+			}
+		});
+		rdBgUnder.setPreferredSize(new Dimension(117, 16));
+		panel_6.add(rdBgUnder);
+		bgPerms.add(rdBgUnder);
+		
+		rdBgTriple = new JRadioButton("Triple Tiles");
+		rdBgTriple.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				if(txtBehavior.getText().equals(""))
+					txtBehavior.setText("00000000");
+				
+				long behavior = Long.parseLong(txtBehavior.getText(), 16);
+				behavior &= 0x8FFFFFFF;
+				behavior |= DataStore.mehTripleEditByte << 24;
+				txtBehavior.setText(String.format("%08X", behavior));
+			}
+		});
+		rdBgTriple.setPreferredSize(new Dimension(102, 16));
+		panel_6.add(rdBgTriple);
+		bgPerms.add(rdBgTriple);
+		
+		txtBehavior = new JTextField();
+		txtBehavior.setDocument(new HexDocument());
+		txtBehavior.getDocument().addDocumentListener(new DocumentListener()
+		{
+
+			public void removeUpdate(DocumentEvent e)
+			{
+				updateBehaviors();
+			}
+
+			public void insertUpdate(DocumentEvent e)
+			{
+				updateBehaviors();
+			}
+
+			public void changedUpdate(DocumentEvent e)
+			{
+				updateBehaviors();
+			}
+		});
+		txtBehavior.setBounds(6, 235, 138, 24);
+		panel_4.add(txtBehavior);
+		txtBehavior.setColumns(1);
+		
+		
+		this.setSize(565,385);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -432,5 +621,59 @@ public class BlockEditor extends JFrame
 		tpp.setPalette(comboBox.getSelectedIndex());
 		blockEditorPanel.repaint();
 		tripleEditorPanel.repaint();
+	}
+	
+	
+	boolean crappyWorkaround = false;
+	public void updateBehaviors()
+	{
+		if(txtBehavior.getText().equals(""))
+			return;
+		
+		long behavior = Long.parseLong(txtBehavior.getText(), 16);
+		int bgPrio = (int)((behavior & 0x70000000) >> 24);
+		
+		if(bgPrio == 0x20)
+			rdBgUnder.setSelected(true);
+		else if(bgPrio == DataStore.mehTripleEditByte)
+			rdBgTriple.setSelected(true);
+		else if(bgPrio == 0)
+			rdBgOver.setSelected(true);
+		
+		if((behavior & 0x07000000) >> 24 == 0x1)
+			rdBattleGrass.setSelected(true);
+		else if((behavior & 0x07000000) >> 24 == 0x2)
+			rdBattleWater.setSelected(true);
+		else
+			battleGroup.deselectAll();
+		
+		crappyWorkaround = true;
+		cmbBehaviors.setSelectedIndex((int)behavior & (DataStore.EngineVersion == 1 ? 0x1FF : 0xFF));
+		crappyWorkaround = false;
+			
+		blockEditorPanel.getBlock().backgroundMetaData = behavior;
+		blockEditorPanel.getBlock().save();
+	}
+	
+	public class NoneSelectedButtonGroup extends ButtonGroup
+	{
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void setSelected(ButtonModel model, boolean selected)
+		{
+			if (selected)
+				super.setSelected(model, selected);
+
+			else
+				clearSelection();
+		}
+		
+		public void deselectAll()
+		{
+			for(AbstractButton b : this.buttons)
+				b.setSelected(false);
+		}
 	}
 }

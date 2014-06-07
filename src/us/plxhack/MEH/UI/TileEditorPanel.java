@@ -254,7 +254,7 @@ public class TileEditorPanel extends JPanel {
     		{
     			BlockEditor.blockEditorPanel.setBlock(MapIO.blockRenderer.getBlock(baseSelectedTile));
     			long behavior = MapIO.blockRenderer.getBehaviorByte(baseSelectedTile);
-    			BlockEditor.lblBehavior.setText(Integer.toHexString((int)behavior));
+    			BlockEditor.txtBehavior.setText(String.format("%08X", behavior));
     		}
     		else
     		{

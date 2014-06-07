@@ -88,8 +88,8 @@ public class TilesetPickerPanel extends JPanel
 				mouseTracker.y=e.getY();
 				if(mouseTracker.x > 256)
 					mouseTracker.x = 256;
-				if(mouseTracker.y > 512)
-					mouseTracker.y = 512;
+				if(mouseTracker.y > 1024)
+					mouseTracker.y = 1024;
 				repaint();
 
 			}
