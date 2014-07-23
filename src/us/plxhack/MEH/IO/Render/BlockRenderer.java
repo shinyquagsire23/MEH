@@ -22,6 +22,7 @@ public class BlockRenderer extends Component
 	
 	private Tileset global;
 	private Tileset local;
+	public static int currentTime = 0;
 	public BlockRenderer(Tileset global, Tileset local)
 	{
 		this.global = global;
@@ -111,7 +112,7 @@ public class BlockRenderer extends Component
 			{
 				try
 				{
-					g.setColor(global.getPalette()[palette].getIndex(0));
+					g.setColor(global.getPalette(currentTime)[palette].getIndex(0));
 				}
 				catch (Exception e)
 				{
@@ -122,11 +123,11 @@ public class BlockRenderer extends Component
 
 			if (tileNum < DataStore.MainTSSize)
 			{
-				g.drawImage(global.getTile(tileNum, palette, xFlip, yFlip), x * 8, y * 8, null);
+				g.drawImage(global.getTile(tileNum, palette, xFlip, yFlip, currentTime), x * 8, y * 8, null);
 			}
 			else
 			{
-				g.drawImage(local.getTile(tileNum - DataStore.MainTSSize, palette, xFlip, yFlip), x * 8, y * 8, null);
+				g.drawImage(local.getTile(tileNum - DataStore.MainTSSize, palette, xFlip, yFlip, currentTime), x * 8, y * 8, null);
 			}
 			x++;
 			if (x > 1)

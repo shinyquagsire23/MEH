@@ -535,6 +535,10 @@ public class MainGUI extends JFrame {
 	JButton btnImportMap;
 	JButton btnNewMap;
 	private JMenuItem mntmNewMenuItem;
+	private static JTextField txtGlobalTileset;
+	private static JTextField txtLocalTileset;
+	private JButton btnNewButton;
+	private JComboBox comboBox;
 	
 	void CreateButtons() {
 		System.out.println("Resource path:" + MainGUI.class.getResource("."));
@@ -663,6 +667,42 @@ public class MainGUI extends JFrame {
 		btnBlockedit.setFocusPainted(false);
 		btnBlockedit.setBorderPainted(false);
 		panelButtons.add(btnBlockedit);
+		
+		btnNewButton = new JButton("Blend");
+		btnNewButton.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				//testXorColors();
+				new WizardPatcher().setVisible(true);
+			}
+		});
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setPreferredSize(new Dimension(48, 48));
+		panelButtons.add(btnNewButton);
+		
+		comboBox = new JComboBox();
+		comboBox.addItemListener(new ItemListener() 
+		{
+			public void itemStateChanged(ItemEvent e) 
+			{
+				MapIO.blockRenderer.currentTime = comboBox.getSelectedIndex();
+				
+				MapIO.blockRenderer.getGlobalTileset().renderGraphics();
+				MapIO.blockRenderer.getLocalTileset().renderGraphics();
+				
+				//Refresh block picker
+				tileEditorPanel.RerenderTiles(tileEditorPanel.imgBuffer, 0);
+				tileEditorPanel.repaint();
+				
+				//Refresh Map Editor
+				MapEditorPanel.Redraw = true;
+				MainGUI.mapEditorPanel.repaint();
+			}
+		});
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Day", "Morning", "Evening", "Night"}));
+		comboBox.setPreferredSize(new Dimension(80, 48));
+		panelButtons.add(comboBox);
 	}
 
 	void CreateWildPokemonPanel() {
@@ -1579,11 +1619,11 @@ public class MainGUI extends JFrame {
 		mimeEditorPanel.add(lblBorderTilesPointer);
 
 		lblGlobalTilesetPointer = new JLabel("Global Tileset Pointer:");
-		lblGlobalTilesetPointer.setBounds(245, 162, 339, 15);
+		lblGlobalTilesetPointer.setBounds(245, 151, 164, 15);
 		mimeEditorPanel.add(lblGlobalTilesetPointer);
 
 		lblLocalTilesetPointer = new JLabel("Local  Tileset  Pointer:");
-		lblLocalTilesetPointer.setBounds(245, 178, 339, 15);
+		lblLocalTilesetPointer.setBounds(245, 176, 164, 15);
 		mimeEditorPanel.add(lblLocalTilesetPointer);
 
 		lblBorderWidth = new JLabel("Border Width: ");
@@ -1790,6 +1830,16 @@ public class MainGUI extends JFrame {
 		});
 
 		mimeEditorPanel.add(spnHeight);
+		
+		txtGlobalTileset = new JTextField();
+		txtGlobalTileset.setBounds(409, 148, 102, 20);
+		mimeEditorPanel.add(txtGlobalTileset);
+		txtGlobalTileset.setColumns(10);
+		
+		txtLocalTileset = new JTextField();
+		txtLocalTileset.setColumns(10);
+		txtLocalTileset.setBounds(409, 175, 102, 20);
+		mimeEditorPanel.add(txtLocalTileset);
 
 		connectionsTabPanel = new JPanel();
 		editorTabs.addTab("Connections", null, connectionsTabPanel, null);
@@ -1956,8 +2006,8 @@ public class MainGUI extends JFrame {
 		lblBorderHeight.setText("Border Height: " + MapIO.loadedMap.getMapData().borderHeight);
 		lblMapTilesPointer.setText("Map Tiles Pointer: " + BitConverter.toHexString(MapIO.loadedMap.getMapData().mapTilesPtr));
 		lblBorderTilesPointer.setText("Border Tiles Pointer: " + BitConverter.toHexString(MapIO.loadedMap.getMapData().borderTilePtr));
-		lblGlobalTilesetPointer.setText("Global Tileset Pointer: " + BitConverter.toHexString(MapIO.loadedMap.getMapData().globalTileSetPtr));
-		lblLocalTilesetPointer.setText("Local  Tileset  Pointer: " + BitConverter.toHexString(MapIO.loadedMap.getMapData().localTileSetPtr));
+		txtGlobalTileset.setText(BitConverter.toHexString(MapIO.loadedMap.getMapData().globalTileSetPtr));
+		txtLocalTileset.setText(BitConverter.toHexString(MapIO.loadedMap.getMapData().localTileSetPtr));
 	}
 
 	public static void loadWildPokemon() {
@@ -2163,6 +2213,112 @@ public class MainGUI extends JFrame {
 			  
 			  javax.swing.JMenuItem menuItem = new javax.swing.JMenuItem("New menu item");
 			  __wbp_panel.add(menuItem);
+		}
+	}
+
+	public void testXorColors()
+	{
+		BufferedImage img = (BufferedImage)Map.renderMap(MapIO.loadedMap, true);
+		Image orig = img.getScaledInstance(img.getWidth(), img.getHeight(), 0);
+		GradientTest t = new GradientTest(orig);
+		t.show();
+		
+		Color night = new Color(42,0,168,80);
+		Color evening = new Color(56,2,0,40);
+		Color day = new Color(0,0,0,0);
+		Color morning = new Color(255,86,59,20);
+		
+		int stepsPH = 6;
+		
+		Color[] nightN = Palette.gradient(night, night, 3*stepsPH);
+		Color[] nightM = Palette.gradient(night, morning, 5*stepsPH);
+		Color[] morningD = Palette.gradient(morning, day, 6*stepsPH);
+		Color[] dayE = Palette.gradient(day, evening, 4*stepsPH);
+		Color[] eveningN = Palette.gradient(evening, night, 1*stepsPH);
+		
+		Color[] gradient = new Color[24*stepsPH];
+		for(int i = 0; i < 24*stepsPH; i++)
+			gradient[i] = night;
+		
+		
+		for(int i = 0; i < nightN.length; i++)
+			gradient[i] = nightN[i];
+		
+		for(int i = 0; i < nightM.length; i++)
+			gradient[i+nightN.length] = nightM[i];
+		
+		for(int i = 0; i < morningD.length; i++)
+			gradient[i+nightN.length+nightM.length] = morningD[i];
+		
+		for(int i = 0; i < dayE.length; i++)
+			gradient[i+nightN.length+nightM.length+morningD.length] = dayE[i];
+		
+		for(int i = 0; i < eveningN.length; i++)
+			gradient[i+nightN.length+nightM.length+morningD.length+dayE.length] = eveningN[i];
+		
+		for(int i = 0; i < nightN.length; i++)
+			gradient[i+nightN.length+nightM.length+morningD.length+dayE.length+eveningN.length] = nightN[i];
+		
+		for(int i = 0; i < (24*stepsPH); i++)
+		{
+			Graphics g = img.getGraphics();
+			g.drawImage(orig, 0,0, null);
+			g.setColor(gradient[i]);
+			g.fillRect(0, 0, img.getWidth(), img.getHeight());
+			try
+			{
+				ImageIO.write(img, "png", new File("cycle/time" + String.format("%03d", i) + ".png"));
+			}
+			catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		BufferedImage b = new BufferedImage(gradient.length * 8, 8, BufferedImage.TYPE_INT_ARGB);
+		for(int i = 0; i < 24*stepsPH; i++)
+		{
+			Graphics g = b.getGraphics();
+			g.setColor(gradient[i]);
+			g.fillRect(i*8, 0, 8, 8);
+		}
+		try
+		{
+			ImageIO.write(b, "png", new File("cycle/gradient.png"));
+		}
+		catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*for(int i = 0; i < 16; i++)
+		{
+			Color c2 = new Color(42,0,168,80);
+			Color c1 = new Color(48,2,0,40);
+			Color c = Palette.gradient(c1, c2, 3)[1];
+			//Color c = new Color(42,0,168,80);
+			MapIO.blockRenderer.getGlobalTileset().getPalette(MapIO.blockRenderer.currentTime)[i].xorColor(c);
+			MapIO.blockRenderer.getLocalTileset().getPalette(MapIO.blockRenderer.currentTime)[i].xorColor(c);
+			MapIO.blockRenderer.getGlobalTileset().rerenderTileSet(i,MapIO.blockRenderer.currentTime);
+			MapIO.blockRenderer.getLocalTileset().rerenderTileSet(i,MapIO.blockRenderer.currentTime);
+		}
+		
+		MapIO.blockRenderer.getGlobalTileset().renderGraphics();
+		MapIO.blockRenderer.getLocalTileset().renderGraphics();
+		
+		//Refresh block picker
+		tileEditorPanel.RerenderTiles(tileEditorPanel.imgBuffer, 0);
+		tileEditorPanel.repaint();
+		
+		//Refresh Map Editor
+		MapEditorPanel.Redraw = true;
+		MainGUI.mapEditorPanel.repaint();*/
+		
+		System.out.println();
+		for(Color c : gradient)
+		{
+			System.out.print("0x" + String.format("%02X", c.getAlpha()) + String.format("%02X", c.getRed()) + String.format("%02X", c.getGreen()) + String.format("%02X", c.getBlue()) + ", ");
 		}
 	}
 }

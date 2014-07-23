@@ -59,9 +59,11 @@ public class TilesetCache
 	{
 		get(loadedMap.getMapData().globalTileSetPtr).resetPalettes();
 		get(loadedMap.getMapData().localTileSetPtr).resetPalettes();
-		for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
-			get(loadedMap.getMapData().globalTileSetPtr).getPalette()[i] = get(loadedMap.getMapData().localTileSetPtr).getROMPalette()[i];
-		get(loadedMap.getMapData().localTileSetPtr).setPalette(get(loadedMap.getMapData().globalTileSetPtr).getPalette());
+		for(int j = 1; j < 5; j++)
+			for(int i = DataStore.MainTSPalCount-1; i < 13; i++)
+				get(loadedMap.getMapData().globalTileSetPtr).getPalette(j-1)[i] = get(loadedMap.getMapData().localTileSetPtr).getROMPalette()[j-1][i];
+		for(int j = 0; j < 4; j++)
+			get(loadedMap.getMapData().localTileSetPtr).setPalette(get(loadedMap.getMapData().globalTileSetPtr).getPalette(j),j);
 		get(loadedMap.getMapData().localTileSetPtr).renderPalettedTiles();
 		get(loadedMap.getMapData().globalTileSetPtr).renderPalettedTiles();
 		get(loadedMap.getMapData().localTileSetPtr).startTileThreads();

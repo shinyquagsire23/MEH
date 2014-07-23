@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import org.zzl.minegaming.GBAUtils.BitConverter;
 import org.zzl.minegaming.GBAUtils.DataStore;
 
+import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tile;
 import us.plxhack.MEH.IO.Tileset;
 import us.plxhack.MEH.Structures.MapTile;
@@ -240,8 +241,8 @@ public class TilesetPickerPanel extends JPanel
 		imgBuffer = new BufferedImage(d.width,d.height,BufferedImage.TYPE_INT_ARGB);
 		//setSize(d);
 		gcBuff=imgBuffer.getGraphics();
-		gcBuff.drawImage(((BufferedImage)(global.getTileSet(viewingPalette))), 0, 0, this);
-		gcBuff.drawImage(((BufferedImage)(local.getTileSet(viewingPalette))), 0, global.getTileSet(viewingPalette).getHeight(), this);
+		gcBuff.drawImage(((BufferedImage)(global.getTileSet(viewingPalette, MapIO.blockRenderer.currentTime))), 0, 0, this);
+		gcBuff.drawImage(((BufferedImage)(local.getTileSet(viewingPalette, MapIO.blockRenderer.currentTime))), 0, global.getTileSet(viewingPalette, MapIO.blockRenderer.currentTime).getHeight(), this);
 	}
 	
 	
@@ -257,7 +258,7 @@ public class TilesetPickerPanel extends JPanel
 			DrawTileset();
 			Redraw = false;
 		}
-		g.setColor(global.getPalette()[baseSelectedPal].getIndex(0));
+		g.setColor(global.getPalette(MapIO.blockRenderer.currentTime)[baseSelectedPal].getIndex(0));
 		g.fillRect(0, 0, imgBuffer.getWidth(null)*2, imgBuffer.getHeight(null)*2);
 		
 		g.drawImage(imgBuffer.getScaledInstance(256, 1024, imgBuffer.SCALE_FAST), 0, 0, this);
@@ -282,6 +283,18 @@ public class TilesetPickerPanel extends JPanel
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void setFlip(boolean xFlip, boolean yFlip)
+	{
+		for(Tile[] ta : selectBuffer)
+			for(Tile t : ta)
+			{
+				if(xFlip)
+					t.xFlip = !t.xFlip;
+				if(yFlip)
+					t.yFlip = !t.yFlip;
+			}
 	}
 
 }

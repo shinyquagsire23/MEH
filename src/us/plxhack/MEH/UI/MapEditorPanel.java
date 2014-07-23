@@ -333,10 +333,10 @@ public class MapEditorPanel extends JPanel {
 
 			if(renderPalette) {
 				int x = 0;
-				for(int i = 0; i < 12; i++) {
+				for(int i = 0; i < 16; i++) {
 					while(x < 16) {
 						try {
-							g.setColor(globalTiles.getPalette()[i].getIndex(x));
+							g.setColor(globalTiles.getPalette(MapIO.blockRenderer.currentTime)[i].getIndex(x));
 							g.fillRect(x*8, i*8, 8, 8);
 						}
 						catch (Exception e) {
@@ -348,10 +348,10 @@ public class MapEditorPanel extends JPanel {
 				}
 
 				x = 0;
-				for(int i = 0; i < 12; i++) {
+				for(int i = 0; i < 16; i++) {
 					while(x < 16) {
 						try {
-							g.setColor(localTiles.getPalette()[i].getIndex(x));
+							g.setColor(localTiles.getPalette(MapIO.blockRenderer.currentTime)[i].getIndex(x));
 							g.fillRect(128+x*8, i*8, 8, 8);
 						}
 						catch(Exception e) {

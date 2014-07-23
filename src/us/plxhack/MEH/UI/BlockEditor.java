@@ -153,6 +153,7 @@ public class BlockEditor extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				xFlip = chbxXFlip.isSelected();
+				tpp.setFlip(xFlip, yFlip);
 				tpp.fetchNewBlock();
 			}
 		});
@@ -166,6 +167,7 @@ public class BlockEditor extends JFrame
 			public void actionPerformed(ActionEvent e) 
 			{
 				yFlip = chbxYFlip.isSelected();
+				tpp.setFlip(xFlip, yFlip);
 				tpp.fetchNewBlock();
 			}
 		});
@@ -405,7 +407,7 @@ public class BlockEditor extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				BufferedImage b = MapIO.blockRenderer.getGlobalTileset().getIndexedTileSet(tpp.viewingPalette);
+				BufferedImage b = MapIO.blockRenderer.getGlobalTileset().getIndexedTileSet(tpp.viewingPalette, MapIO.blockRenderer.currentTime);
 				FileDialog fd = new FileDialog(new Frame(), "Locate A Tileset", FileDialog.SAVE);
 				fd.setFilenameFilter(new FilenameFilter() {
 				    public boolean accept(File dir, String name) {
@@ -435,7 +437,7 @@ public class BlockEditor extends JFrame
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				BufferedImage b = MapIO.blockRenderer.getLocalTileset().getIndexedTileSet(tpp.viewingPalette);
+				BufferedImage b = MapIO.blockRenderer.getLocalTileset().getIndexedTileSet(tpp.viewingPalette,MapIO.blockRenderer.currentTime);
 				FileDialog fd = new FileDialog(new Frame(), "Locate A Tileset", FileDialog.SAVE);
 				fd.setFilenameFilter(new FilenameFilter() {
 				    public boolean accept(File dir, String name) {
@@ -495,7 +497,7 @@ public class BlockEditor extends JFrame
 					
 					
 					//Import and edit the palette
-					Palette[] p = MapIO.blockRenderer.getGlobalTileset().getPalette();
+					Palette[] p = MapIO.blockRenderer.getGlobalTileset().getPalette(MapIO.blockRenderer.currentTime);
 					
 					//We don't need to change the first color here.
 					reds[0] = p[tpp.viewingPalette].getReds()[0];
@@ -503,10 +505,10 @@ public class BlockEditor extends JFrame
 					blues[0] = p[tpp.viewingPalette].getBlues()[0];
 					
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapIO.blockRenderer.getGlobalTileset().setPalette(p);			
-					p = MapIO.blockRenderer.getLocalTileset().getPalette();
+					MapIO.blockRenderer.getGlobalTileset().setPalette(p,MapIO.blockRenderer.currentTime);			
+					p = MapIO.blockRenderer.getLocalTileset().getPalette(MapIO.blockRenderer.currentTime);
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapIO.blockRenderer.getLocalTileset().setPalette(p);
+					MapIO.blockRenderer.getLocalTileset().setPalette(p,MapIO.blockRenderer.currentTime);
 					
 					GBAImage i = GBAImage.fromImage(tileset, p[tpp.viewingPalette]);
 					byte[] compData = Lz77.compressLZ77(i.getRaw());
@@ -562,7 +564,7 @@ public class BlockEditor extends JFrame
 					
 					
 					//Import and edit the palette
-					Palette[] p = MapIO.blockRenderer.getLocalTileset().getPalette();
+					Palette[] p = MapIO.blockRenderer.getLocalTileset().getPalette(MapIO.blockRenderer.currentTime);
 					
 					//We don't need to change the first color here.
 					reds[0] = p[tpp.viewingPalette].getReds()[0];
@@ -570,10 +572,10 @@ public class BlockEditor extends JFrame
 					blues[0] = p[tpp.viewingPalette].getBlues()[0];
 					
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapIO.blockRenderer.getGlobalTileset().setPalette(p);			
-					p = MapIO.blockRenderer.getLocalTileset().getPalette();
+					MapIO.blockRenderer.getGlobalTileset().setPalette(p,MapIO.blockRenderer.currentTime);			
+					p = MapIO.blockRenderer.getLocalTileset().getPalette(MapIO.blockRenderer.currentTime);
 					p[tpp.viewingPalette].setColors(reds, greens, blues);
-					MapIO.blockRenderer.getLocalTileset().setPalette(p);
+					MapIO.blockRenderer.getLocalTileset().setPalette(p,MapIO.blockRenderer.currentTime);
 					
 					GBAImage i = GBAImage.fromImage(tileset, p[tpp.viewingPalette]);
 					byte[] compData = Lz77.compressLZ77(i.getRaw());
@@ -602,9 +604,9 @@ public class BlockEditor extends JFrame
 	{
 		//Rerender tiles
 		MapIO.blockRenderer.getGlobalTileset().renderGraphics();
-		MapIO.blockRenderer.getGlobalTileset().rerenderTileSet(tpp.viewingPalette);
+		MapIO.blockRenderer.getGlobalTileset().rerenderTileSet(tpp.viewingPalette,MapIO.blockRenderer.currentTime);
 		MapIO.blockRenderer.getLocalTileset().renderGraphics();
-		MapIO.blockRenderer.getLocalTileset().rerenderTileSet(tpp.viewingPalette);
+		MapIO.blockRenderer.getLocalTileset().rerenderTileSet(tpp.viewingPalette,MapIO.blockRenderer.currentTime);
 		
 		//Refresh block picker
 		tileEditorPanel.RerenderTiles(tileEditorPanel.imgBuffer, 0);

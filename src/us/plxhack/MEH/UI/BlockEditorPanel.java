@@ -213,15 +213,15 @@ public class BlockEditorPanel extends JPanel
 			{
 				if (block.getTile(x, y).getTileNumber() < DataStore.MainTSSize)
 				{
-					g.setColor(host.tpp.global.getPalette()[block.getTile(x, y).getPaletteNum()].getIndex(0)); //Set default background color
+					g.setColor(host.tpp.global.getPalette(MapIO.blockRenderer.currentTime)[block.getTile(x, y).getPaletteNum()].getIndex(0)); //Set default background color
 					g.fillRect(x * 16, y * 16,16,16);
-					g.drawImage(host.tpp.global.getTile(block.getTile(x, y).getTileNumber(), block.getTile(x, y).getPaletteNum(), block.getTile(x, y).xFlip, block.getTile(x, y).yFlip).getScaledInstance(16, 16, Image.SCALE_FAST), x * 16, y * 16, null);
+					g.drawImage(host.tpp.global.getTile(block.getTile(x, y).getTileNumber(), block.getTile(x, y).getPaletteNum(), block.getTile(x, y).xFlip, block.getTile(x, y).yFlip, MapIO.blockRenderer.currentTime).getScaledInstance(16, 16, Image.SCALE_FAST), x * 16, y * 16, null);
 				}
 				else
 				{
-					g.setColor(host.tpp.local.getPalette()[block.getTile(x, y).getPaletteNum()].getIndex(0)); //Set default background color
+					g.setColor(host.tpp.local.getPalette(MapIO.blockRenderer.currentTime)[block.getTile(x, y).getPaletteNum()].getIndex(0)); //Set default background color
 					g.fillRect(x * 16, y * 16,16,16);
-					g.drawImage(host.tpp.local.getTile(block.getTile(x, y).getTileNumber() - DataStore.MainTSSize, block.getTile(x, y).getPaletteNum(), block.getTile(x, y).xFlip, block.getTile(x, y).yFlip).getScaledInstance(16, 16, Image.SCALE_FAST), x * 16, y * 16, null);
+					g.drawImage(host.tpp.local.getTile(block.getTile(x, y).getTileNumber() - DataStore.MainTSSize, block.getTile(x, y).getPaletteNum(), block.getTile(x, y).xFlip, block.getTile(x, y).yFlip, MapIO.blockRenderer.currentTime).getScaledInstance(16, 16, Image.SCALE_FAST), x * 16, y * 16, null);
 				}
 			}
 		}

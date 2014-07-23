@@ -10,9 +10,9 @@ public class Tileset
 {
 	private GBARom rom;
 	private GBAImage image;
-	private BufferedImage[] bi;
-	private Palette[] palettes; 
-	private Palette[] palettesFromROM;
+	private BufferedImage[][] bi;
+	private Palette[][] palettes; 
+	private Palette[][] palettesFromROM;
 	private static Tileset lastPrimary;
 	public TilesetHeader tilesetHeader;
 
@@ -61,25 +61,28 @@ public class Tileset
 			}
 		}
 		
-		renderedTiles = new HashMap[tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13];
-		customRenderedTiles = new HashMap[13-DataStore.MainTSPalCount];
+		renderedTiles = new HashMap[16*4];
+		customRenderedTiles = new HashMap[16*4];
 		
-		for(int i = 0; i < (tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13); i++)
+		for(int i = 0; i < 16 * 4; i++)
 			renderedTiles[i] = new HashMap<Integer,BufferedImage>();
-		for(int i = 0; i < 13-DataStore.MainTSPalCount; i++)
+		for(int i = 0; i < 16*4; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 		
-		image = new GBAImage(uncompressedData,palettes[0],new Point(128,(tilesetHeader.isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));
+		image = new GBAImage(uncompressedData,palettes[0][0],new Point(128,(tilesetHeader.isPrimary ? DataStore.MainTSHeight : DataStore.LocalTSHeight)));
 	}
 	
 	public void renderPalettes()
 	{
-		palettes = new Palette[13];
-		bi = new BufferedImage[13];
+		palettes = new Palette[4][16];
+		bi = new BufferedImage[4][16];
 		
-		for(int i = 0; i < (tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13); i++)
+		for(int i = 0; i < 4; i++)
 		{
-			palettes[i] = new Palette(GBAImageType.c16, rom.readBytes(((int)tilesetHeader.pPalettes)+(32*i),32));
+			for(int j = 0; j < 16; j++)
+			{
+				palettes[i][j] = new Palette(GBAImageType.c16, rom.readBytes(((int)tilesetHeader.pPalettes)+((32*j) + (i * 0x200)),32));
+			}
 		}
 		palettesFromROM = palettes.clone();
 	}
@@ -96,10 +99,10 @@ public class Tileset
 			new TileLoader(renderedTiles,i).start();
 	}
 	
-	public BufferedImage getTileWithCustomPal(int tileNum, Palette palette, boolean xFlip, boolean yFlip)
+	public BufferedImage getTileWithCustomPal(int tileNum, Palette palette, boolean xFlip, boolean yFlip, int time)
 	{
-		int x = ((tileNum) % (bi[0].getWidth() / 8)) * 8;
-		int y = ((tileNum) / (bi[0].getWidth() / 8)) * 8;
+		int x = ((tileNum) % (bi[time][0].getWidth() / 8)) * 8;
+		int y = ((tileNum) / (bi[time][0].getWidth() / 8)) * 8;
 		BufferedImage toSend =  image.getBufferedImageFromPal(palette).getSubimage(x, y, 8, 8);
 
 		if(!xFlip && !yFlip)
@@ -112,42 +115,42 @@ public class Tileset
 		return toSend;
 	}
 
-	public BufferedImage getTile(int tileNum, int palette, boolean xFlip, boolean yFlip)
+	public BufferedImage getTile(int tileNum, int palette, boolean xFlip, boolean yFlip, int time)
 	{
 		if(palette < DataStore.MainTSPalCount)
 		{
-		if(renderedTiles[palette].containsKey(tileNum)) //Check to see if we've cached that tile
+		if(renderedTiles[palette+(time * 16)].containsKey(tileNum)) //Check to see if we've cached that tile
 		{
 			if(xFlip && yFlip)
-				return verticalFlip(horizontalFlip(renderedTiles[palette].get(tileNum)));
+				return verticalFlip(horizontalFlip(renderedTiles[palette+(time * 16)].get(tileNum)));
 			else if(xFlip)
 			{
-				return horizontalFlip(renderedTiles[palette].get(tileNum));
+				return horizontalFlip(renderedTiles[palette+(time * 16)].get(tileNum));
 			}
 			else if(yFlip)
 			{
-				return verticalFlip(renderedTiles[palette].get(tileNum));
+				return verticalFlip(renderedTiles[palette+(time * 16)].get(tileNum));
 			}
 			
-			return renderedTiles[palette].get(tileNum);
+			return renderedTiles[palette+(time * 16)].get(tileNum);
 		}
 		}
 		else if(palette < 13)
 		{
-			if(customRenderedTiles[palette-DataStore.MainTSPalCount].containsKey(tileNum)) //Check to see if we've cached that tile
+			if(customRenderedTiles[(palette-DataStore.MainTSPalCount)+(time * 16)].containsKey(tileNum)) //Check to see if we've cached that tile
 			{
 				if(xFlip && yFlip)
-					return verticalFlip(horizontalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum)));
+					return verticalFlip(horizontalFlip(customRenderedTiles[(palette-DataStore.MainTSPalCount)+(time * 16)].get(tileNum)));
 				else if(xFlip)
 				{
-					return horizontalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum));
+					return horizontalFlip(customRenderedTiles[(palette-DataStore.MainTSPalCount)+(time * 16)].get(tileNum));
 				}
 				else if(yFlip)
 				{
-					return verticalFlip(customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum));
+					return verticalFlip(customRenderedTiles[(palette-DataStore.MainTSPalCount)+(time * 16)].get(tileNum));
 				}
 				
-				return customRenderedTiles[palette-DataStore.MainTSPalCount].get(tileNum);
+				return customRenderedTiles[(palette-DataStore.MainTSPalCount)+(time * 16)].get(tileNum);
 			}
 		}
 		else
@@ -161,7 +164,7 @@ public class Tileset
 		BufferedImage toSend = new BufferedImage(8,8,BufferedImage.TYPE_INT_ARGB);
 		try
 		{
-			toSend =  bi[palette].getSubimage(x, y, 8, 8);
+			toSend =  bi[time][palette].getSubimage(x, y, 8, 8);
 		}
 		catch(Exception e)
 		{
@@ -169,9 +172,9 @@ public class Tileset
 		//	System.out.println("Attempted to read 8x8 at " + x + ", " + y);
 		}
 		if(palette < DataStore.MainTSPalCount || renderedTiles.length > DataStore.MainTSPalCount)
-			renderedTiles[palette].put(tileNum, toSend);
+			renderedTiles[palette+(time * 16)].put(tileNum, toSend);
 		else
-			customRenderedTiles[palette-DataStore.MainTSPalCount].put(tileNum, toSend);
+			customRenderedTiles[(palette-DataStore.MainTSPalCount)+(time * 16)].put(tileNum, toSend);
 
 		if(!xFlip && !yFlip)
 			return toSend;
@@ -183,12 +186,12 @@ public class Tileset
 		return toSend;
 	}
 	
-	public Palette[] getPalette()
+	public Palette[] getPalette(int time)
 	{
-		return palettes;
+		return palettes[time];
 	}
 	
-	public Palette[] getROMPalette()
+	public Palette[][] getROMPalette()
 	{
 		return palettesFromROM.clone(); //No touchy the real palette!
 	}
@@ -198,30 +201,39 @@ public class Tileset
 		palettes = getROMPalette();
 	}
 	
-	public void setPalette(Palette[] pal)
+	public void setPalette(Palette[] pal, int time)
 	{
-		palettes = pal;
+		palettes[time] = pal;
 	}
 	
-	public void rerenderTileSet(int palette)
+	public void setPalette(Palette pal, int index, int time)
 	{
-			bi[palette] = image.getBufferedImageFromPal(palettes[palette]);
+		palettes[time][index] = pal;
+	}
+	
+	public void rerenderTileSet(int palette, int time)
+	{
+			bi[time][palette] = image.getBufferedImageFromPal(palettes[time][palette]);
 	}
 	
 	public void renderPalettedTiles()
 	{		
-		for(int i = 0; i < 13; i++)
+		for(int j = 0; j < 4; j++)
 		{
-			bi[i] = image.getBufferedImageFromPal(palettes[i]);
+			for (int i = 0; i < 16; i++)
+			{
+				bi[j][i] = image.getBufferedImageFromPal(palettes[j][i]);
 
+			}
 		}
-		for(int i = 0; i < 13; i++)
-			rerenderTileSet(i);
+		for(int j = 0; j < 4; j++)
+			for(int i = 0; i < 16; i++)
+				rerenderTileSet(i,j);
 	}
 	public void resetCustomTiles()
 	{
-		customRenderedTiles = new HashMap[DataStore.MainTSPalCount];
-		for(int i = 0; i < DataStore.MainTSPalCount; i++)
+		customRenderedTiles = new HashMap[16*4];
+		for(int i = 0; i < 16*4; i++)
 			customRenderedTiles[i] = new HashMap<Integer,BufferedImage>();
 	}
 	
@@ -246,14 +258,14 @@ public class Tileset
         return dimg;
     }
 
-	public BufferedImage getTileSet(int palette)
+	public BufferedImage getTileSet(int palette, int time)
 	{
-		return bi[palette];
+		return bi[time][palette];
 	}
 	
-	public BufferedImage getIndexedTileSet(int palette)
+	public BufferedImage getIndexedTileSet(int palette, int time)
 	{
-		return image.getIndexedImage(palettes[palette], true);
+		return image.getIndexedImage(palettes[time][palette], true);
 	}
 	
 	public TilesetHeader getTilesetHeader()
@@ -280,28 +292,33 @@ public class Tileset
 		public void run()
 		{
 			int k = (tilesetHeader.isPrimary ? DataStore.MainTSSize : DataStore.LocalTSSize);
-			for(int i = 0; i < 1023; i++)
-			{
+
+				for (int i = 0; i < 1023; i++)
+				{
 					try
 					{
-						buffer[pal].put(i, getTile(i,pal,false,false));
+						buffer[pal].put(i, getTile(i, pal, false, false, 0));
 					}
-					catch(Exception e)
+					catch (Exception e)
 					{
-						//e.printStackTrace();
+						// e.printStackTrace();
 						System.out.println("An error occured while writing tile " + i + " with palette " + pal);
 					}
-			}
+				}
+			
 		}
 		
 	}
 
 	public void save()
 	{
-		for(int i = 0; i < (tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 13); i++)
+		for(int j = 0; j < 1; j++) //Caused issues last time I tested it...
 		{
-			rom.Seek(((int)tilesetHeader.pPalettes)+(32*i));
-			palettes[i].save(rom);
+			for (int i = 0; i < (tilesetHeader.isPrimary ? DataStore.MainTSPalCount : 16); i++)
+			{
+				rom.Seek(((int) tilesetHeader.pPalettes) + (32 * i + (j * 0x200)));
+				palettes[j][i].save(rom);
+			}
 		}
 		tilesetHeader.save();
 	}
