@@ -8,5 +8,5 @@ public class Version {
     public final static String RequestApplicationBuild() {
         return MajorVersion + "." + MinorVersion + "." + Build + Release;
     }
-    public static String[] Contributors = {"Shiny Quagsire", "interdpth", "Bela", "DeltaSalamence", "trevor403"};
+    public static String[] Contributors = {"Shiny Quagsire", "interdpth", "Bela", "DeltaSalamence", "trevor403", "diegoisawesome"};
 }

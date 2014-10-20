@@ -1,5 +1,6 @@
 package us.plxhack.MEH.IO;
 
+import org.zzl.minegaming.GBAUtils.DataStore;
 import org.zzl.minegaming.GBAUtils.GBARom;
 import org.zzl.minegaming.GBAUtils.ISaveable;
 
@@ -28,8 +29,14 @@ public class TilesetHeader implements ISaveable {
 		  pGFX = rom.getPointer();
 		  pPalettes = rom.getPointer();
 		  pBlocks = rom.getPointer();
-		  pAnimation = rom.getPointer();
-		  pBehavior = rom.getPointer();
+		  if (DataStore.EngineVersion == 1) {
+			  pAnimation = rom.getPointer();
+			  pBehavior = rom.getPointer();
+		  }
+		  else {
+			  pBehavior = rom.getPointer();
+			  pAnimation = rom.getPointer();
+		  }
 		  hdrSize=rom.internalOffset-offset;
 		  
 	  }

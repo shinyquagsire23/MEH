@@ -6,6 +6,7 @@ import org.zzl.minegaming.GBAUtils.GBARom;
 
 public class Block
 {
+	public Tile tilesThirdLayer[][];
 	public Tile tilesForeground[][];
 	public Tile tilesBackground[][];
 	public int blockID;
@@ -22,6 +23,8 @@ public class Block
 		this.blockID = blockID;
 		this.backgroundMetaData = bgBytes;
 		this.rom = rom;
+//		blockRenderer.getBehaviorByte(blockID)
+		tilesThirdLayer = new Tile[2][2];
 		tilesForeground = new Tile[2][2];
 		tilesBackground = new Tile[2][2];
 		for(int i = 0; i < 2; i++)

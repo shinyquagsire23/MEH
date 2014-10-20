@@ -17,6 +17,7 @@ public class BlockRenderer extends Component
 	{
 		NONE,
 		LEGACY,
+		LEGACY2,
 		REFERENCE;
 	}
 	
@@ -76,12 +77,17 @@ public class BlockRenderer extends Component
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 		int x = 0;
 		int y = 0;
-		int top = 0;
+		int layerNumber = 0;
 		
 		TripleType type = TripleType.NONE;
-		if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30 && DataStore.EngineVersion == 1) //Temporarily disabling triple tile support in RSE
+		if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30)
 			type = TripleType.LEGACY;
 			
+		if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x40) == 0x40) {
+			blockPointer +=8;
+			type = TripleType.LEGACY2;
+		}
+		
 		else if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1)
 			type = TripleType.REFERENCE;
 		
@@ -104,11 +110,11 @@ public class BlockRenderer extends Component
 				blockPointer -= i;
 			}
 			int orig = global.getROM().readWord(blockPointer + i);
-			int tileNum = global.getROM().readWord(blockPointer + i) & 0x3FF;
-			int palette = (global.getROM().readWord(blockPointer + i) & 0xF000) >> 12;
-			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
-			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
-			if (transparency && top == 0)
+			int tileNum = orig & 0x3FF;
+			int palette = (orig & 0xF000) >> 12;
+			boolean xFlip = (orig & 0x400) > 0;
+			boolean yFlip = (orig & 0x800) > 0;
+			if (transparency && layerNumber == 0)
 			{
 				try
 				{
@@ -139,7 +145,7 @@ public class BlockRenderer extends Component
 			{
 				x = 0;
 				y = 0;
-				top = 1;
+				layerNumber++;
 			}
 			i++;
 		}
@@ -159,26 +165,33 @@ public class BlockRenderer extends Component
 		int blockPointer = (int) ((isSecondaryBlock ? local.getTilesetHeader().pBlocks : global.getTilesetHeader().pBlocks) + (blockNum * 16));
 		int x = 0;
 		int y = 0;
-		int top = 0;
+		int layerNumber = 0;
 		Block b = new Block(realBlockNum, global.getROM());
 		
 		boolean tripleTile = false;
-		if((b.backgroundMetaData >> 24 & 0x30) == 0x30)
+		
+		if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30)
 		{
 			tripleTile = true;
 			System.out.println("Rendering triple tile block!");
+		}
+		else if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x40) == 0x40)
+		{
+			tripleTile = true;
+			blockPointer +=8;
+			System.out.println("Rendering space-saver triple tile block!");
 		}
 		
 		for (int i = 0; i < (tripleTile ? 24 : 16); i++)
 		{
 			int orig = global.getROM().readWord(blockPointer + i);
-			int tileNum = global.getROM().readWord(blockPointer + i) & 0x3FF;
-			int palette = (global.getROM().readWord(blockPointer + i) & 0xF000) >> 12;
-			boolean xFlip = (global.getROM().readWord(blockPointer + i) & 0x400) > 0;
-			boolean yFlip = (global.getROM().readWord(blockPointer + i) & 0x800) > 0;
+			int tileNum = orig & 0x3FF;
+			int palette = (orig & 0xF000) >> 12;
+			boolean xFlip = (orig & 0x400) > 0;
+			boolean yFlip = (orig & 0x800) > 0;
 
-			if(i < 16)
-				b.setTile(x+(top*2), y, new Tile(tileNum, palette, xFlip, yFlip));
+//			if(i < 16)
+			b.setTile(x+(layerNumber*2), y, new Tile(tileNum, palette, xFlip, yFlip));
 			x++;
 			if (x > 1)
 			{
@@ -189,7 +202,7 @@ public class BlockRenderer extends Component
 			{
 				x = 0;
 				y = 0;
-				top = 1;
+				layerNumber++;
 			}
 			i++;
 		}

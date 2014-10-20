@@ -1,5 +1,8 @@
 package us.plxhack.MEH;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import us.plxhack.MEH.IO.BankLoader;
 import us.plxhack.MEH.Plugins.PluginManager;
 import us.plxhack.MEH.UI.MainGUI;
@@ -23,8 +26,11 @@ public class Main
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
 		JFrame window = new MainGUI();
-		window.setSize(1000, 600);
-		window.setTitle("Map Editor of Happiness - No ROM Loaded");
+		window.setSize(1024, 736);
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		window.setLocation(dim.width/2-window.getSize().width/2, dim.height/2-window.getSize().height/2);
+		window.setTitle("Map Editor of Happiness | No ROM Loaded");
+		window.setMinimumSize(new Dimension(516,338));
 		BankLoader.reset();
 		window.setVisible(true);
 		try
