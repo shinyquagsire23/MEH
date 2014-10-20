@@ -18,14 +18,15 @@ import us.plxhack.MEH.Structures.EventType;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
+
 
 import java.awt.*;
 import java.awt.event.*;
@@ -73,13 +74,15 @@ public class MainGUI extends JFrame {
 	public static JPanel eventScrollPanel;
 	private JMenuItem mnOpen;
 	private JMenuItem mnSave;
-	private JMenuItem mnNewMap;
+	private JMenuItem mnSaveMap;
+	private JMenuItem mnSaveMapToPNG;
+	private JMenuItem mnExit;
     private JMenu mnHelp;
     private JMenuItem mnAbout;
     private PermissionTilePanel permissionTilePanel;
 	private JScrollPane movementScrollPane;
 	private JPanel connectionsTabPanel;
-	private JPanel connectinonsInfoPanel;
+	private JPanel connectionsInfoPanel;
 	private JScrollPane connectionsEditorScroll;
 	private JLabel lblNewLabel;
 	private JPanel panelWildEditor;
@@ -188,29 +191,29 @@ public class MainGUI extends JFrame {
 	public DataStore dataStore;
 	private JPanel editorPanel;
 
-    public static JPanel panelButtons;
+    public static JToolBar panelButtons;
 
     private static JSlider pkEncounter;
 
     JPanel mimePanel;// Mr. Mime 2 dirty 4 mii
     private JMenu mnPatches;
     private JMenuItem mntmDaynightPokemon;
-    private JButton btnBlockedit;
     private JCheckBoxMenuItem mnEnableDebugging;
 
 	void CreateToolbar() {
 		JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
 		lblTileVal = new JLabel("Current Tile: 0x0");
 		lblTileVal.setFont(new Font("Dialog", Font.BOLD, 10));
 		toolBar.add(lblTileVal);
 		editorPanel.add(toolBar, BorderLayout.NORTH);
-		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+//		toolBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		toolBar.setPreferredSize(new Dimension(128, 32));
 	}
 
 	void CreateBorderArea() {
 		JPanel panelBorderTilesContainer = new JPanel();
-		panelBorderTilesContainer.setPreferredSize(new Dimension(10, 100));
+		panelBorderTilesContainer.setPreferredSize(new Dimension(10, 70));
 		panelMapTilesContainer.add(panelBorderTilesContainer, BorderLayout.NORTH);
 		panelBorderTilesContainer.setLayout(new BorderLayout(0, 0));
 
@@ -225,8 +228,8 @@ public class MainGUI extends JFrame {
 		panelBorderTilesToAbsolute.setLayout(null);
 
 		borderTileEditor = new BorderEditorPanel();
-		borderTileEditor.setBorder(new TitledBorder(new LineBorder(new Color(0, 0, 0), 1, true), "Border Tiles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		borderTileEditor.setBounds(12, 12, 114, 75);
+		borderTileEditor.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Border Tiles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		borderTileEditor.setBounds(4, 0, 150, 65);
 		panelBorderTilesToAbsolute.add(borderTileEditor);
 	}
 
@@ -235,7 +238,7 @@ public class MainGUI extends JFrame {
 		editorTabs.addTab("Events", null, eventsPanel, null);
 		eventsPanel.setLayout(new BorderLayout(0, 0));
 		JPanel splitm = new JPanel();
-		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+//		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		splitm.setPreferredSize(new Dimension(4, 10));
 		splitm.setMaximumSize(new Dimension(4, 32000));
 		JPanel pmtc = new JPanel();
@@ -363,7 +366,7 @@ public class MainGUI extends JFrame {
 		editorTabs.addTab("Map", null, editorPanel, null);
 		editorPanel.setLayout(new BorderLayout(0, 0));
 		splitterMapTiles = new JPanel();
-		splitterMapTiles.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+//		splitterMapTiles.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		splitterMapTiles.setPreferredSize(new Dimension(4, 10));
 		splitterMapTiles.setMaximumSize(new Dimension(4, 32767));
 
@@ -388,12 +391,12 @@ public class MainGUI extends JFrame {
 
 	void CreateMenus() {
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+//		menuBar.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		setJMenuBar(menuBar);
 
 		JMenu mnFile = new JMenu("File");
 
-		mnOpen = new JMenuItem("Open...");
+		mnOpen = new JMenuItem("Open ROM");
 		mnOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				openROM();
@@ -401,22 +404,24 @@ public class MainGUI extends JFrame {
 		});
 
 		mnSave = new JMenuItem("Save");
-		mnSave.enable(false);
+		mnSave.setEnabled(false);
 		mnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MapIO.saveAll();
 			}
 		});
 
-		JMenuItem mnSaveMap = new JMenuItem("Save Map...");
+		mnSaveMap = new JMenuItem("Save Map");
+		mnSaveMap.setEnabled(false);
 		mnSaveMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MapIO.saveMap();
 			}
 		});
 
-		mnNewMap = new JMenuItem("Save Map to PNG...");
-		mnNewMap.addActionListener(new ActionListener() 
+		mnSaveMapToPNG = new JMenuItem("Save Map to PNG");
+		mnSaveMapToPNG.setEnabled(false);
+		mnSaveMapToPNG.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -444,6 +449,16 @@ public class MainGUI extends JFrame {
 			}
 		});
 
+		mnExit = new JMenuItem("Exit");
+		mnExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO: Are you *sure* you want to exit / Check for saved
+				// changes
+				PluginManager.unloadAllPlugins();
+				System.exit(0);
+			}
+		});
+		
 		JMenu mnSettings = new JMenu("Settings");
 
 		JMenuItem mntmPreferences = new JMenuItem("Preferences...");
@@ -485,7 +500,9 @@ public class MainGUI extends JFrame {
         mnFile.addSeparator();
         mnFile.add(mnSaveMap);
         mnFile.addSeparator();
-        mnFile.add(mnNewMap);
+        mnFile.add(mnSaveMapToPNG);
+        mnFile.addSeparator();
+        mnFile.add(mnExit);
         menuBar.add(mnSettings);
         mnSettings.add(mntmPreferences);
         menuBar.add(mnTools);
@@ -532,40 +549,38 @@ public class MainGUI extends JFrame {
         mnHelp.add(mnAbout);
 	}
 
-	JButton btnImportMap;
-	JButton btnNewMap;
+	IconButton btnNewMap;
+	IconButton btnSaveROM;
+	IconButton btnSaveMap;
+    IconButton btnBlockEdit;
+    IconButton btnDNPokePatcher;
+	JComboBox mapBlendComboBox;
+	IconButton btnImportMap;
 	private JMenuItem mntmNewMenuItem;
 	private static JTextField txtGlobalTileset;
 	private static JTextField txtLocalTileset;
-	private JButton btnNewButton;
-	private JComboBox comboBox;
 	
 	void CreateButtons() {
 		System.out.println("Resource path:" + MainGUI.class.getResource("."));
-		panelButtons = new JPanel();
-		panelButtons.setPreferredSize(new Dimension(10, 50));
-		panelButtons.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
-		panelButtons.setMinimumSize(new Dimension(10, 50));
+		panelButtons = new JToolBar();
+        panelButtons.setFloatable(false);
+        panelButtons.setRollover(true);
+		panelButtons.setPreferredSize(new Dimension(10, 38));
+//		panelButtons.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+		panelButtons.setMinimumSize(new Dimension(10, 38));
 		getContentPane().add(panelButtons, BorderLayout.NORTH);
 
-		JButton btnOpenROM = new JButton("");
-		btnOpenROM.setToolTipText("Open ROM for editing");
-		btnOpenROM.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/ROMopen.png")));
-		btnOpenROM.setFocusPainted(false);
-		btnOpenROM.setBorder(null);
-		btnOpenROM.setBorderPainted(false);
-		btnOpenROM.setPreferredSize(new Dimension(48, 48));
+		IconButton btnOpenROM = new IconButton("Open ROM for editing","/resources/ROMopen.png",true);
 
 		btnOpenROM.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				openROM();
 			}
 		});
-		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, -1, -2));
+		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		panelButtons.add(btnOpenROM);
 
-		JButton btnSaveROM = new JButton("");
-		btnSaveROM.setToolTipText("Write changes to ROM file");
+		btnSaveROM = new IconButton("Write changes to ROM file","/resources/ROMsave.png",false);
 		btnSaveROM.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -577,99 +592,55 @@ public class MainGUI extends JFrame {
 				MapIO.saveROM();
 			}
 		});
-		btnSaveROM.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/ROMsave.png")));
-		btnSaveROM.setFocusPainted(false);
-		btnSaveROM.setBorderPainted(false);
-		btnSaveROM.setPreferredSize(new Dimension(48, 48));
 		panelButtons.add(btnSaveROM);
-
-		Component horizontalStrut = Box.createHorizontalStrut(7);
-		horizontalStrut.setForeground(Color.BLACK);
-		panelButtons.add(horizontalStrut);
-
-		JPanel separator1 = new JPanel();
-		separator1.setBackground(SystemColor.scrollbar);
-		separator1.setPreferredSize(new Dimension(1, 46));
-		FlowLayout fl_separator1 = (FlowLayout) separator1.getLayout();
-		fl_separator1.setVgap(0);
-		fl_separator1.setHgap(0);
-
-		panelButtons.add(separator1);
-
-		Component horizontalStrut_1 = Box.createHorizontalStrut(7);
-		horizontalStrut_1.setForeground(Color.BLACK);
-		panelButtons.add(horizontalStrut_1);
-
-		btnNewMap = new JButton("");
-        btnNewMap.setToolTipText("New Map (Not implemented)");
+		
+		panelButtons.add(Box.createHorizontalStrut(2));
+		panelButtons.add(new ButtonSeparator(32));
+		panelButtons.add(Box.createHorizontalStrut(1));
+		
+		btnNewMap = new IconButton("New Map (Not implemented)","/resources/newmap.png",false);
 		btnNewMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				MapEditorPanel.renderPalette = !MapEditorPanel.renderPalette;
 				mapEditorPanel.repaint();
 			}
 		});
-
-		JButton btnSaveMap = new JButton("");
-		btnSaveMap.setToolTipText("Save Map to VROM");
+		
+		btnSaveMap = new IconButton("Save Map to VROM","/resources/mapsave.png",false);
 		btnSaveMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MapIO.saveMap();
 			}
 		});
-		btnSaveMap.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/mapsave.png")));
-		btnSaveMap.setPreferredSize(new Dimension(48, 48));
-		btnSaveMap.setFocusPainted(false);
-		btnSaveMap.setBorderPainted(false);
 		panelButtons.add(btnSaveMap);
+		
+		panelButtons.add(Box.createHorizontalStrut(2));
+		panelButtons.add(new ButtonSeparator(32));
+		panelButtons.add(Box.createHorizontalStrut(1));
 
-		Component horizontalStrut_2 = Box.createHorizontalStrut(7);
-		horizontalStrut_2.setForeground(Color.BLACK);
-		panelButtons.add(horizontalStrut_2);
-
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(1, 46));
-		panel.setBackground(SystemColor.windowBorder);
-		panelButtons.add(panel);
-
-		Component horizontalStrut_3 = Box.createHorizontalStrut(7);
-		horizontalStrut_3.setForeground(Color.BLACK);
-		panelButtons.add(horizontalStrut_3);
-		btnNewMap.setFocusPainted(false);
-		btnNewMap.setBorderPainted(false);
-		btnNewMap.setPreferredSize(new Dimension(48, 48));
-
-		btnImportMap = new JButton("");
-        btnImportMap.setToolTipText("Import Map (Not implemented)");
+		btnImportMap = new IconButton("Import Map (Not implemented)","",false);
 		btnImportMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MapEditorPanel.renderTileset = !MapEditorPanel.renderTileset;
 				mapEditorPanel.repaint();
 			}
 		});
-		btnImportMap.setFocusPainted(false);
-		btnImportMap.setBorderPainted(false);
-		btnImportMap.setPreferredSize(new Dimension(48, 48));
 		if(MapIO.DEBUG)
 		{
 			panelButtons.add(btnImportMap);
 			panelButtons.add(btnNewMap);
 		}
 		
-		btnBlockedit = new JButton();
-		btnBlockedit.setIcon(new ImageIcon(MainGUI.class.getResource("/resources/blockedit.png")));
-		btnBlockedit.addActionListener(new ActionListener() {
+		btnBlockEdit = new IconButton("Edit Blocks","/resources/blockedit.png",false);
+		btnBlockEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new BlockEditor().show();
+				new BlockEditor().setVisible(true);
 			}
 		});
-		btnBlockedit.setToolTipText("Import Map (Not implemented)");
-		btnBlockedit.setPreferredSize(new Dimension(48, 48));
-		btnBlockedit.setFocusPainted(false);
-		btnBlockedit.setBorderPainted(false);
-		panelButtons.add(btnBlockedit);
+		panelButtons.add(btnBlockEdit);
 		
-		btnNewButton = new JButton("Blend");
-		btnNewButton.addActionListener(new ActionListener() 
+		btnDNPokePatcher = new IconButton("D/N\nPKMN","",false);
+		btnDNPokePatcher.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -677,16 +648,14 @@ public class MainGUI extends JFrame {
 				new WizardPatcher().setVisible(true);
 			}
 		});
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setPreferredSize(new Dimension(48, 48));
-		panelButtons.add(btnNewButton);
+		panelButtons.add(btnDNPokePatcher);
 		
-		comboBox = new JComboBox();
-		comboBox.addItemListener(new ItemListener() 
+		mapBlendComboBox = new JComboBox();
+		mapBlendComboBox.addItemListener(new ItemListener() 
 		{
 			public void itemStateChanged(ItemEvent e) 
 			{
-				MapIO.blockRenderer.currentTime = comboBox.getSelectedIndex();
+				MapIO.blockRenderer.currentTime = mapBlendComboBox.getSelectedIndex();
 				
 				MapIO.blockRenderer.getGlobalTileset().renderGraphics();
 				MapIO.blockRenderer.getLocalTileset().renderGraphics();
@@ -700,14 +669,47 @@ public class MainGUI extends JFrame {
 				MainGUI.mapEditorPanel.repaint();
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Day", "Morning", "Evening", "Night"}));
-		comboBox.setPreferredSize(new Dimension(80, 48));
-		panelButtons.add(comboBox);
+		mapBlendComboBox.setModel(new DefaultComboBoxModel(new String[] {"Day", "Morning", "Evening", "Night"}));
+		mapBlendComboBox.setPreferredSize(new Dimension(80, 20));
+		mapBlendComboBox.setEnabled(false);
+		panelButtons.add(mapBlendComboBox);
+	}
+	
+	void enableMapOperationButtons() {
+		btnSaveMap.setEnabled(true);
+		btnBlockEdit.setEnabled(true);
+		btnDNPokePatcher.setEnabled(true);
+		mapBlendComboBox.setEnabled(true);
+		mnSaveMap.setEnabled(true);
+		mnSaveMapToPNG.setEnabled(true);
+		
+	}
+	
+	public class ButtonSeparator extends JSeparator {
+		public ButtonSeparator (int height) {
+			super(SwingConstants.VERTICAL);
+			Dimension d = getPreferredSize();
+		    d.height = height;
+		    setPreferredSize(d);
+		}
+	}
+	
+	public class IconButton extends JButton {
+		public IconButton (String toolTipText, String iconPath, boolean enableSwitch) {
+			super("");
+			setToolTipText(toolTipText);
+			setIcon(new ImageIcon(MainGUI.class.getResource(iconPath)));
+			setFocusPainted(false);
+			setBorder(null);
+			setBorderPainted(false);
+			setPreferredSize(new Dimension(36, 36));
+			setEnabled(enableSwitch);
+		}
 	}
 
 	void CreateWildPokemonPanel() {
 		wildPokemonPanel = new JPanel();
-		editorTabs.addTab("Wild Pokemon", null, wildPokemonPanel, null);
+		editorTabs.addTab("Wild Pokémon", null, wildPokemonPanel, null);
 		wildPokemonPanel.setLayout(new BorderLayout(0, 0));
 
 		panelWildEditor = new JPanel();
@@ -826,7 +828,7 @@ public class MainGUI extends JFrame {
 						return;
 					}
 				}
-				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild pokemon data to a new format no longer supported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pokémon data to a new format no longer supported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
 				if(result == JOptionPane.YES_OPTION) {
 					MapIO.wildData.aWildPokemon[currentType].convertToDN();
 					loadWildPokemon();
@@ -892,7 +894,7 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
 				}
 				catch (Exception ex) {
-					System.out.println("Error loading wild pokemon data, data not found or nonexistant.");
+					System.out.println("Error loading wild Pokémon data, data not found or nonexistant.");
 					if(MapIO.DEBUG)
 						ex.printStackTrace();
 				}
@@ -1581,7 +1583,7 @@ public class MainGUI extends JFrame {
 		pkchance12.setBounds(395, 43, 70, 15);
 		panelpk11_12.add(pkchance12);
 
-		lblNewLabel = new JLabel("Hey there,\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokemon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.");
+		lblNewLabel = new JLabel("Hey there,\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokémon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.");
 		lblNewLabel.setPreferredSize(new Dimension(51215, 15));
 		lblNewLabel.setMaximumSize(new Dimension(512, 15));
 	}
@@ -1638,9 +1640,8 @@ public class MainGUI extends JFrame {
 		splitPane.setRightComponent(editorTabs);
 		CreateMapPanel();
 		CreateBorderArea();
-
+		
 		panelTilesContainer.add(panelMapTilesContainer, BorderLayout.NORTH);
-
 		panelTilesContainer.add(splitterMapTiles, BorderLayout.WEST);
 
 		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -1687,7 +1688,7 @@ public class MainGUI extends JFrame {
 
 	void CreateSplitPane() {
 		splitPane = new JSplitPane();
-		splitPane.setResizeWeight(0.2);
+//		splitPane.setResizeWeight(0.2);
 		splitPane.setDividerSize(1);
 		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent e) {
@@ -1732,7 +1733,7 @@ public class MainGUI extends JFrame {
 		statusPanel.setPreferredSize(new Dimension(10, 24));
 		getContentPane().add(statusPanel, BorderLayout.SOUTH);
 
-		lblInfo = new JLabel("No ROM Loaded.");
+		lblInfo = new JLabel("No ROM loaded.");
         lblX = new JLabel("X: 0");
         lblY = new JLabel("Y: 0");
 		statusPanel.add(lblInfo);
@@ -1742,7 +1743,7 @@ public class MainGUI extends JFrame {
 
 	public void CreatePermissions() {
 		JPanel splitm = new JPanel();
-		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
+//		splitm.setBorder(new BevelBorder(BevelBorder.RAISED, null, null, null, null));
 		splitm.setPreferredSize(new Dimension(4, 10));
 		splitm.setMaximumSize(new Dimension(4, 320));
 		JPanel pmtc = new JPanel();
@@ -1780,7 +1781,7 @@ public class MainGUI extends JFrame {
 			e1.printStackTrace();
 		}
 		ImagePanel mimePic = new ImagePanel(mime);
-		mimePic.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+//		mimePic.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		mimePic.setBounds(545, 71, 164, 164);
 		mimeEditorPanel.add(mimePic);
 
@@ -1845,14 +1846,14 @@ public class MainGUI extends JFrame {
 		editorTabs.addTab("Connections", null, connectionsTabPanel, null);
 		connectionsTabPanel.setLayout(new BorderLayout(0, 0));
 
-		connectinonsInfoPanel = new JPanel();
-		connectinonsInfoPanel.setPreferredSize(new Dimension(10, 24));
-		connectionsTabPanel.add(connectinonsInfoPanel, BorderLayout.NORTH);
-		connectinonsInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+		connectionsInfoPanel = new JPanel();
+		connectionsInfoPanel.setPreferredSize(new Dimension(10, 24));
+		connectionsTabPanel.add(connectionsInfoPanel, BorderLayout.NORTH);
+		connectionsInfoPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
 
 		mbMain = new JMenuBar();
 		mbMain.setBorderPainted(false);
-		connectinonsInfoPanel.add(mbMain);
+		connectionsInfoPanel.add(mbMain);
 
 		mnAddCon = new JMenu("Add...");
 		mbMain.add(mnAddCon);
@@ -1929,6 +1930,7 @@ public class MainGUI extends JFrame {
 		mapBanks.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
 				MapIO.loadMap();
+		        enableMapOperationButtons();
 			}
 		});
 		mapBanks.addTreeSelectionListener(new TreeSelectionListener() {
@@ -1952,13 +1954,15 @@ public class MainGUI extends JFrame {
 					if (e.getClickCount() == 2) {
                         if (mapBanks.getModel().getIndexOfChild(mapBanks.getModel().getRoot(), mapBanks.getSelectionPath().getLastPathComponent()) == -1) {
                             MapIO.loadMap();
+            		        enableMapOperationButtons();
                         }
 					}
 				}
 			}
 		});
-		mapBanks.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("No banks loaded.") {
-		}));
+//		mapBanks.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("No banks loaded.") {
+//		}));
+		mapBanks.setModel(new DefaultTreeModel(null));
 		mapBanks.setCellRenderer(new MapTreeRenderer());
 
 		JScrollPane mapPane = new JScrollPane(mapBanks, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -2020,11 +2024,11 @@ public class MainGUI extends JFrame {
 		}
 		
 		if(MapIO.wildData.aWildPokemon[currentType].bDNEnabled == 1) {
-			pkTime.enable();
+			pkTime.setEnabled(true);
 			btnEnableTimebasedPokemon.setVisible(false);
 		}
 		else {
-			pkTime.disable();
+			pkTime.setEnabled(false);
 			selectedTime = 0;
 			btnEnableTimebasedPokemon.setVisible(true);
 		}
@@ -2159,6 +2163,12 @@ public class MainGUI extends JFrame {
 
 	public void openROM() {
 		int i = GBARom.loadRom();
+		if (i == -2)
+		{
+			JOptionPane.showMessageDialog(null, "The ROM could not be opened.\nIt may be open in another program.", "Error opening ROM", JOptionPane.WARNING_MESSAGE);
+		}		
+		if (i < 0)
+			return;
 		String s = Plugin.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		// while(s.contains("/") || s.contains("\\"))
 		System.out.println(s);
@@ -2166,7 +2176,7 @@ public class MainGUI extends JFrame {
 		MapIO.loadPokemonNames();
 
 		//if (true) {
-        mapBanks.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Maps By Bank...") {
+        mapBanks.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Maps by Bank") {
         }));
         DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
         model.reload();
@@ -2178,6 +2188,7 @@ public class MainGUI extends JFrame {
         mapEditorPanel.repaint();
         borderTileEditor.repaint();
         tileEditorPanel.repaint();
+        
 		//}
 
 		setStatus("Loading...");
@@ -2187,7 +2198,9 @@ public class MainGUI extends JFrame {
 		new BankLoader((int) DataStore.MapHeaders, ROMManager.getActiveROM(), lblInfo, mapBanks).start();
 		new WildDataCache(ROMManager.getActiveROM()).start();
         mnSave.setEnabled(true);
-		this.setTitle("Map Editor of Happiness - " + new File(ROMManager.getActiveROM().input_filepath).getName());
+		btnSaveROM.setEnabled(true);
+        
+		this.setTitle("Map Editor of Happiness | " + new File(ROMManager.getActiveROM().input_filepath).getName());
 		PluginManager.fireROMLoad();
 	}
 
@@ -2321,4 +2334,5 @@ public class MainGUI extends JFrame {
 			System.out.print("0x" + String.format("%02X", c.getAlpha()) + String.format("%02X", c.getRed()) + String.format("%02X", c.getGreen()) + String.format("%02X", c.getBlue()) + ", ");
 		}
 	}
+	
 }

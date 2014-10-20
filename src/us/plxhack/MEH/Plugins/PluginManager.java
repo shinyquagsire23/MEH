@@ -19,34 +19,36 @@ public class PluginManager
 	{
 		
 		File search = new File("plugins/");
-		for(File f : search.listFiles())
-		{
-			URLClassLoader classLoader = URLClassLoader .newInstance(new URL[] { new URL("file:./plugins/" + f.getName()) });
-			Class<?> clazz = classLoader.loadClass("org.zzl.minegaming.TestPlugin.Plugin"); //TODO: Read main class from somewhere. YAML?
-			final Plugin plugin = (Plugin) clazz.newInstance();
-			plugin.load();
-			plugins.add(plugin);
-			
-			if(plugin.createButton)
+		if (search.exists()){
+			for(File f : search.listFiles())
 			{
-				JButton btnPlugin = new JButton("");
-				btnPlugin.setToolTipText(plugin.getToolTip());
-				btnPlugin.addActionListener(new ActionListener() 
+				URLClassLoader classLoader = URLClassLoader .newInstance(new URL[] { new URL("file:./plugins/" + f.getName()) });
+				Class<?> clazz = classLoader.loadClass("org.zzl.minegaming.TestPlugin.Plugin"); //TODO: Read main class from somewhere. YAML?
+				final Plugin plugin = (Plugin) clazz.newInstance();
+				plugin.load();
+				plugins.add(plugin);
+				
+				if(plugin.createButton)
 				{
-					
-					public void actionPerformed(ActionEvent e) 
+					JButton btnPlugin = new JButton("");
+					btnPlugin.setToolTipText(plugin.getToolTip());
+					btnPlugin.addActionListener(new ActionListener() 
 					{
-						if(plugin.bLoadROM){
-							plugin.loadROM(ROMManager.currentROM);
+						
+						public void actionPerformed(ActionEvent e) 
+						{
+							if(plugin.bLoadROM){
+								plugin.loadROM(ROMManager.currentROM);
+							}
+							plugin.execute();
 						}
-						plugin.execute();
-					}
-				});
-				btnPlugin.setIcon(plugin.getButtonImage());
-				btnPlugin.setFocusPainted(false);
-				btnPlugin.setBorderPainted(false);
-				btnPlugin.setPreferredSize(new Dimension(54, 48));
-				MainGUI.panelButtons.add(btnPlugin);
+					});
+					btnPlugin.setIcon(plugin.getButtonImage());
+					btnPlugin.setFocusPainted(false);
+					btnPlugin.setBorderPainted(false);
+					btnPlugin.setPreferredSize(new Dimension(54, 48));
+					MainGUI.panelButtons.add(btnPlugin);
+				}
 			}
 		}
 	}
