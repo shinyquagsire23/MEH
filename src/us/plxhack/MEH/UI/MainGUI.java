@@ -198,6 +198,7 @@ public class MainGUI extends JFrame {
     JPanel mimePanel;// Mr. Mime 2 dirty 4 mii
     private JMenu mnPatches;
     private JMenuItem mntmDaynightPokemon;
+    private JMenuItem mntmWizard;
     private JCheckBoxMenuItem mnEnableDebugging;
 
 	void CreateToolbar() {
@@ -478,6 +479,12 @@ public class MainGUI extends JFrame {
 					MapIO.patchDNPokemon();
 			}
 		});
+		mntmWizard = new JMenuItem("Wizard (Day and Night System)");
+		mntmWizard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new WizardPatcher().setVisible(true); //TODO: Check if Wizard is installed
+			}
+		});
 
         mnHelp = new JMenu("Help");
 
@@ -507,6 +514,7 @@ public class MainGUI extends JFrame {
         mnSettings.add(mntmPreferences);
         menuBar.add(mnTools);
         mnTools.add(mnPatches);
+        mnPatches.add(mntmWizard);
         mnPatches.add(mntmDaynightPokemon);
         
         mntmNewMenuItem = new JMenuItem("Triple-Layer Tiles (FR)");
@@ -639,7 +647,7 @@ public class MainGUI extends JFrame {
 		});
 		panelButtons.add(btnBlockEdit);
 		
-		btnDNPokePatcher = new IconButton("D/N\nPKMN","",false);
+		/*btnDNPokePatcher = new IconButton("D/N\nPKMN","",false);
 		btnDNPokePatcher.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -648,7 +656,7 @@ public class MainGUI extends JFrame {
 				new WizardPatcher().setVisible(true);
 			}
 		});
-		panelButtons.add(btnDNPokePatcher);
+		panelButtons.add(btnDNPokePatcher);*/
 		
 		mapBlendComboBox = new JComboBox();
 		mapBlendComboBox.addItemListener(new ItemListener() 
@@ -709,7 +717,7 @@ public class MainGUI extends JFrame {
 
 	void CreateWildPokemonPanel() {
 		wildPokemonPanel = new JPanel();
-		editorTabs.addTab("Wild Pokémon", null, wildPokemonPanel, null);
+		editorTabs.addTab("Wild Pokï¿½mon", null, wildPokemonPanel, null);
 		wildPokemonPanel.setLayout(new BorderLayout(0, 0));
 
 		panelWildEditor = new JPanel();
@@ -828,7 +836,7 @@ public class MainGUI extends JFrame {
 						return;
 					}
 				}
-				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pokémon data to a new format no longer supported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pokï¿½mon data to a new format no longer supported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
 				if(result == JOptionPane.YES_OPTION) {
 					MapIO.wildData.aWildPokemon[currentType].convertToDN();
 					loadWildPokemon();
@@ -894,7 +902,7 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
 				}
 				catch (Exception ex) {
-					System.out.println("Error loading wild Pokémon data, data not found or nonexistant.");
+					System.out.println("Error loading wild Pokï¿½mon data, data not found or nonexistant.");
 					if(MapIO.DEBUG)
 						ex.printStackTrace();
 				}
@@ -1583,7 +1591,7 @@ public class MainGUI extends JFrame {
 		pkchance12.setBounds(395, 43, 70, 15);
 		panelpk11_12.add(pkchance12);
 
-		lblNewLabel = new JLabel("Hey there,\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokémon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.");
+		lblNewLabel = new JLabel("Hey there,\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokï¿½mon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.");
 		lblNewLabel.setPreferredSize(new Dimension(51215, 15));
 		lblNewLabel.setMaximumSize(new Dimension(512, 15));
 	}
