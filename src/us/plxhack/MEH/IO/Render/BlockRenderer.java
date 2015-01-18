@@ -91,7 +91,7 @@ public class BlockRenderer extends Component
 		else if((getBehaviorByte(origBlockNum) >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x60) == 0x60 && DataStore.EngineVersion == 1)
 			type = TripleType.REFERENCE;
 		
-		if(type != TripleType.NONE)
+		if(type != TripleType.NONE && MapIO.DEBUG == true)
 			System.out.println("Rendering triple tile! " + type.toString());
 		
 		for (int i = 0; i < (type != TripleType.NONE ? 24 : 16); i++)
@@ -173,13 +173,15 @@ public class BlockRenderer extends Component
 		if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x30) == 0x30)
 		{
 			tripleTile = true;
-			System.out.println("Rendering triple tile block!");
+			if(MapIO.DEBUG == true)
+				System.out.println("Rendering triple tile block!");
 		}
 		else if((b.backgroundMetaData >> (DataStore.EngineVersion == 1 ? 24 : 8) & 0x40) == 0x40)
 		{
 			tripleTile = true;
 			blockPointer +=8;
-			System.out.println("Rendering space-saver triple tile block!");
+			if(MapIO.DEBUG == true)
+				System.out.println("Rendering space-saver triple tile block!");
 		}
 		
 		for (int i = 0; i < (tripleTile ? 24 : 16); i++)

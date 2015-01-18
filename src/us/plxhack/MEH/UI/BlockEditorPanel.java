@@ -106,10 +106,10 @@ public class BlockEditorPanel extends JPanel
 				else if(e.getButton() == 3)
 				{
 					host.tpp.baseSelectedTile = block.getTile(x, y).getTileNumber();
-					host.comboBox.setSelectedIndex(block.getTile(x, y).getPaletteNum());
+					host.cmbBoxPalette.setSelectedIndex(block.getTile(x, y).getPaletteNum());
 					host.xFlip = block.getTile(x, y).xFlip;
 					host.yFlip = block.getTile(x, y).yFlip;
-					host.scrollPaneTiles.getVerticalScrollBar().setValue(Math.min((block.getTile(x, y).getTileNumber() / 16) * 16, host.scrollPaneTep.getVerticalScrollBar().getMaximum()));
+					host.scrollPaneTiles.getVerticalScrollBar().setValue(Math.min((block.getTile(x, y).getTileNumber() / 16) * 16, host.scrollPaneTEP.getVerticalScrollBar().getMaximum()));
 					//MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
 					MapIO.repaintTileEditorPanel();
 				}

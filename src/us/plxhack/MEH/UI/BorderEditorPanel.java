@@ -68,7 +68,7 @@ public class BorderEditorPanel extends JPanel
 					map.isEdited = true;
 				}
 				else {
-					MapEditorPanel.calculateSelectBox(e);
+					//MapEditorPanel.calculateSelectBox(e);
 					
 					if(MapEditorPanel.selectBox.width > map.getMapData().borderWidth * 16)
 						MapEditorPanel.selectBox.width = map.getMapData().borderWidth * 16;
@@ -151,7 +151,7 @@ public class BorderEditorPanel extends JPanel
 			{
 				if(e.getButton() == 3)
 				{
-					MapEditorPanel.calculateSelectBox(e);
+					//MapEditorPanel.calculateSelectBox(e);
 
 					//Fill the tile buffer
 					MapEditorPanel.selectBuffer = new MapTile[MapEditorPanel.selectBox.width / 16][MapEditorPanel.selectBox.height / 16];

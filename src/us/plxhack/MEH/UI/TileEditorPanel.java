@@ -5,7 +5,9 @@ import org.zzl.minegaming.GBAUtils.DataStore;
 
 import us.plxhack.MEH.IO.MapIO;
 import us.plxhack.MEH.IO.Tileset;
+import us.plxhack.MEH.Structures.EditMode;
 import us.plxhack.MEH.Structures.MapTile;
+import us.plxhack.MEH.UI.MapEditorPanel.SelectRect;
 
 import javax.swing.*;
 
@@ -25,22 +27,25 @@ public class TileEditorPanel extends JPanel {
 	public static boolean tripleSelectMode = false; //We really need events...
 	public Tileset globalTiles;
 	public Tileset localTiles;
-	private boolean isMouseDown = true;
     private boolean Redraw = false;
     private boolean tiedToEditor = false;
-	Rectangle mouseTracker;
+	static Rectangle mouseTracker;
+	public static SelectRect selectBox;
+	public Color selectRectColor = MainGUI.uiSettings.cursorColor;
 
 	public void SetRect(int width, int height) {
 
-		if(height> 16) height = 16;
-		if(width > 16) width = 16;
+		if (height > 16)
+			height = 16;
+		if (width > 16)
+			width = 16;
 		mouseTracker.height = height;
 		mouseTracker.width = width;
 	}
 
 	public void SetRect() {
-		mouseTracker.height=16;
-		mouseTracker.width=16;
+		mouseTracker.height = 16;
+		mouseTracker.width = 16;
 	}
 
 	int srcX;
@@ -48,20 +53,37 @@ public class TileEditorPanel extends JPanel {
 
 	public TileEditorPanel(boolean tied) {
 		tiedToEditor = tied;
-		mouseTracker=new Rectangle(0,0,16,16);
+		mouseTracker = new Rectangle(0,0,16,16);
+		selectBox = new SelectRect(0,0,16,16);
 
 		this.addMouseMotionListener(new MouseMotionListener() {
 
             public void mouseDragged(MouseEvent e) {
-				int b1 = InputEvent.BUTTON1_DOWN_MASK;
+/*				int b1 = InputEvent.BUTTON1_DOWN_MASK;
 				int b2 = InputEvent.BUTTON2_DOWN_MASK;
-                //mouseTracker.x = e.getX();
-                //mouseTracker.y = e.getY();
+                mouseTracker.x = e.getX();
+                mouseTracker.y = e.getY();
                 baseSelectedTile = (e.getX() / 16) + ((e.getY() / 16) * editorWidth);
                 applySelectedTile();
 				if ((e.getModifiersEx() & (b1 | b2)) != b1 && tiedToEditor) {
 					MapEditorPanel.calculateSelectBox(e);
 				}
+                repaint();*/
+            	
+            	if (e.getModifiersEx() == 1024)  {
+					mouseTracker.x = e.getX();
+					mouseTracker.y = e.getY();
+				}
+				int x = (mouseTracker.x / 16);
+				int y = (mouseTracker.y / 16);
+				
+				if(MapIO.DEBUG)
+					System.out.println(x + " " + y);
+
+				if(mouseTracker.x > (16 * editorWidth) - 1 || mouseTracker.y > ((DataStore.MainTSSize / editorWidth) * (DataStore.LocalTSSize / editorWidth) * 16) - 1)
+					MapEditorPanel.calculateSelectBox(e,selectBox);
+				
+				MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
                 repaint();
 			}
 
@@ -74,14 +96,15 @@ public class TileEditorPanel extends JPanel {
 
 		this.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
-				int x = 0;
+/*				int x = 0;
 				int y = 0;
 
 				x = (e.getX() / 16);
 				y = (e.getY() / 16);
 
+				//Reset tile rectangle
 				if (e.getClickCount() == 2 && e.getButton() == 3) {
-					SetRect();//Reset tile rectangle
+					SetRect();
 				}
 
 				else {
@@ -90,14 +113,30 @@ public class TileEditorPanel extends JPanel {
 					baseSelectedTile = x + (y * editorWidth);
                     //applySelectedTile();
 				}
-                repaint();
+                repaint();*/
 			}
 
 			public void mousePressed(MouseEvent e) {
-				if(e.getButton() == 3) {
-					MapEditorPanel.selectBox = new Rectangle(e.getX(),e.getY(),0,0);
+				if(mouseTracker.x > (16 * editorWidth) - 1 || mouseTracker.y > ((DataStore.MainTSSize / editorWidth) * (DataStore.LocalTSSize / editorWidth) * 16) - 1)
+					return;
+				
+				if(MapIO.DEBUG)
+					System.out.println(e.getButton());
+				
+				int x = e.getX() / 16;
+				int y = e.getY() / 16;
+				
+				if(e.getButton() == 1) {
+					baseSelectedTile = x + (y * editorWidth);
+					selectRectColor = MainGUI.uiSettings.markerColor;
+				} else if(e.getButton() == 3) {
+					selectBox = new SelectRect(x * 16,y * 16,16,16);
+					selectRectColor = MainGUI.uiSettings.cursorSelectColor;
+					MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
 				}
-                repaint();
+				
+                applySelectedTile();
+				repaint();
 			}
 
 			public void mouseExited(MouseEvent e) {
@@ -105,14 +144,14 @@ public class TileEditorPanel extends JPanel {
 			}
 			
 			public void mouseEntered(MouseEvent e) {
-				isMouseDown = true;
                 repaint();
 			}
 
 			public void mouseReleased(MouseEvent e) {
-                baseSelectedTile = (e.getX() / 16) + ((e.getY() / 16) * editorWidth);
+				selectRectColor = MainGUI.uiSettings.cursorColor;
+				
 				if (e.getButton() == 3) {
-					MapEditorPanel.calculateSelectBox(e);
+					MapEditorPanel.calculateSelectBox(e,selectBox);
 
 					//Fill the tile buffer
 					MapEditorPanel.selectBuffer = new MapTile[MapEditorPanel.selectBox.width / 16][MapEditorPanel.selectBox.height / 16];
@@ -122,7 +161,6 @@ public class TileEditorPanel extends JPanel {
 						for(int y = 0; y < MapEditorPanel.bufferHeight; y++)
 							MapEditorPanel.selectBuffer[x][y] = new MapTile(baseSelectedTile = x + (y * editorWidth), 0xC); //TODO implement movement perms
 				}
-                applySelectedTile();
                 repaint();
 			}
 		});
@@ -208,16 +246,16 @@ public class TileEditorPanel extends JPanel {
 			g.setColor(MainGUI.uiSettings.markerColor);
 			g.drawRect((baseSelectedTile % editorWidth) * 16, (baseSelectedTile / editorWidth) * 16, 15, 15);
 			
-			g.setColor(MainGUI.uiSettings.cursorColor);
-			if( mouseTracker.width <0)
-				mouseTracker.x-=Math.abs( mouseTracker.width);
-			if( mouseTracker.height <0)
-				mouseTracker.y-=Math.abs( mouseTracker.height);
+			g.setColor(selectRectColor);
+			if(mouseTracker.width <0)
+				mouseTracker.x -= Math.abs(mouseTracker.width);
+			if(mouseTracker.height <0)
+				mouseTracker.y -= Math.abs(mouseTracker.height);
 			
 			if(mouseTracker.x > editorWidth * 16)
 				mouseTracker.x = editorWidth * 16;
 			
-			g.drawRect(((mouseTracker.x / 16) % editorWidth) * 16,(mouseTracker.y / 16) * 16,MapEditorPanel.selectBox.width-1,MapEditorPanel.selectBox.height-1);
+			g.drawRect(((mouseTracker.x / 16) % editorWidth) * 16,(mouseTracker.y / 16) * 16,selectBox.width-1,selectBox.height-1);
 		}
 		try {
 			//best error image.
