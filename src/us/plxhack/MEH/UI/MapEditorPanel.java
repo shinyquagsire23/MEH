@@ -18,7 +18,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
-public class MapEditorPanel extends JPanel {
+public class MapEditorPanel extends JPanel implements MouseListener, MouseMotionListener {
 	private static MapEditorPanel instance = null;
 
 	public static MapEditorPanel getInstance() {
@@ -26,6 +26,22 @@ public class MapEditorPanel extends JPanel {
 			instance = new MapEditorPanel();
 		}
 		return instance;
+	}
+	
+	public static class SelectRect extends Rectangle
+	{
+		int startX;
+		int startY;
+		int realWidth;
+		int realHeight;
+		
+		public SelectRect(int i, int j, int k, int l) {
+			super(i,j,k,l);
+			startX = i;
+			startY = j;
+			realWidth = k;
+			realHeight = l;
+		}
 	}
 
 	private static final long serialVersionUID = -877213633894324075L;
@@ -39,145 +55,210 @@ public class MapEditorPanel extends JPanel {
 	public static MapTile[][] selectBuffer;
 	public static int bufferWidth = 1;
 	public static int bufferHeight = 1;
-	public static Rectangle selectBox;
+	public static SelectRect selectBox;
+	public Color selectRectColor = MainGUI.uiSettings.cursorColor;
 	private static EditMode currentMode = EditMode.TILES;
  
 	public MapEditorPanel() {
 		mouseTracker = new Rectangle(0,0,16,16);
-		selectBox = new Rectangle(0,0,16,16);
+		selectBox = new SelectRect(0,0,16,16);
 		selectBuffer = new MapTile[1][1];
 		selectBuffer[0][0] = new MapTile(0,0xC);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		/*
+		int x = selectBox.x / 16;
+		int y = selectBox.y / 16;
+		if (map == null)
+            return;
+
+		if (x > map.getMapData().mapWidth || y > map.getMapData().mapHeight)
+			return;
 		
-		this.addMouseMotionListener(new MouseMotionListener() {
+		System.out.println(e.getButton());
 
-			public void mouseDragged(MouseEvent e) {
-				if (e.getModifiersEx() == 1024)  {
-					mouseTracker.x = e.getX();
-					mouseTracker.y = e.getY();
-				}
-				int x = (mouseTracker.x / 16);
-				int y = (mouseTracker.y / 16);
-				if(x > map.getMapData().mapWidth || y > map.getMapData().mapHeight) {
-					return;
-				}
-				System.out.println(x + " " + y);
-
-				if (e.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK)  {
-					
-					drawTiles(x, y);
-					moveSelectRect(e);
-					map.isEdited = true;
-					MapIO.repaintTileEditorPanel();
-				}
-				else {
-					calculateSelectBox(e);
-				}
-                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
-                repaint();
-			}
-
-			public void mouseMoved(MouseEvent e) {
-				if(map == null)
-					return;
-				moveSelectRect(e);
-				repaint();
-			}
-		});
-
-		this.addMouseListener(new MouseListener() {
-
-			public void mouseClicked(MouseEvent e) {
-				int x = selectBox.x / 16;
-				int y = selectBox.y / 16;
-				if (map == null)
-                    return;
-
-				if (x>map.getMapData().mapWidth || y>map.getMapData().mapHeight) {
-					return;
-				}
-				System.out.println(e.getButton());
-
-				if(e.getButton() == 1) {
-					
-					drawTiles(x, y);
-					map.isEdited = true;
-					//DrawMap();
-				}
-				else if(e.getButton() == 3) {
-					if(currentMode == EditMode.TILES) {
-						MainGUI.tileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
-						MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
-					}
-					else if(currentMode == EditMode.MOVEMENT) {
-						PermissionTilePanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getMeta();
-						MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
-					}
-					
-					MapIO.repaintTileEditorPanel();
-				}
-                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
-                repaint();
-			}
-
-			public void mousePressed(MouseEvent e) {
-				if(e.getButton() == 3) {
-					selectBox = new Rectangle(e.getX(),e.getY(),0,0);
-					bufferWidth = 1;
-					bufferHeight = 1;
-					mouseTracker.x=e.getX() - (bufferWidth * 8);
-					mouseTracker.y=e.getY() - (bufferHeight * 8);
-				}
-                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
-                repaint();
-			}
-
-			public void mouseExited(MouseEvent e) {
-                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
-                repaint();
-			}
-
+		if(e.getButton() == 1) {
 			
-			public void mouseEntered(MouseEvent e) {
-                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
-                repaint();
+			drawTiles(x, y);
+			map.isEdited = true;
+			//DrawMap();
+		}
+		else if(e.getButton() == 3) {
+			if(currentMode == EditMode.TILES) {
+				MainGUI.tileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
+				MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
 			}
-
+			else if(currentMode == EditMode.MOVEMENT) {
+				PermissionTilePanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getMeta();
+				MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
+			}
 			
-			public void mouseReleased(MouseEvent e) {
-				if(e.getButton() == 3) {
-					calculateSelectBox(e);
-					//Fill the tile buffer
-					selectBuffer = new MapTile[selectBox.width / 16][selectBox.height / 16];
-					bufferWidth = selectBox.width / 16;
-					bufferHeight = selectBox.height / 16;
-					for(int x = 0; x < bufferWidth; x++)
-						for(int y = 0; y < bufferHeight; y++)
-							selectBuffer[x][y] = (MapTile)map.getMapTileData().getTile(selectBox.x / 16 + x, selectBox.y / 16 + y).clone();
-				}
-                MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
-                repaint();
-			}
-		});
+			MapIO.repaintTileEditorPanel();
+		}
+		
+		MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+        repaint();
+        */
 	}
 
-	public void moveSelectRect(MouseEvent e)
-	{
+	public void mousePressed(MouseEvent e) {
+		if (map == null || !isInBounds(e.getX(),e.getY()))
+			return;
+		
+		if(MapIO.DEBUG)
+			System.out.println(e.getButton());
+
+		int x = selectBox.x / 16;
+		int y = selectBox.y / 16;
+		
+		if(e.getButton() == 1) {
+			selectRectColor = MainGUI.uiSettings.markerColor;
+			drawTiles(x, y);
+			map.isEdited = true;
+			//DrawMap();
+		}
+		else if(e.getButton() == 3) {
+			selectBox = new SelectRect(x * 16,y * 16,16,16);
+			selectRectColor = MainGUI.uiSettings.cursorSelectColor;
+			
+			if(currentMode == EditMode.TILES) {
+				MainGUI.tileEditorPanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getID();
+				MainGUI.lblTileVal.setText("Current Tile: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
+			}
+			else if(currentMode == EditMode.MOVEMENT) {
+				PermissionTilePanel.baseSelectedTile = map.getMapTileData().getTile(x, y).getMeta();
+				MainGUI.lblTileVal.setText("Current Perm: 0x" + BitConverter.toHexString(MainGUI.tileEditorPanel.baseSelectedTile));
+			}
+			
+			//MapIO.repaintTileEditorPanel();
+		}
+		
+		/*
+		if(e.getButton() == 3) {
+			selectBox = new SelectRect((e.getX() / 16) * 16,(e.getY() / 16) * 16,16,16);
+			bufferWidth = 1;
+			bufferHeight = 1;
+			mouseTracker.x = e.getX() - (bufferWidth * 8);
+			mouseTracker.y = e.getY() - (bufferHeight * 8);
+			selectRectColor = MainGUI.uiSettings.cursorSelectColor;
+		}*/
+		
+		MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+        repaint();
+	}
+	
+	public void mouseReleased(MouseEvent e) {
+		if (map == null)
+            return;
+		
+		selectRectColor = MainGUI.uiSettings.cursorColor;
+		
+		if(e.getButton() == 3) {
+			if(isInBounds(e.getX(),e.getY())) {
+				calculateSelectBox(e,selectBox);
+				//Fill the tile buffer
+				selectBuffer = new MapTile[selectBox.width / 16][selectBox.height / 16];
+				bufferWidth = selectBox.width / 16;
+				bufferHeight = selectBox.height / 16;
+				for(int x = 0; x < bufferWidth; x++)
+					for(int y = 0; y < bufferHeight; y++)
+						selectBuffer[x][y] = (MapTile)map.getMapTileData().getTile(selectBox.x / 16 + x, selectBox.y / 16 + y).clone();
+			}
+		}
+        repaint();
+	}
+
+	public void mouseEntered(MouseEvent e) {
+		if (map == null)
+            return;
+		
+		if(isInBounds(mouseTracker.x,mouseTracker.y))
+			MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+        repaint();
+	}
+
+	public void mouseExited(MouseEvent e) {
+/*		if (map == null)
+            return;
+		
+		if(isInBounds(mouseTracker.x,mouseTracker.y))
+			MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+        repaint();*/
+	}
+	
+	public void mouseDragged(MouseEvent e) {
 		mouseTracker.x = e.getX();
 		mouseTracker.y = e.getY();
+		
+		if(map == null || !isInBounds(mouseTracker.x,mouseTracker.y))
+			return;
+		
+		int x = (mouseTracker.x / 16);
+		int y = (mouseTracker.y / 16);
+		
+		if(MapIO.DEBUG)
+			System.out.println(x + " " + y);
 
-		if(mouseTracker.x > map.getMapData().mapWidth * 16)
-			mouseTracker.x = (int)(map.getMapData().mapWidth * 16) - (bufferWidth * 8);
-		if(mouseTracker.y > map.getMapData().mapHeight * 16)
-			mouseTracker.y = (int)(map.getMapData().mapHeight * 16) - (bufferHeight * 8);
-        MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+		if (e.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK)  {
+			
+			drawTiles(x, y);
+			moveSelectRect(e);
+			map.isEdited = true;
+			//MapIO.repaintTileEditorPanel();
+		}
+		else
+			if(isInBounds(e.getX(),e.getY()))
+				calculateSelectBox(e,selectBox);
+		
+		MainGUI.setMouseCoordinates(x, y);
+        repaint();
+	}
+
+	public void mouseMoved(MouseEvent e) {
+		if(map == null || !isInBounds(e.getX(),e.getY()))
+			return;
+		
+		moveSelectRect(e);
+		repaint();
+	}
+
+	public boolean isInBounds(int x, int y)
+	{
+		if (x < 0 | x >= (map.getMapData().mapWidth * 16) | y < 0 | y >= (map.getMapData().mapHeight * 16))
+			return false;
+		return true;
+	}
+	
+	public void moveSelectRect(MouseEvent e)
+	{
+		if(isInBounds(e.getX(),e.getY()))
+		{
+			mouseTracker.x = e.getX();
+			mouseTracker.y = e.getY();
+			MainGUI.setMouseCoordinates(mouseTracker.x / 16, mouseTracker.y / 16);
+		}
         
         selectBox.x = ((mouseTracker.x / 16) * 16);
         selectBox.y = ((mouseTracker.y / 16) * 16);
+        selectBox.startX = ((mouseTracker.x / 16) * 16);
+        selectBox.startY = ((mouseTracker.y / 16) * 16);
         
-        if(selectBox.width > 16)
+/*		if(selectBox.width > 16)
         	selectBox.x -= selectBox.width / 2;
-        if(selectBox.height > 16)
-        	selectBox.y -= selectBox.height / 2;
+		if(selectBox.height > 16)
+        	selectBox.y -= selectBox.height / 2;*/
+        
+        if(selectBox.realWidth + selectBox.x > (map.getMapData().mapWidth * 16 - 1))
+        	selectBox.width = (int) ((map.getMapData().mapWidth * 16) - selectBox.x);
+        else
+        	selectBox.width = selectBox.realWidth;
+        if(selectBox.realHeight + selectBox.y > (map.getMapData().mapHeight * 16 - 1))
+        	selectBox.height = (int) ((map.getMapData().mapHeight * 16) - selectBox.y);
+        else
+        	selectBox.height = selectBox.realHeight;
 	}
 	
 	public void drawTiles(int x, int y)
@@ -186,53 +267,62 @@ public class MapEditorPanel extends JPanel {
 		{
 			for(int DrawY = 0; DrawY < bufferHeight; DrawY++) 
 			{
+				if (selectBox.x + DrawX * 16 < (map.getMapData().mapWidth * 16 - 1) && selectBox.y + DrawY * 16 < (map.getMapData().mapHeight * 16 - 1)) {
 				//Tiles multi-select will grab both the tiles and the meta, 
 				//while movement editing will only select metas.
-				if(currentMode == EditMode.TILES) 
-				{
-					map.getMapTileData().getTile(selectBox.x/16 + DrawX, selectBox.y/16 + DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
-					if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
-						map.getMapTileData().getTile(selectBox.x/16 + DrawX, selectBox.y/16 + DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
-					drawTile(selectBox.x/16 + DrawX,selectBox.y/16 + DrawY);
-				}
-				else if(currentMode == EditMode.MOVEMENT) 
-				{
-					map.getMapTileData().getTile(selectBox.x/16+DrawX, selectBox.y/16+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
-					drawTile(selectBox.x/16+DrawX,selectBox.y/16+DrawY);
+					if(currentMode == EditMode.TILES) 
+					{
+						map.getMapTileData().getTile(selectBox.x/16 + DrawX, selectBox.y/16 + DrawY).SetID(selectBuffer[DrawX][DrawY].getID());
+						if(selectBuffer[DrawX][DrawY].getMeta() >= 0)
+							map.getMapTileData().getTile(selectBox.x/16 + DrawX, selectBox.y/16 + DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta()); //TODO Allow for tile-only selection. Hotkeys?
+						drawTile(selectBox.x/16 + DrawX,selectBox.y/16 + DrawY);
+					}
+					else if(currentMode == EditMode.MOVEMENT) 
+					{
+						map.getMapTileData().getTile(selectBox.x/16+DrawX, selectBox.y/16+DrawY).SetMeta(selectBuffer[DrawX][DrawY].getMeta());
+						drawTile(selectBox.x/16+DrawX,selectBox.y/16+DrawY);
+					}
 				}
 			}
 		}
 	}
 
-	public static void calculateSelectBox(MouseEvent e) {
+	public static void calculateSelectBox(MouseEvent e, SelectRect givenBox) {
+		//Round the values to multiples of 16
+		int x = (e.getX() / 16) * 16;
+		int y = (e.getY() / 16) * 16;
+		givenBox.x = ((givenBox.x / 16) * 16);
+		givenBox.y = ((givenBox.y / 16) * 16);
+		givenBox.startX = ((givenBox.startX / 16) * 16);
+		givenBox.startY = ((givenBox.startY / 16) * 16);
+		givenBox.width = ((givenBox.width / 16) * 16);
+		givenBox.height = ((givenBox.height / 16) * 16);
+		givenBox.realWidth = ((givenBox.realWidth / 16) * 16);
+		givenBox.realHeight = ((givenBox.realHeight / 16) * 16);
+		
 		//Get width/height
-		selectBox.width = (e.getX() - selectBox.x);
-		selectBox.height = (e.getY() - selectBox.y);
-
+		givenBox.width = givenBox.realWidth = (x - givenBox.startX);
+		givenBox.height = givenBox.realHeight = (y - givenBox.startY);
+		
 		//If our selection is negative, adjust it to be positive 
 		//starting from the position the mouse was released
-		if (selectBox.width < 0) {
-			selectBox.x = e.getX();
-			selectBox.width = Math.abs(selectBox.width);
-		}
-		if (selectBox.height < 0) {
-			selectBox.y = e.getY();
-			selectBox.height = Math.abs(selectBox.height);
-		}
-
-		//Round the values to multiples of 16
-		selectBox.x = ((selectBox.x / 16) * 16);
-		selectBox.y = ((selectBox.y / 16) * 16);
-		selectBox.width = (selectBox.width / 16) * 16;
-		selectBox.height = (selectBox.height / 16) * 16;
+		if (givenBox.realWidth < 0)
+			givenBox.x = x;
+		else
+			givenBox.x = givenBox.startX;
+		if (givenBox.realHeight < 0)
+			givenBox.y = y;
+		else
+			givenBox.y = givenBox.startY;
+		
+		givenBox.width = givenBox.realWidth = Math.abs(givenBox.realWidth) + 16;
+		givenBox.height = givenBox.realHeight = Math.abs(givenBox.realHeight) + 16;
 		
 		//Minimum sizes
-		if(selectBox.height == 0) {
-			selectBox.height = 16;
-		}
-		if(selectBox.width == 0) {
-			selectBox.width = 16;
-		}
+		if(givenBox.realWidth == 0)
+			givenBox.width = givenBox.realWidth = 16;
+		if(givenBox.realHeight == 0)
+			givenBox.height = givenBox.realHeight = 16;
 	}
 
 	public void setGlobalTileset(Tileset global) {
@@ -373,7 +463,8 @@ public class MapEditorPanel extends JPanel {
 				}
 			}
 
-			g.setColor(MainGUI.uiSettings.cursorColor);
+			
+			g.setColor(selectRectColor);
 			if (mouseTracker.width < 0)
 				mouseTracker.x -= Math.abs(mouseTracker.width);
 			if (mouseTracker.height < 0)
@@ -401,6 +492,19 @@ public class MapEditorPanel extends JPanel {
 		globalTiles = null;
 		localTiles = null;
 		map = null;
+		mouseTracker.x = 0;
+		mouseTracker.y = 0;
+		MainGUI.setMouseCoordinates(0, 0);
+	    
+	    selectBox.x = 0;
+	    selectBox.y = 0;
+	    selectBox.startX = 0;
+	    selectBox.startY = 0;
+	    selectBox.width = 16;
+	    selectBox.height = 16;
+	    selectBox.realWidth = 16;
+	    selectBox.realHeight = 16;
+		repaint();
 	}
 
 	public static void setMode(EditMode tiles) {

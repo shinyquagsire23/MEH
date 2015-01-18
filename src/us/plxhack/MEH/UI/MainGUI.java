@@ -27,7 +27,6 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
 
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -425,7 +424,7 @@ public class MainGUI extends JFrame {
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				FileDialog fd = new FileDialog(new Frame(), "Locate A Tileset", FileDialog.SAVE);
+				FileDialog fd = new FileDialog(new Frame(), "Locate Tileset", FileDialog.SAVE);
 				fd.setFilenameFilter(new FilenameFilter() {
 				    public boolean accept(File dir, String name) {
 				      return (name.toLowerCase().endsWith(".png"));
@@ -433,7 +432,7 @@ public class MainGUI extends JFrame {
 				});
 				fd.setFile(MapIO.currentBank + "-" + MapIO.selectedMap + "-" + BankLoader.mapNames.get((int)MapIO.loadedMap.mapHeader.bLabelID) + ".png");
 				fd.setDirectory(System.getProperty("user.home"));
-				fd.show();
+				fd.setVisible(true);
 				String location = fd.getDirectory() + fd.getFile();
 				if(fd.getDirectory().equals("null"))
 					return;
@@ -514,7 +513,7 @@ public class MainGUI extends JFrame {
         {
         	public void actionPerformed(ActionEvent e) 
         	{
-        		new TripleTilePatcher().show();
+        		new TripleTilePatcher().setVisible(true);
         	}
         });
         mnPatches.add(mntmNewMenuItem);
@@ -549,19 +548,20 @@ public class MainGUI extends JFrame {
         mnHelp.add(mnAbout);
 	}
 
-	IconButton btnNewMap;
-	IconButton btnSaveROM;
-	IconButton btnSaveMap;
-    IconButton btnBlockEdit;
-    IconButton btnDNPokePatcher;
+	TopRowButton btnNewMap;
+	TopRowButton btnSaveROM;
+	TopRowButton btnSaveMap;
+    TopRowButton btnBlockEdit;
+    TopRowButton btnDNPokePatcher;
 	JComboBox mapBlendComboBox;
-	IconButton btnImportMap;
+	TopRowButton btnImportMap;
 	private JMenuItem mntmNewMenuItem;
 	private static JTextField txtGlobalTileset;
 	private static JTextField txtLocalTileset;
 	
 	void CreateButtons() {
-		System.out.println("Resource path:" + MainGUI.class.getResource("."));
+		if(MapIO.DEBUG)
+			System.out.println("Resource path:" + MainGUI.class.getResource("."));
 		panelButtons = new JToolBar();
         panelButtons.setFloatable(false);
         panelButtons.setRollover(true);
@@ -570,7 +570,7 @@ public class MainGUI extends JFrame {
 		panelButtons.setMinimumSize(new Dimension(10, 38));
 		getContentPane().add(panelButtons, BorderLayout.NORTH);
 
-		IconButton btnOpenROM = new IconButton("Open ROM for editing","/resources/ROMopen.png",true);
+		TopRowButton btnOpenROM = new TopRowButton("/resources/ROMopen.png","Open ROM for editing",true);
 
 		btnOpenROM.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -580,7 +580,7 @@ public class MainGUI extends JFrame {
 		panelButtons.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		panelButtons.add(btnOpenROM);
 
-		btnSaveROM = new IconButton("Write changes to ROM file","/resources/ROMsave.png",false);
+		btnSaveROM = new TopRowButton("/resources/ROMsave.png","Write changes to ROM file",false);
 		btnSaveROM.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -598,7 +598,7 @@ public class MainGUI extends JFrame {
 		panelButtons.add(new ButtonSeparator(32));
 		panelButtons.add(Box.createHorizontalStrut(1));
 		
-		btnNewMap = new IconButton("New Map (Not implemented)","/resources/newmap.png",false);
+		btnNewMap = new TopRowButton("/resources/newmap.png","New Map (Not implemented)",false);
 		btnNewMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				MapEditorPanel.renderPalette = !MapEditorPanel.renderPalette;
@@ -606,7 +606,7 @@ public class MainGUI extends JFrame {
 			}
 		});
 		
-		btnSaveMap = new IconButton("Save Map to VROM","/resources/mapsave.png",false);
+		btnSaveMap = new TopRowButton("/resources/mapsave.png","Save Map to VROM",false);
 		btnSaveMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MapIO.saveMap();
@@ -618,7 +618,7 @@ public class MainGUI extends JFrame {
 		panelButtons.add(new ButtonSeparator(32));
 		panelButtons.add(Box.createHorizontalStrut(1));
 
-		btnImportMap = new IconButton("Import Map (Not implemented)","",false);
+		btnImportMap = new TopRowButton("","Import Map (Not implemented)",false);
 		btnImportMap.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				MapEditorPanel.renderTileset = !MapEditorPanel.renderTileset;
@@ -631,15 +631,16 @@ public class MainGUI extends JFrame {
 			panelButtons.add(btnNewMap);
 		}
 		
-		btnBlockEdit = new IconButton("Edit Blocks","/resources/blockedit.png",false);
+		btnBlockEdit = new TopRowButton("/resources/blockedit.png","Edit Blocks",false);
 		btnBlockEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new BlockEditor().setVisible(true);
+				JFrame ownerframe = new JFrame();
+				new BlockEditor(ownerframe, "Block Editor", Dialog.ModalityType.APPLICATION_MODAL).setVisible(true);
 			}
 		});
 		panelButtons.add(btnBlockEdit);
 		
-		btnDNPokePatcher = new IconButton("D/N\nPKMN","",false);
+		btnDNPokePatcher = new TopRowButton("","D/N PKMN",false);
 		btnDNPokePatcher.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
@@ -694,11 +695,11 @@ public class MainGUI extends JFrame {
 		}
 	}
 	
-	public class IconButton extends JButton {
-		public IconButton (String toolTipText, String iconPath, boolean enableSwitch) {
+	public class TopRowButton extends JButton {
+		public TopRowButton (String iconPath, String toolTipText, boolean enableSwitch) {
 			super("");
-			setToolTipText(toolTipText);
 			setIcon(new ImageIcon(MainGUI.class.getResource(iconPath)));
+			setToolTipText(toolTipText);
 			setFocusPainted(false);
 			setBorder(null);
 			setBorderPainted(false);
@@ -822,13 +823,13 @@ public class MainGUI extends JFrame {
 		btnEnableTimebasedPokemon.addActionListener(new ActionListener()  {
 			public void actionPerformed(ActionEvent e)  {
 				if(!ROMManager.getActiveROM().isDNPkmnPatchAdded) {
-					int result = JOptionPane.showConfirmDialog(new JFrame(),"It appears that you haven't patched your ROM for Day/Night pokemon.\nWould you like to do that now?","Peer Pressure", JOptionPane.YES_NO_OPTION);
+					int result = JOptionPane.showConfirmDialog(new JFrame(),"It appears that you haven't patched your ROM for time-based Pokémon changes.\nWould you like to do that now?","Peer Pressure", JOptionPane.YES_NO_OPTION);
 					if(result == JOptionPane.YES_OPTION) {
 						MapIO.patchDNPokemon();
 						return;
 					}
 				}
-				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pokémon data to a new format no longer supported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
+				int result = JOptionPane.showConfirmDialog(new JFrame(),"This option will permanantely convert your wild Pokémon data to a new format unsupported by other map editors.\nAre you sure you want to continue?","No More A-Map 4 u", JOptionPane.YES_NO_OPTION);
 				if(result == JOptionPane.YES_OPTION) {
 					MapIO.wildData.aWildPokemon[currentType].convertToDN();
 					loadWildPokemon();
@@ -851,7 +852,7 @@ public class MainGUI extends JFrame {
 		lblpkmax.setBounds(80, 12, 50, 15);
 		pkEditorPanel.add(lblpkmax);
 
-		lblPkMn = new JLabel("Pokemon");
+		lblPkMn = new JLabel("Pokémon");
 		lblPkMn.setHorizontalAlignment(SwingConstants.CENTER);
 		lblPkMn.setBounds(147, 12, 159, 15);
 		pkEditorPanel.add(lblPkMn);
@@ -894,9 +895,10 @@ public class MainGUI extends JFrame {
 					MapIO.wildData.aWildPokemon[currentType].aWildPokemon[selectedTime][0].wNum = pkName1.getSelectedIndex();
 				}
 				catch (Exception ex) {
-					System.out.println("Error loading wild Pokémon data, data not found or nonexistant.");
+					ex.printStackTrace();
+					
 					if(MapIO.DEBUG)
-						ex.printStackTrace();
+						System.out.println("Error loading wild Pokémon data, data not found or nonexistant.");
 				}
 			}
 		});
@@ -1586,6 +1588,10 @@ public class MainGUI extends JFrame {
 		lblNewLabel = new JLabel("Hey there,\nFirst off I'd like to thank you for taking the time to make your way to this tab. It seems that you are very interested in editing Wild Pokémon, because that is obviously the name of this tab. Unfortunately neither Shiny Quagsire nor interdpth have actually implemented this feature so we put this giant block of text here to tell you that this feature isn't implemented.");
 		lblNewLabel.setPreferredSize(new Dimension(51215, 15));
 		lblNewLabel.setMaximumSize(new Dimension(512, 15));
+		
+		pkEditorPanel.setVisible(false);
+		panelpk6_10.setVisible(false);
+		panelpk11_12.setVisible(false);
 	}
 
 	void CreateMimeTab() {
@@ -1669,7 +1675,6 @@ public class MainGUI extends JFrame {
 		tilesetScrollPane = new JScrollPane(tileEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		tilesetScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		tilesetScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		tilesetScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 		tabbedPane.addTab("Tiles", null, tilesetScrollPane, null);
 
 		permissionTilePanel = new PermissionTilePanel();
@@ -1677,7 +1682,6 @@ public class MainGUI extends JFrame {
 		movementScrollPane = new JScrollPane(permissionTilePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		movementScrollPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		movementScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-		movementScrollPane.getHorizontalScrollBar().setUnitIncrement(16);
 		tabbedPane.addTab("Movement", null, movementScrollPane, null);
 
 		CreateToolbar();
@@ -1929,6 +1933,7 @@ public class MainGUI extends JFrame {
 		mapBanks = new JTree();
 		mapBanks.addKeyListener(new KeyAdapter() {
 			public void keyTyped(KeyEvent e) {
+		        mapEditorPanel.reset();
 				MapIO.loadMap();
 		        enableMapOperationButtons();
 			}
@@ -1936,10 +1941,16 @@ public class MainGUI extends JFrame {
 		mapBanks.addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				try {
-					String s = ((DefaultMutableTreeNode) e.getPath().getPath()[2]).toString();
-					s = s.split("\\(")[s.split("\\(").length - 1].replace(")", "");
-					MapIO.selectedBank = Integer.parseInt(s.split("\\.")[0]);
-					MapIO.selectedMap = Integer.parseInt(s.split("\\.")[1]);
+					//String s = ((DefaultMutableTreeNode) e.getPath().getPath()[3]).toString();
+					//s = s.split("\\(")[s.split("\\(").length - 1].replace(")", "");
+					//MapIO.selectedBank = Integer.parseInt(s.split("\\.")[0]);
+					//MapIO.selectedMap = Integer.parseInt(s.split("\\.")[1]);
+					
+					Object node = e.getPath().getPath()[e.getPath().getPath().length - 1];
+					if (node instanceof BankLoader.MapTreeNode){
+						MapIO.selectedBank = ((BankLoader.MapTreeNode)node).bank;
+						MapIO.selectedMap = ((BankLoader.MapTreeNode)node).map;
+					}
 				}
 				catch (Exception ex) {
                     ex.printStackTrace();
@@ -1952,10 +1963,18 @@ public class MainGUI extends JFrame {
 				if (e.getButton() == MouseEvent.BUTTON1) {
                     // Find a more streamlined way to detect that a node was not expanded
 					if (e.getClickCount() == 2) {
-                        if (mapBanks.getModel().getIndexOfChild(mapBanks.getModel().getRoot(), mapBanks.getSelectionPath().getLastPathComponent()) == -1) {
-                            MapIO.loadMap();
-            		        enableMapOperationButtons();
-                        }
+						try
+						{
+	                        if (mapBanks.getModel().getIndexOfChild(mapBanks.getModel().getRoot(), mapBanks.getSelectionPath().getLastPathComponent()) == -1) {
+	            		        mapEditorPanel.reset();
+	                            MapIO.loadMap();
+	            		        enableMapOperationButtons();
+	                        }
+						}
+						catch (Exception ex)
+						{
+							ex.printStackTrace();
+						}
 					}
 				}
 			}
@@ -1964,7 +1983,7 @@ public class MainGUI extends JFrame {
 //		}));
 		mapBanks.setModel(new DefaultTreeModel(null));
 		mapBanks.setCellRenderer(new MapTreeRenderer());
-
+		
 		JScrollPane mapPane = new JScrollPane(mapBanks, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		mapPane.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
 		mapPanelFrame.add(mapPane);
@@ -1972,7 +1991,8 @@ public class MainGUI extends JFrame {
 
     public static void updateTree() {
         Object root = mapBanks.getModel().getRoot();
-        Object folder = mapBanks.getModel().getChild(root, MapIO.selectedBank);
+        Object type = mapBanks.getModel().getChild(root, 1);
+        Object folder = mapBanks.getModel().getChild(type, MapIO.selectedBank);
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)(mapBanks.getModel().getChild(folder, MapIO.selectedMap));
         TreePath path = new TreePath(node.getPath());
         mapBanks.setSelectionPath(path);
@@ -2033,7 +2053,8 @@ public class MainGUI extends JFrame {
 			btnEnableTimebasedPokemon.setVisible(true);
 		}
 		
-		System.out.println(selectedTime);
+		if(MapIO.DEBUG)
+			System.out.println(selectedTime);
 
 		if (MapIO.currentBank != -1 && MapIO.currentMap != -1 && MapIO.wildData.aWildPokemon[currentType].aWildPokemon != null) {
 			pkEncounter.setValue(MapIO.wildData.aWildPokemon[currentType].bRatio);
@@ -2171,15 +2192,27 @@ public class MainGUI extends JFrame {
 			return;
 		String s = Plugin.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		// while(s.contains("/") || s.contains("\\"))
-		System.out.println(s);
+		if (MapIO.DEBUG)
+			System.out.println(s);
 		dataStore = new DataStore("MEH.ini", ROMManager.currentROM.getGameCode());
 		MapIO.loadPokemonNames();
 
 		//if (true) {
-        mapBanks.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Maps by Bank") {
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode(null);
+		DefaultTreeModel mapTree = new DefaultTreeModel(root);
+		DefaultMutableTreeNode byName = new DefaultMutableTreeNode("Maps by Name");
+		DefaultMutableTreeNode byBank = new DefaultMutableTreeNode("Maps by Bank");
+		root.add(byName);
+		root.add(byBank);
+		mapBanks.setRootVisible(false);
+		mapBanks.setModel(mapTree);
+		
+		
+        /*mapBanks.setModel(new DefaultTreeModel(new DefaultMutableTreeNode("Maps by Bank") {
         }));
-        DefaultTreeModel model = (DefaultTreeModel) mapBanks.getModel();
-        model.reload();
+        TreeModel model = mapBanks.getModel();
+        model.reload();*/
+		
         BankLoader.reset();
         TilesetCache.clearCache();
         mapEditorPanel.reset();
@@ -2195,7 +2228,7 @@ public class MainGUI extends JFrame {
 
 		// chckbxmntmDrawSprites.setSelected(DataStore.mehSettingShowSprites==1);
 		// TODO Redo this in settings
-		new BankLoader((int) DataStore.MapHeaders, ROMManager.getActiveROM(), lblInfo, mapBanks).start();
+		new BankLoader((int) DataStore.MapHeaders, ROMManager.getActiveROM(), lblInfo, mapBanks, byBank).start();
 		new WildDataCache(ROMManager.getActiveROM()).start();
         mnSave.setEnabled(true);
 		btnSaveROM.setEnabled(true);
@@ -2234,7 +2267,7 @@ public class MainGUI extends JFrame {
 		BufferedImage img = (BufferedImage)Map.renderMap(MapIO.loadedMap, true);
 		Image orig = img.getScaledInstance(img.getWidth(), img.getHeight(), 0);
 		GradientTest t = new GradientTest(orig);
-		t.show();
+		t.setVisible(true);
 		
 		Color night = new Color(42,0,168,80);
 		Color evening = new Color(56,2,0,40);

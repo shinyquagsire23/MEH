@@ -28,11 +28,12 @@ public class PermissionTilePanel extends JPanel
     private static boolean Redraw = true;
 	static Rectangle mouseTracker;
 	public static Image imgPermissions;
-	public void SetRect(int width, int heigh){
+	
+	public void SetRect(int width, int height){
 
-		if(heigh>16) heigh=16;
+		if(height>16) height=16;
 		if(width>16) width=16;
-		mouseTracker.height=heigh;
+		mouseTracker.height=height;
 		mouseTracker.width=width;
 	}
 	public void SetRect(){
@@ -57,7 +58,7 @@ public class PermissionTilePanel extends JPanel
 				int b2 = InputEvent.BUTTON2_DOWN_MASK;
 				if ((e.getModifiersEx() & (b1 | b2)) != b1) 
 				{
-					MapEditorPanel.calculateSelectBox(e);
+					//MapEditorPanel.calculateSelectBox(e);
 					repaint();
 				}
 			}
@@ -116,7 +117,7 @@ public class PermissionTilePanel extends JPanel
 			{
 				if(e.getButton() == 3)
 				{
-					MapEditorPanel.selectBox = new Rectangle(e.getX(),e.getY(),0,0);
+					MapEditorPanel.selectBox = new MapEditorPanel.SelectRect(e.getX(),e.getY(),0,0);
 				}
 			}
 
@@ -137,7 +138,7 @@ public class PermissionTilePanel extends JPanel
 			{
 				if(e.getButton() == 3)
 				{
-					MapEditorPanel.calculateSelectBox(e);
+					//MapEditorPanel.calculateSelectBox(e);
 
 					//Fill the tile buffer
 					MapEditorPanel.selectBuffer = new MapTile[MapEditorPanel.selectBox.width / 16][MapEditorPanel.selectBox.height / 16];
