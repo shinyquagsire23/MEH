@@ -117,7 +117,7 @@ public class MapIO
 
 			}
 		}.start();
-        MainGUI.setStatus(MainGUI.mapBanks.getLastSelectedPathComponent().toString() + " Loaded.");
+        MainGUI.setStatus(MainGUI.mapBanks.getLastSelectedPathComponent().toString() + " loaded.");
 	}
 
 	public static String[] pokemonNames;
@@ -129,6 +129,7 @@ public class MapIO
 		for (int i = 0; i < DataStore.NumPokemon; i++)
 		{
 			pokemonNames[i] = ROMManager.currentROM.readPokeText();
+			System.out.println(pokemonNames[i]);
 		}
 		addStringArray(MainGUI.pkName1, pokemonNames);
 		addStringArray(MainGUI.pkName2, pokemonNames);
@@ -161,7 +162,7 @@ public class MapIO
 					}
 				});
 
-				fd.show();
+				fd.setVisible(true);
 				String location = fd.getDirectory() + fd.getFile();
 				if (location.isEmpty())
 					return;

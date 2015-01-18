@@ -2,18 +2,23 @@ package us.plxhack.MEH.UI;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JViewport;
+import javax.swing.UIManager;
 
 import java.awt.BorderLayout;
 import java.awt.FileDialog;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 
 import javax.swing.JScrollPane;
@@ -74,11 +79,11 @@ import java.awt.FlowLayout;
 
 import javax.swing.JTextField;
 
-public class BlockEditor extends JFrame
+public class BlockEditor extends JDialog
 {
 	TilesetPickerPanel tpp;
-	JComboBox comboBox;
-	JScrollPane scrollPaneTep;
+	JComboBox cmbBoxPalette;
+	JScrollPane scrollPaneTEP;
 	JScrollPane scrollPaneTiles;
 	public static JLabel lblMeep;
 	//static JLabel lblBehavior;
@@ -100,55 +105,66 @@ public class BlockEditor extends JFrame
 	private ButtonGroup battleGroup;
 	private JComboBox cmbBehaviors;
 	
-	public BlockEditor() 
+	public BlockEditor(JFrame parent, String text, ModalityType modalityType) 
 	{
+		super(parent, text, modalityType);
 		setResizable(false);
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
 		
-		scrollPaneTep = new JScrollPane((Component) null, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollPaneTep.setPreferredSize(new Dimension(16*9, 3));
-		scrollPaneTep.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		scrollPaneTep.getVerticalScrollBar().setUnitIncrement(16);
-		scrollPaneTep.getHorizontalScrollBar().setUnitIncrement(16);
+		// Block selector panel
 		
 		tileEditorPanel = new TileEditorPanel(false);
+		tileEditorPanel.setPreferredSize(new Dimension((TileEditorPanel.editorWidth) * 16 + ((Integer)UIManager.get("ScrollBar.width")).intValue() + 2, ((DataStore.EngineVersion == 1 ? 0x200 + 0x56 : 0x200 + 0x300) / TileEditorPanel.editorWidth) * 16));
+		tileEditorPanel.setSize(tileEditorPanel.getPreferredSize());
 		tileEditorPanel.setLayout(null);
-		tileEditorPanel.setSize(new Dimension(16*8, 2560));
-		tileEditorPanel.setPreferredSize(new Dimension(16*8, 2560));
 		
 		tileEditorPanel.globalTiles = MainGUI.tileEditorPanel.globalTiles;
 		tileEditorPanel.localTiles = MainGUI.tileEditorPanel.localTiles;
 		tileEditorPanel.RerenderTiles(tileEditorPanel.imgBuffer, 0);
 		
-		scrollPaneTep.setViewportView(tileEditorPanel);
-		getContentPane().add(scrollPaneTep, BorderLayout.WEST);
+		scrollPaneTEP = new JScrollPane(tileEditorPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneTEP.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		scrollPaneTEP.getVerticalScrollBar().setUnitIncrement(16);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setPreferredSize(new Dimension(256, 10));
-		getContentPane().add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel rightOfBlockSelector = new JPanel();
+//		rightOfBlockSelector.setPreferredSize(new Dimension(256, 10));
+		rightOfBlockSelector.setLayout(new BorderLayout(5, 5));
 		
-		JPanel panel_2 = new JPanel();
-//		panel_2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_2.setPreferredSize(new Dimension(256, 60));
-		panel_1.add(panel_2, BorderLayout.NORTH);
-		panel_2.setLayout(null);
+/*		JSplitPane splitBlocksFromRight = new JSplitPane();
+		splitBlocksFromRight.setEnabled(false);
+		splitBlocksFromRight.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+//		splitBlocksFromRight.setPreferredSize(new Dimension(150, 10));
+		splitBlocksFromRight.setBorder(null);
+		
+		splitBlocksFromRight.setLeftComponent(scrollPaneTEP);
+		splitBlocksFromRight.setRightComponent(rightOfBlockSelector);
+		getContentPane().add(splitBlocksFromRight, BorderLayout.WEST);*/
+		
+		getContentPane().add(scrollPaneTEP);
+		getContentPane().add(rightOfBlockSelector);
+		
+		JPanel blockModifier = new JPanel();
+		blockModifier.setPreferredSize(new Dimension(400,80));
+//		blockModifier.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		rightOfBlockSelector.add(blockModifier, BorderLayout.NORTH);
+		blockModifier.setLayout(null);
 		
 		lblMeep = new JLabel("Meep");
 		lblMeep.setBounds(12, 12, 80, 15);
-		panel_2.add(lblMeep);
+		blockModifier.add(lblMeep);
 		
-		comboBox = new JComboBox();
-		comboBox.addActionListener(new ActionListener() 
+		cmbBoxPalette = new JComboBox();
+		cmbBoxPalette.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
-				tpp.setPalette(comboBox.getSelectedIndex());
+				tpp.setPalette(cmbBoxPalette.getSelectedIndex());
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Palette 0", "Palette 1", "Palette 2", "Palette 3", "Palette 4", "Palette 5", "Palette 6", "Palette 7", "Palette 8", "Palette 9", "Palette 10", "Palette 11", "Palette 12"}));
-		comboBox.setPreferredSize(new Dimension(36, 24));
-		comboBox.setBounds(10, 30, 107, 24);
-		panel_2.add(comboBox);
+		cmbBoxPalette.setModel(new DefaultComboBoxModel(new String[] {"Palette 0", "Palette 1", "Palette 2", "Palette 3", "Palette 4", "Palette 5", "Palette 6", "Palette 7", "Palette 8", "Palette 9", "Palette 10", "Palette 11", "Palette 12"}));
+		cmbBoxPalette.setPreferredSize(new Dimension(36, 24));
+		cmbBoxPalette.setBounds(10, 30, 107, 24);
+		blockModifier.add(cmbBoxPalette);
 		
 		final JCheckBox chbxXFlip = new JCheckBox("X Flip");
 		chbxXFlip.addActionListener(new ActionListener() 
@@ -162,7 +178,7 @@ public class BlockEditor extends JFrame
 		});
 		chbxXFlip.setPreferredSize(new Dimension(63, 16));
 		chbxXFlip.setBounds(130, 12, 70, 23);
-		panel_2.add(chbxXFlip);
+		blockModifier.add(chbxXFlip);
 		
 		final JCheckBox chbxYFlip = new JCheckBox("Y Flip");
 		chbxYFlip.addActionListener(new ActionListener() 
@@ -176,54 +192,56 @@ public class BlockEditor extends JFrame
 		});
 		chbxYFlip.setPreferredSize(new Dimension(62, 16));
 		chbxYFlip.setBounds(130, 31, 70, 23);
-		panel_2.add(chbxYFlip);
+		blockModifier.add(chbxYFlip);
 		
 		panelSelectedBlock = new ImagePanel(null);
 		panelSelectedBlock.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panelSelectedBlock.setBounds(210, 16, 32, 32);
-		panel_2.add(panelSelectedBlock);
+		blockModifier.add(panelSelectedBlock);
 		
-		scrollPaneTiles = new JScrollPane((Component) null, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPaneTiles.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-		scrollPaneTiles.getVerticalScrollBar().setUnitIncrement(16);
-		scrollPaneTiles.getHorizontalScrollBar().setUnitIncrement(16);
+		JPanel tileSelectAndBehavior = new JPanel();
+		tileSelectAndBehavior.setLayout(new BoxLayout(tileSelectAndBehavior, BoxLayout.X_AXIS));
 		
+		// Tile selector
+
 		tpp = new TilesetPickerPanel(MapIO.blockRenderer.getGlobalTileset(),MapIO.blockRenderer.getLocalTileset(), this);
 //		tpp.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tpp.setPreferredSize(new Dimension(256,1024));
+		tpp.setPreferredSize(new Dimension(256 + ((Integer)UIManager.get("ScrollBar.width")).intValue() + 5, 1024));
 		
-		scrollPaneTiles.setViewportView(tpp);
-		panel_1.add(scrollPaneTiles, BorderLayout.CENTER);
-		
-		JSplitPane panel = new JSplitPane();
-		panel.setEnabled(false);
-		panel.setResizeWeight(0.19);
-		panel.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		panel.setPreferredSize(new Dimension(150, 10));
-		panel.setBorder(null);
-		getContentPane().add(panel, BorderLayout.EAST);
-		
-		JPanel panel_3 = new JPanel();
-//		panel_3.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel.setLeftComponent(panel_3);
-		panel_3.setLayout(null);
+		scrollPaneTiles = new JScrollPane(tpp, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneTiles.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+		scrollPaneTiles.getVerticalScrollBar().setUnitIncrement(16);
 		
 		blockEditorPanel = new BlockEditorPanel(this);
 		blockEditorPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		blockEditorPanel.setPreferredSize(new Dimension(64, 32));
-		blockEditorPanel.setBounds(40, 12, 64, 32);
-		panel_3.add(blockEditorPanel);
+		blockEditorPanel.setBounds(300, 16, 64, 32);
+		blockModifier.add(blockEditorPanel);
 		
 		tripleEditorPanel = new TripleEditorPanel(this);
 		tripleEditorPanel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tripleEditorPanel.setPreferredSize(new Dimension(20,20));
-		tripleEditorPanel.setBounds(103, 24, 20, 20);
-		panel_3.add(tripleEditorPanel);
+		tripleEditorPanel.setBounds(363, 28, 20, 20);
+		blockModifier.add(tripleEditorPanel);
 		
-		JPanel panel_4 = new JPanel();
-//		panel_4.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel.setRightComponent(panel_4);
-		panel_4.setLayout(null);
+		JPanel behaviorModifier = new JPanel();
+		behaviorModifier.setLayout(new BoxLayout(behaviorModifier, BoxLayout.Y_AXIS));
+//		behaviorModifier.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		
+/*		JSplitPane splitTileAndBehavior = new JSplitPane();
+		splitTileAndBehavior.setEnabled(false);
+		splitTileAndBehavior.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+//		splitTileAndBehavior.setPreferredSize(new Dimension(150, 10));
+		splitTileAndBehavior.setBorder(null);
+		rightOfBlockSelector.add(splitTileAndBehavior, BorderLayout.WEST);
+		
+		splitTileAndBehavior.setLeftComponent(scrollPaneTiles);
+		splitTileAndBehavior.setRightComponent(behaviorModifier);*/
+		
+		rightOfBlockSelector.add(tileSelectAndBehavior);
+		tileSelectAndBehavior.add(scrollPaneTiles);
+		tileSelectAndBehavior.add(Box.createRigidArea(new Dimension(3,0)));
+		tileSelectAndBehavior.add(behaviorModifier);
 		
 		cmbBehaviors = new JComboBox();
 		cmbBehaviors.addItemListener(new ItemListener()
@@ -253,20 +271,18 @@ public class BlockEditor extends JFrame
 					behaviorItems[i] = Integer.toHexString(i).toUpperCase();
 		}
 		
-		JPanel panel_5 = new JPanel();
+		JPanel pnlBlockBehavior = new JPanel();
 		cmbBehaviors.setModel(new DefaultComboBoxModel(behaviorItems));
-		cmbBehaviors.setPreferredSize(new Dimension(80, 20));
-		panel_5.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Block Behavior", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_5.setBounds(6, 4, 138, 60);
-		panel_5.add(cmbBehaviors);
-		panel_4.add(panel_5);
+		cmbBehaviors.setPreferredSize(new Dimension(200, 20));
+		pnlBlockBehavior.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Block Behavior", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+//		pnlBlockBehavior.setBounds(6, 4, 138, 60);
+		pnlBlockBehavior.add(cmbBehaviors, BorderLayout.WEST);
+		behaviorModifier.add(pnlBlockBehavior);
 		
-		JPanel panel_6 = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) panel_6.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
-		panel_6.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Wild Battles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_6.setBounds(6, 66, 138, 92);
-		panel_4.add(panel_6);
+		JPanel pnlWildBattle = new JPanel(new GridLayout(0, 1));
+		pnlWildBattle.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Wild Battles", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+//		pnlWildBattle.setBounds(6, 66, 138, 92);
+		behaviorModifier.add(pnlWildBattle);
 		
 		battleGroup = new ButtonGroup();
 		
@@ -285,8 +301,8 @@ public class BlockEditor extends JFrame
 			}
 		});
 		rdBattleNone.setSelected(true);
-		rdBattleNone.setPreferredSize(new Dimension(121, 16));
-		panel_6.add(rdBattleNone);
+//		rdBattleNone.setPreferredSize(new Dimension(121, 16));
+		pnlWildBattle.add(rdBattleNone);
 		battleGroup.add(rdBattleNone);
 		
 		rdBattleGrass = new JRadioButton("Grass Battles");
@@ -303,8 +319,8 @@ public class BlockEditor extends JFrame
 				txtBehavior.setText(String.format("%08X", behavior));
 			}
 		});
-		rdBattleGrass.setPreferredSize(new Dimension(121, 16));
-		panel_6.add(rdBattleGrass);
+//		rdBattleGrass.setPreferredSize(new Dimension(121, 16));
+		pnlWildBattle.add(rdBattleGrass);
 		battleGroup.add(rdBattleGrass);
 		
 		rdBattleWater = new JRadioButton("Water Battles");
@@ -321,18 +337,15 @@ public class BlockEditor extends JFrame
 				txtBehavior.setText(String.format("%08X", behavior));
 			}
 		});
-		rdBattleWater.setPreferredSize(new Dimension(121, 16));
-		panel_6.add(rdBattleWater);
+//		rdBattleWater.setPreferredSize(new Dimension(121, 16));
+		pnlWildBattle.add(rdBattleWater);
 		battleGroup.add(rdBattleWater);
 		
 		
-		JPanel panel_7 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_7.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
-		panel_7.setAlignmentX(Component.LEFT_ALIGNMENT);
-		panel_7.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Layer Priority", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_7.setBounds(6, 160, 138, 92);
-		panel_4.add(panel_7);
+		JPanel pnlLayerPriority = new JPanel(new GridLayout(0, 1));
+		pnlLayerPriority.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Layer Priority", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+//		pnlLayerPriority.setBounds(6, 160, 138, 92);
+		behaviorModifier.add(pnlLayerPriority);
 		
 		ButtonGroup bgPerms = new ButtonGroup();
 		
@@ -351,8 +364,8 @@ public class BlockEditor extends JFrame
 			}
 		});
 		rdBgOver.setSelected(true);
-		rdBgOver.setPreferredSize(new Dimension(107, 16));
-		panel_7.add(rdBgOver);
+//		rdBgOver.setPreferredSize(new Dimension(107, 16));
+		pnlLayerPriority.add(rdBgOver);
 		bgPerms.add(rdBgOver);
 		
 		rdBgUnder = new JRadioButton("Player Over");
@@ -369,8 +382,8 @@ public class BlockEditor extends JFrame
 				txtBehavior.setText(String.format("%08X", behavior));
 			}
 		});
-		rdBgUnder.setPreferredSize(new Dimension(117, 16));
-		panel_7.add(rdBgUnder);
+//		rdBgUnder.setPreferredSize(new Dimension(117, 16));
+		pnlLayerPriority.add(rdBgUnder);
 		bgPerms.add(rdBgUnder);
 		
 		rdBgTriple = new JRadioButton("Triple Layer");
@@ -387,8 +400,8 @@ public class BlockEditor extends JFrame
 				txtBehavior.setText(String.format("%08X", behavior));
 			}
 		});
-		rdBgTriple.setPreferredSize(new Dimension(102, 16));
-		panel_7.add(rdBgTriple);
+//		rdBgTriple.setPreferredSize(new Dimension(102, 16));
+		pnlLayerPriority.add(rdBgTriple);
 		bgPerms.add(rdBgTriple);
 		
 		txtBehavior = new JTextField();
@@ -411,12 +424,12 @@ public class BlockEditor extends JFrame
 				updateBehaviors();
 			}
 		});
-		txtBehavior.setBounds(6, 235, 138, 24);
-		panel_4.add(txtBehavior);
+//		txtBehavior.setBounds(6, 235, 138, 24);
+		behaviorModifier.add(txtBehavior);
 		txtBehavior.setColumns(1);
 		
 		
-		this.setSize(565,385);	
+		this.setSize(scrollPaneTEP.getPreferredSize().width + scrollPaneTiles.getPreferredSize().width + behaviorModifier.getPreferredSize().width,400);	
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/2-this.getSize().width/2, dim.height/2-this.getSize().height/2);
 		
@@ -644,7 +657,7 @@ public class BlockEditor extends JFrame
 		MainGUI.mapEditorPanel.repaint();
 		
 		//Refresh block editor
-		tpp.setPalette(comboBox.getSelectedIndex());
+		tpp.setPalette(cmbBoxPalette.getSelectedIndex());
 		blockEditorPanel.repaint();
 		tripleEditorPanel.repaint();
 	}

@@ -263,6 +263,7 @@ public class ConnectionsEditorPanel extends JPanel
 				downCon[dC] = c;
 				dC++;
 				//if(dC > 1)
+				if(MapIO.DEBUG)
 					System.out.println("Down");
 			}
 			else if (c.lType == 0x2)
@@ -272,6 +273,7 @@ public class ConnectionsEditorPanel extends JPanel
 				upCon[uC] = c;
 				uC++;
 				//if(uC > 1)
+				if(MapIO.DEBUG)
 					System.out.println("Up");
 			}
 			else if(c.lType == 0x3)
@@ -281,6 +283,7 @@ public class ConnectionsEditorPanel extends JPanel
 				leftCon[lC] = c;
 				lC++;
 				//if(lC > 1)
+				if(MapIO.DEBUG)
 					System.out.println("Left");
 			}
 			else if(c.lType == 0x4)
@@ -290,6 +293,7 @@ public class ConnectionsEditorPanel extends JPanel
 				rightCon[rC] = c;
 				rC++;
 				//if(rC > 1)
+				if(MapIO.DEBUG)
 					System.out.println("Right");
 			}
 

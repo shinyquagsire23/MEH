@@ -20,6 +20,7 @@ public class BankLoader extends Thread implements Runnable
 	int tblOffs;
 	JLabel lbl;
 	JTree tree;
+	DefaultMutableTreeNode node;
 	private static int mapNamesPtr;
 	public static ArrayList<Long>[] maps;
 	public static ArrayList<Long> bankPointers = new ArrayList<Long>();
@@ -41,13 +42,14 @@ public class BankLoader extends Thread implements Runnable
 		}
 	}
 
-	public BankLoader(int tableOffset, GBARom rom, JLabel label, JTree tree)
+	public BankLoader(int tableOffset, GBARom rom, JLabel label, JTree tree, DefaultMutableTreeNode node)
 	{
 		BankLoader.rom = rom;
 		tblOffs = (int) ROMManager.currentROM.getPointer(tableOffset);
 	
 		lbl = label;
 		this.tree = tree;
+		this.node = node;
 		reset();
 	}
 
@@ -57,7 +59,7 @@ public class BankLoader extends Thread implements Runnable
 		Date d = new Date();
 		ArrayList<byte[]> bankPointersPre = rom.loadArrayOfStructuredData(tblOffs, DataStore.NumBanks, 4);
 		DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-		DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+		DefaultMutableTreeNode root = node;
 
 		int bankNum = 0;
 		for (byte[] b : bankPointersPre)
@@ -113,7 +115,7 @@ public class BankLoader extends Thread implements Runnable
 						}
 					}
 					
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(convMapName + " (" + mapNum + "." + miniMapNum + ")"); //TODO: Pull PokeText from header
+					MapTreeNode node = new MapTreeNode(convMapName + " (" + mapNum + "." + miniMapNum + ")",mapNum,miniMapNum); //TODO: Pull PokeText from header
 					findNode(root,String.valueOf(mapNum)).add(node);
 					miniMapNum++;
 				}
@@ -145,7 +147,7 @@ public class BankLoader extends Thread implements Runnable
 
         double loadTime = eD.getTime() - d.getTime();
 
-		setStatus("Banks Loaded in " + loadTime + "ms" + (loadTime < 1000 ? "! :DDD" : "."));
+		setStatus("Banks loaded in " + loadTime + "ms" + (loadTime < 1000 ? "! :DDD" : "."));
 	}
 
 	public void setStatus(String status)
@@ -181,5 +183,18 @@ public class BankLoader extends Thread implements Runnable
 			}
 		}
 		return null;
+	}
+	
+	public class MapTreeNode extends DefaultMutableTreeNode
+	{
+		public int bank;
+		public int map;
+		
+		public MapTreeNode (String name, int bank2, int map2)
+		{
+			super(name);
+			bank = bank2;
+			map = map2;
+		}
 	}
 }
